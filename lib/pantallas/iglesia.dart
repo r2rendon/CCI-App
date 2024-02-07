@@ -69,9 +69,9 @@ class Iglesia extends StatelessWidget {
               ),
             ),
 
-            //Serie
+            //Serie implementado desde FireBase
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 23),
+              padding: EdgeInsets.symmetric(horizontal: 35),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -119,7 +119,7 @@ class Iglesia extends StatelessWidget {
             ),
             //Mision y vision
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 23),
+              padding: EdgeInsets.symmetric(horizontal: 35),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -164,7 +164,6 @@ class Iglesia extends StatelessWidget {
             //Extra
 
             const SizedBox(height: 20),
-            Divider(),
             Center(
               child: Text(
                 "Contáctanos",
