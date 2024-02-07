@@ -62,8 +62,8 @@ class Transmisiones extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "¡Hola a todos! Les invitamos cordialmente a unirse al live de "
-                    "la celebración Especial de CCI San Pedro Sula.",
+                    "Hola Familia! Aquí puedes conectarte a nuestras transmisiones en vivo de "
+                    "todas las celebraciones para que no te pierdas esa palabra que Dios tiene para ti. Disfrutemos juntos de este tiempo!",
                     style: TextStyle(
                       fontSize: 18,
                     ),

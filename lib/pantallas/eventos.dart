@@ -56,6 +56,21 @@ class Eventos extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hola! Tú eres parte de la gran familia de CCI San Pedro Sula, y por esto queremos que estés enterado de todo lo que se viene! "
+                    "Aquí encontrarás los próximos eventos para que puedas agendar las fechas y no te pierdas de nada.",
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

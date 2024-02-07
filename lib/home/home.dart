@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pantallas/eventos.dart';
 import '../pantallas/iglesia.dart';
+import '../pantallas/ministerios.dart';
 import '../pantallas/ofrendas.dart';
 import '../pantallas/transmisiones.dart';
 import 'constantes.dart';
@@ -177,6 +178,46 @@ class HomeState extends State<Home> {
                   },
                   child: const Text(
                     'Quienes somos?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: blanco,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          //Ministerios
+          Positioned(
+            top: 335,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.person_3,
+                  color: blanco,
+                  size: 25,
+                ),
+                const SizedBox(width: 10),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: TextStyle(
+                      color: blanco,
+                      fontSize: 25,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Ministerios(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Ministerios',
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       color: blanco,
