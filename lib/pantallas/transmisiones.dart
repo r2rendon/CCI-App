@@ -6,10 +6,11 @@ class Transmisiones extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
@@ -35,7 +36,7 @@ class Transmisiones extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            //Centro Cristiano Internacional
+            //Descripcion de funtion
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
@@ -55,8 +56,21 @@ class Transmisiones extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
-            //Transmisiones en vivo
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "¡Hola a todos! Les invitamos cordialmente a unirse al live de "
+                    "la celebración Especial de CCI San Pedro Sula.",
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

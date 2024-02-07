@@ -7,4 +7,4 @@ final double horizontalPadding = 40;
 final double verticalPadding = 25;
 
 const double defpaultPadding = 16.0;
-const Duration defaultDuration = Duration(milliseconds: 300);
+const Duration duracion = Duration(milliseconds: 300);

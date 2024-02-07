@@ -1,5 +1,5 @@
+import 'package:cci_app/home/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'home/splash_screen.dart';
 
 void main() {
   runApp(

@@ -6,10 +6,11 @@ class Ofrendas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
