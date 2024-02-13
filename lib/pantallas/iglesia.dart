@@ -71,7 +71,7 @@ class Iglesia extends StatelessWidget {
 
             //Serie implementado desde FireBase
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              padding: EdgeInsets.symmetric(horizontal: 23),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -119,7 +119,7 @@ class Iglesia extends StatelessWidget {
             ),
             //Mision y vision
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              padding: EdgeInsets.symmetric(horizontal: 23),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -163,28 +163,23 @@ class Iglesia extends StatelessWidget {
 
             //Extra
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "Contáctanos",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Text(
-                      "Honduras, San Pedro Sula, Colonia Trejo 9 calle, 21 y 22 avenida."),
-                  Text("+504-2510-1731"),
-                  Text("iglesia@ccisanpedrosula.org"),
-                  const SizedBox(height: 20),
-                ],
+            const SizedBox(height: 20),
+            Divider(),
+            Center(
+              child: Text(
+                "Contáctanos",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
+            Text(
+                "Honduras, San Pedro Sula, Colonia Trejo 9 calle, 21 y 22 avenida."),
+            Text("+504-2510-1731"),
+            Text("iglesia@ccisanpedrosula.org"),
+            const SizedBox(height: 20),
           ],
         ),
       ),
