@@ -160,26 +160,344 @@ class Iglesia extends StatelessWidget {
                 ],
               ),
             ),
-
-            //Extra
-
-            const SizedBox(height: 20),
-            Divider(),
             Center(
               child: Text(
-                "Contáctanos",
+                "Pastores Generales",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            Text(
-                "Honduras, San Pedro Sula, Colonia Trejo 9 calle, 21 y 22 avenida."),
-            Text("+504-2510-1731"),
-            Text("iglesia@ccisanpedrosula.org"),
+            //Mario Valencia
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Mario Valencia",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastor General",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  new Image.asset(
+                    "assets/images/mario.png",
+                    scale: 12,
+                  ),
+                ],
+              ),
+            ),
+            // Karla de Valencia
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Karla de Valencia",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastora General",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  new Image.asset(
+                    "assets/images/karla.png",
+                    scale: 12,
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 20),
+
+            //Pastores titulares
+            Center(
+              child: Text(
+                "Pastores De Celebraciones",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            //Juan Ramon Tabora
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Juan Ramón Tábora",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastor Titular 9:00 a.m.",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  new Image.asset(
+                    "assets/images/juanramon.png",
+                    scale: 12.5,
+                  ),
+                ],
+              ),
+            ),
+            //Rosa de Tabora
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Rosa de Tábora",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastora Titular 9:00 a.m.",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  new Image.asset(
+                    "assets/images/rosa.png",
+                    scale: 12.5,
+                  ),
+                ],
+              ),
+            ),
+            //Juan Carlos Vallecillo
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Juan Carlos Vallecillo",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastor Titular 11:30 a.m.",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  new Image.asset(
+                    "assets/images/juanca.png",
+                    scale: 12.5,
+                  ),
+                ],
+              ),
+            ),
+            //Kensy de Vallecillo
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Kensy de Vallecillo",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastora Titular 11:30 a.m.",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  new Image.asset(
+                    "assets/images/kensy.png",
+                    scale: 12.5,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            //Pastores Generacionales
+            Center(
+              child: Text(
+                "Pastores de Nuevas Generaciones",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            //Alejandro Henriquez
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Alejandro Henríquez",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastor Generacional",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  new Image.asset(
+                    "assets/images/alejandro.png",
+                    scale: 12.5,
+                  ),
+                ],
+              ),
+            ),
+            //Gabriela de Henríquez
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Row(
+                children: [
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Gabriela de Henríquez",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Pastora Generacional",
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  new Image.asset(
+                    "assets/images/gaby.png",
+                    scale: 12.5,
+                  ),
+                ],
+              ),
+            ),
+
+            //Informacion de contacto
+            const SizedBox(height: 20),
+            Divider(),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    "Contáctanos",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    "Honduras, San Pedro Sula, Colonia Trejo 9 calle, 21 y 22 avenida.",
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "+504-2510-1731",
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "iglesia@ccisanpedrosula.org",
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
           ],
         ),
       ),
