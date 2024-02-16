@@ -46,7 +46,7 @@ class Ofrendas extends StatelessWidget {
                 children: const [
                   Text("San Pedro Sula"),
                   Text(
-                    "Ofrendas",
+                    "Diezmos y Ofrendas",
                     style: TextStyle(
                       fontSize: 40,
                       height: 0,
@@ -56,6 +56,50 @@ class Ofrendas extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hemos dispuesto nuestras cuentas bancarias para que puedas dar tus diezmos y ofrendas",
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Proverbios 3:9-10",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'Honra al Señor con tus riquezas y con lo mejor de todo lo que produces. Entonces él llenará tus graneros,  y tus tinajas se desbordarán de buen vino.',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                Image.asset(
+                  "assets/images/bac.png",
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+            Column(
+              children: [
+                Image.asset(
+                  "assets/images/atlantida.png",
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ],
         ),
       ),

@@ -57,6 +57,7 @@ class Iglesia extends StatelessWidget {
                     "Ser comunidad es fundamental para crecer juntos y fortalecernos, "
                     "Cuando nos unimos como comunidad, podemos compartir nuestras experiencias, "
                     "conocimientos y habilidades, lo que nos permite aprender unos de otros y crecer juntos.",
+                    textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 18,
                       height: 0,
@@ -68,50 +69,97 @@ class Iglesia extends StatelessWidget {
                 ],
               ),
             ),
-
-            //Serie implementado desde FireBase
+            //Nuestro Pastor
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 23),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    "assets/images/Serie.png",
-                    opacity: AlwaysStoppedAnimation(.8),
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    scale: 1,
+                    image: AssetImage("assets/images/logo.png"),
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "SI TÚ LO DICES",
-                    style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "Serie Mes de Febrero",
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "- Nuestro Pastor",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.italic),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Enseñar a la congregación acerca de cómo al creer en lo que Dios ha prometido, "
-                    "en quien es El para nosotros, podemos ver como sus Palabras llenas de poder y autoridad "
-                    "transforman nuestras vidas. ¿Pero qué tipo de Fe se requiere? ¿Fe en Quien? Seremos "
-                    "estimulados a actuar y vivir porque Él lo ha dicho.",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
+                    const SizedBox(height: 6),
+                    Text(
+                      'Mario Valencia.',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
+                    Text(
+                      'En CCI podemos pero sobre todo queremos ser su iglesia, uno de mis mayores anhelos es ser parte como iglesia de la restauración y '
+                      'crecimiento espiritual personal y familiar.',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Durante años hemos orado para que Dios nos permita ser luz y sal de está hermosa ciudad de San Pedro Sula. Creemos firmemente en la '
+                      'restauración y el crecimiento integral de la familia y estamos para apoyarle para que se vea reflejado en su familia.',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Es para nosotros, como familia pastoral, una gran alegría contar con su con su visita y será una bendición si usted decide hacer del '
+                      'Centro Cristiano Internacional San Pedro Sula, su casa! Declaramos sobre su vida la promesa de Dios que dice:',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    Text(
+                      '“Pues yo sé los planes que tengo para ustedes —dice el SEÑOR —. Son planes para lo bueno y no para lo malo, para darles un futuro y una esperanza.” Jeremías 29:11',
+                      textAlign: TextAlign.justify,
+                      style:
+                          TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      '¡Y Oramos que Dios le bendiga abundantemente y le esperamos cada domingo para disfrutar y seguir siendo parte de la familia CCI!',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Divider(),
+                  ],
+                ),
+              ),
+            ),
+
+            //Horarios
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/images/horarios.png",
+                    opacity: AlwaysStoppedAnimation(.8),
                   ),
-                  Text("1. Creo en Ti"),
-                  Text("2. Tus planes, no los míos"),
-                  Text("3. Porque Tú lo dices"),
-                  Text("4. Promesa Segura"),
-                  Text("5. Apartados"),
                   const SizedBox(height: 20),
                   Divider(),
                 ],
@@ -127,13 +175,14 @@ class Iglesia extends StatelessWidget {
                     "Visión",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     "Ser una iglesia comprometida con la restauración de individuos, familias y ministerios, "
                     "que provoca cambios sostenidos, logrando así alcanzar con el evangelio de Jesús a nuestra comunidad, la nación y el mundo.",
+                    textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w300,
@@ -143,13 +192,14 @@ class Iglesia extends StatelessWidget {
                     "Misión",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     "Alcanzar con el evangelio a la sociedad de San Pedro Sula, Honduras  y el Mundo, formando en cada creyente un discípulo de Cristo "
                     "altamente involucrado en la restauración de la salud espiritual, moral y material de las familias de nuestra comunidad y del mundo. ",
+                    textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w300,

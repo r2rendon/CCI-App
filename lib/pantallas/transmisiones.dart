@@ -43,7 +43,7 @@ class Transmisiones extends StatelessWidget {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text("San Pedro Sula"),
                   Text(
                     "Transmisiones en vivo",
@@ -68,6 +68,51 @@ class Transmisiones extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  Divider(),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                Image.asset(
+                  "assets/images/transmision.png",
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+
+            //Descripcion
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Esta es una gran oportunidad para conectarnos como comunidad y elevar nuestras oraciones juntos!",
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 9),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "No importa donde estés en este momento, podrás unirte a nosotros desde la comodidad de tu hogar a través de nuestra App CCI.",
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Divider(),
                 ],
               ),
             ),
