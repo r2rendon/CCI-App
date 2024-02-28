@@ -280,7 +280,7 @@ class Iglesia extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(height: 20),
                   new Image.asset(
                     "assets/images/karla.png",
                     scale: 12,
@@ -475,7 +475,7 @@ class Iglesia extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 20),
                   new Image.asset(
                     "assets/images/alejandro.png",
                     scale: 12.5,
@@ -509,17 +509,20 @@ class Iglesia extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(height: 20),
+                  Divider(),
                   new Image.asset(
                     "assets/images/gaby.png",
                     scale: 12.5,
                   ),
+                  const SizedBox(width: 20),
                 ],
               ),
             ),
 
             //Informacion de contacto
             const SizedBox(height: 20),
+
             Divider(),
             Center(
               child: Column(

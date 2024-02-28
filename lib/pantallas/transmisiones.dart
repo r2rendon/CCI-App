@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../home/constantes.dart';
+import '../utils/YouTubePlayer.dart';
 
 class Transmisiones extends StatelessWidget {
   @override
@@ -36,6 +37,7 @@ class Transmisiones extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+
             //Descripcion de funtion
             Padding(
               padding: EdgeInsets.symmetric(
@@ -55,7 +57,17 @@ class Transmisiones extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            Divider(),
+            //Transmision
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                new YoutubePlayerComponent(),
+                // const SizedBox(height: 20),
+              ],
+            ),
+            Divider(),
+            //Descripcion 1
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 23),
               child: Column(
@@ -64,49 +76,27 @@ class Transmisiones extends StatelessWidget {
                   Text(
                     "Hola Familia! Aquí puedes conectarte a nuestras transmisiones en vivo de "
                     "todas las celebraciones para que no te pierdas esa palabra que Dios tiene para ti. Disfrutemos juntos de este tiempo!",
+                    // textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
                   Divider(),
                 ],
               ),
             ),
-            Column(
-              children: [
-                Image.asset(
-                  "assets/images/transmision.png",
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
 
-            //Descripcion
+            //Descripcion 2
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 23),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Esta es una gran oportunidad para conectarnos como comunidad y elevar nuestras oraciones juntos!",
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 9),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 23),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "No importa donde estés en este momento, podrás unirte a nosotros desde la comodidad de tu hogar a través de nuestra App CCI.",
-                    textAlign: TextAlign.justify,
+                    'Esta es una gran oportunidad para conectarnos como comunidad y elevar nuestras oraciones juntos! '
+                    'No importa donde estés en este momento, podrás unirte a nosotros desde la comodidad de tu hogar a través de nuestra App CCI.',
+                    // textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 18,
                     ),

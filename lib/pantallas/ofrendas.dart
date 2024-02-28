@@ -55,6 +55,7 @@ class Ofrendas extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 23),
@@ -68,6 +69,7 @@ class Ofrendas extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  Divider(),
                   Text(
                     "Proverbios 3:9-10",
                     textAlign: TextAlign.center,
@@ -81,6 +83,8 @@ class Ofrendas extends StatelessWidget {
                     textAlign: TextAlign.justify,
                     style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
                   ),
+                  const SizedBox(height: 20),
+                  Divider(),
                 ],
               ),
             ),
@@ -98,6 +102,7 @@ class Ofrendas extends StatelessWidget {
                   "assets/images/atlantida.png",
                 ),
                 const SizedBox(height: 20),
+                Divider(),
               ],
             ),
           ],

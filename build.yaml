@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        generate_for:
+          include:
+            
+            - "lib/pantallas/**.dart"
+            - "assets/images/**.png"
+            - "assets/images/**.jpg"
