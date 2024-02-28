@@ -58,13 +58,21 @@ class Transmisiones extends StatelessWidget {
               ),
             ),
             Divider(),
+            //Icono de live
+
             //Transmision
-            Positioned.fill(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   YoutubePlayerComponent(),
                   // const SizedBox(height: 20),
+                  Icon(
+                    Icons.live_tv,
+                    size: 45,
+                    color: const Color.fromARGB(255, 255, 0, 0),
+                  ),
                 ],
               ),
             ),
