@@ -59,12 +59,14 @@ class Transmisiones extends StatelessWidget {
             ),
             Divider(),
             //Transmision
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                new YoutubePlayerComponent(),
-                // const SizedBox(height: 20),
-              ],
+            Positioned.fill(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  YoutubePlayerComponent(),
+                  // const SizedBox(height: 20),
+                ],
+              ),
             ),
             Divider(),
             //Descripcion 1
