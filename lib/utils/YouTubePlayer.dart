@@ -9,17 +9,18 @@ class YoutubePlayerComponent extends StatefulWidget {
 }
 
 class _YoutubePlayerState extends State<YoutubePlayerComponent> {
-  final videoURL = 'http://www.youtube.com/watch?v=-FyRTd0k5Ao';
+  final videoURL = 'https://www.youtube.com/watch?v=7j93K4zXTUg';
   late YoutubePlayerController _controller;
 
   @override
   void initState() {
     final videoId = YoutubePlayer.convertUrlToId(videoURL);
     _controller = YoutubePlayerController(
-      // initialVideoId: videoId!,
-      initialVideoId: "-FyRTd0k5Ao",
+      initialVideoId: videoId!,
+      // initialVideoId: "-FyRTd0k5Ao",
 
       flags: YoutubePlayerFlags(
+        isLive: true,
         autoPlay: true,
         mute: false,
         forceHD: true,
@@ -44,7 +45,7 @@ class _YoutubePlayerState extends State<YoutubePlayerComponent> {
             playedColor: Color.fromARGB(255, 255, 7, 7),
             handleColor: Color.fromARGB(255, 255, 7, 7),
           ),
-          // onReady: () {},
+          onReady: () {},
         ),
       ],
     );
