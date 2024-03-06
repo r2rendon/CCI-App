@@ -1,5 +1,4 @@
 import 'package:cci_app/home/constantes.dart';
-
 import 'package:cci_app/pantallas/ofrendas.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -27,12 +26,13 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Color.fromARGB(255, 0, 0, 0),
       body: screens[_currentIndex],
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: GNav(
-          tabBackgroundColor: negro,
+          tabBackgroundColor: blanco,
+          color: blanco,
           selectedIndex: _currentIndex,
           tabBorderRadius: 100,
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
@@ -40,33 +40,37 @@ class HomeState extends State<Home> {
           tabs: const [
             GButton(
               icon: Icons.groups_2_outlined,
-              text: ' Eventos',
+              backgroundColor: barr,
+              rippleColor: blanco,
+              padding: EdgeInsets.all(15.0),
               iconActiveColor: blanco,
-              textColor: blanco,
             ),
             GButton(
               icon: Icons.videocam_outlined,
-              text: 'Transmisiones',
-              iconActiveColor: blanco,
-              textColor: blanco,
+              // backgroundColor: barr,
+              padding: EdgeInsets.all(15.0),
+              iconActiveColor: negro,
             ),
             GButton(
               icon: Icons.church_outlined,
-              text: 'Iglesia',
+              backgroundColor: barr,
+              rippleColor: blanco,
+              padding: EdgeInsets.all(15.0),
               iconActiveColor: blanco,
-              textColor: blanco,
             ),
             GButton(
               icon: Icons.person_3,
-              text: 'Ministerios',
+              backgroundColor: barr,
+              rippleColor: blanco,
+              padding: EdgeInsets.all(15.0),
               iconActiveColor: blanco,
-              textColor: blanco,
             ),
             GButton(
               icon: Icons.mobile_friendly,
-              text: 'Ofrendas',
+              backgroundColor: barr,
+              rippleColor: blanco,
+              padding: EdgeInsets.all(15.0),
               iconActiveColor: blanco,
-              textColor: blanco,
             ),
           ],
         ),

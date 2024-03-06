@@ -1,236 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-// import 'package:flutter/material.dart';
-// import '../pantallas/eventos.dart';
-// import '../pantallas/iglesia.dart';
-// import '../pantallas/ministerios.dart';
-// import '../pantallas/ofrendas.dart';
-// import '../pantallas/transmisiones.dart';
-// import 'constantes.dart';
+class MyApp extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
 
-// class Home extends StatefulWidget {
-//   @override
-//   State<Home> createState() => HomeState();
-// }
-
-// class HomeState extends State<Home> {
-//   get child => null;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//       backgroundColor: negro,
-//       body: Stack(
-//         children: [
-//           Positioned(
-//             top: 2,
-//             child: Image.asset(
-//               "assets/images/mundo.jpg",
-//             ),
-//           ),
-
-//           //Transmisiones en vivo
-//           Positioned(
-//             top: 90,
-//             left: 0,
-//             right: 0,
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(
-//                   Icons.videocam_outlined,
-//                   color: blanco,
-//                   size: 25,
-//                 ),
-//                 const SizedBox(width: 10),
-//                 TextButton(
-//                   style: TextButton.styleFrom(
-//                     textStyle: TextStyle(
-//                       color: blanco,
-//                       fontSize: 25,
-//                     ),
-//                   ),
-//                   onPressed: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => Transmisiones(),
-//                       ),
-//                     );
-//                   },
-//                   child: const Text(
-//                     'Transmisiones en vivo',
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w300,
-//                       color: blanco,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           //Eventos
-//           Positioned(
-//             top: 150,
-//             left: 0,
-//             right: 0,
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(
-//                   Icons.groups_2_outlined,
-//                   color: blanco,
-//                   size: 25,
-//                 ),
-//                 const SizedBox(width: 10),
-//                 TextButton(
-//                   style: TextButton.styleFrom(
-//                     textStyle: TextStyle(
-//                       fontSize: 25,
-//                     ),
-//                   ),
-//                   onPressed: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => Eventos(),
-//                       ),
-//                     );
-//                   },
-//                   child: const Text(
-//                     'Eventos',
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w300,
-//                       color: blanco,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           //Ofrendas
-//           Positioned(
-//             top: 209.9,
-//             left: 0,
-//             right: 0,
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(
-//                   Icons.mobile_friendly,
-//                   color: blanco,
-//                   size: 25,
-//                 ),
-//                 const SizedBox(width: 10),
-//                 TextButton(
-//                   style: TextButton.styleFrom(
-//                     textStyle: TextStyle(
-//                       fontSize: 25,
-//                     ),
-//                   ),
-//                   onPressed: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => Ofrendas(),
-//                       ),
-//                     );
-//                   },
-//                   child: const Text(
-//                     'Dar',
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w300,
-//                       color: blanco,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           //Iglesia
-//           Positioned(
-//             top: 270.9,
-//             left: 0,
-//             right: 0,
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(
-//                   Icons.church_outlined,
-//                   color: blanco,
-//                   size: 25,
-//                 ),
-//                 const SizedBox(width: 10),
-//                 TextButton(
-//                   style: TextButton.styleFrom(
-//                     textStyle: TextStyle(
-//                       fontSize: 25,
-//                     ),
-//                   ),
-//                   onPressed: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => Iglesia(),
-//                       ),
-//                     );
-//                   },
-//                   child: const Text(
-//                     'Nuestra Iglesia',
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w300,
-//                       color: blanco,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           //Ministerios
-//           Positioned(
-//             top: 335,
-//             left: 0,
-//             right: 0,
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(
-//                   Icons.person_3,
-//                   color: blanco,
-//                   size: 25,
-//                 ),
-//                 const SizedBox(width: 10),
-//                 TextButton(
-//                   style: TextButton.styleFrom(
-//                     textStyle: TextStyle(
-//                       color: blanco,
-//                       fontSize: 25,
-//                     ),
-//                   ),
-//                   onPressed: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => Ministerios(),
-//                       ),
-//                     );
-//                   },
-//                   child: const Text(
-//                     'Ministerios',
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w300,
-//                       color: blanco,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class _HomeState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Open Mailer"),
+          backgroundColor: Colors.redAccent,
+        ),
+        body: Container(
+            padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                ElevatedButton(
+                    onPressed: () async {
+                      String email =
+                          Uri.encodeComponent("mail@fluttercampus.com");
+                      String subject = Uri.encodeComponent("Hello Flutter");
+                      String body =
+                          Uri.encodeComponent("Hi! I'm Flutter Developer");
+                      print(subject); //output: Hello%20Flutter
+                      Uri mail = Uri.parse(
+                          "mailto:$email?subject=$subject&body=$body");
+                      if (await launchUrl(mail)) {
+                        //email app opened
+                      } else {
+                        //email app is not opened
+                      }
+                    },
+                    child: Text("Mail Us Now"))
+              ],
+            )));
+  }
+}
