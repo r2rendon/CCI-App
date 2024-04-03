@@ -1,5 +1,8 @@
+import 'package:cci_app/Informacion/mapa.dart';
 import 'package:flutter/material.dart';
+import '../Informacion/whatsapp.dart';
 import '../home/constantes.dart';
+import '../Informacion/numero.dart';
 
 class Iglesia extends StatelessWidget {
   @override
@@ -97,11 +100,7 @@ class Iglesia extends StatelessWidget {
                       Text(
                         "- Nuestro Pastor",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: blanco,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: thema,
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -193,11 +192,7 @@ class Iglesia extends StatelessWidget {
                     Text(
                       "Visión",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: blanco,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: thema,
                     ),
                     Text(
                       "Ser una iglesia comprometida con la restauración de individuos, familias y ministerios, "
@@ -212,11 +207,7 @@ class Iglesia extends StatelessWidget {
                     Text(
                       "Misión",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: blanco,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: thema,
                     ),
                     Text(
                       "Alcanzar con el evangelio a la sociedad de San Pedro Sula, Honduras  y el Mundo, formando en cada creyente un discípulo de Cristo "
@@ -237,11 +228,7 @@ class Iglesia extends StatelessWidget {
                 child: Text(
                   "Pastores",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: blanco,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: thema,
                 ),
               ),
               //Otro
@@ -298,42 +285,25 @@ class Iglesia extends StatelessWidget {
 
               //Informacion de contacto
               const SizedBox(height: 20),
-              Divider(),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      "Contáctanos",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: blanco,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 23),
+                child: Card(
+                  color: Color.fromARGB(28, 255, 255, 255),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Contáctanos",
+                        style: thema,
                       ),
-                    ),
-                    Text(
-                      "Honduras, San Pedro Sula, Colonia Trejo 9 calle, 21 y 22 avenida.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: blanco,
-                      ),
-                    ),
-                    Text(
-                      "+504 2510-1731",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: blanco,
-                      ),
-                    ),
-                    Text(
-                      "iglesia@ccisanpedrosula.org",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: blanco,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                      const SizedBox(height: 20),
+                      Mapa('mapa'),
+                      const SizedBox(height: 20),
+                      Telefono('celular'),
+                      const SizedBox(height: 20),
+                      WhatsApp('mapa'),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
             ],

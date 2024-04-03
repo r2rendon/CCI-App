@@ -8,16 +8,7 @@ class Eventos extends StatelessWidget {
       backgroundColor: negro,
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                gris,
-                negro,
-              ],
-            ),
-          ),
+          decoration: Decorations,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -100,7 +91,7 @@ class Eventos extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      "SI TÚ LO DICES",
+                      "LA VERDADERA GRANDEZA",
                       style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
@@ -108,7 +99,7 @@ class Eventos extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        "Serie Mes de Febrero",
+                        "Serie Mes de Abril",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -118,10 +109,7 @@ class Eventos extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Enseñar a la congregación acerca de cómo al creer en lo que Dios ha prometido, "
-                      "en quien es El para nosotros, podemos ver como sus Palabras llenas de poder y autoridad "
-                      "transforman nuestras vidas. ¿Pero qué tipo de Fe se requiere? ¿Fe en Quien? Seremos "
-                      "estimulados a actuar y vivir porque Él lo ha dicho.",
+                      "No hay mejor manera de servir",
                       style: TextStyle(
                         color: blanco,
                         fontSize: 18,
@@ -129,27 +117,67 @@ class Eventos extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "1. Creo en Ti",
+                      "1. Como el que sirve.",
                       style: TextStyle(color: barr),
                     ),
                     Text(
-                      "2. Tus planes, no los míos",
+                      "2. Acciones Sinceras.",
                       style: TextStyle(color: barr),
                     ),
                     Text(
-                      "3. Porque Tú lo dices",
+                      "3. Unidos.",
                       style: TextStyle(color: barr),
                     ),
                     Text(
-                      "4. Promesa Segura",
-                      style: TextStyle(color: barr),
-                    ),
-                    Text(
-                      "5. Apartados",
+                      "4. Confiables.",
                       style: TextStyle(color: barr),
                     ),
                     const SizedBox(height: 20),
                     Divider(),
+                    const SizedBox(height: 20),
+                    Text(
+                      "EVENTOS DE ABRIL",
+                      style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: blanco),
+                    ),
+                    Card(
+                      elevation: 1,
+                      color: gris,
+                      borderOnForeground: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(
+                            "Conferencia Especializada",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: blanco,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          Text(
+                            " - Viernes 26 de Abril",
+                            style: TextStyle(
+                              // fontSize: 18,
+                              color: blanco,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          Text(
+                            "  - Templo CCI SPS",
+                            style: TextStyle(
+                              // fontSize: 18,
+                              color: blanco,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

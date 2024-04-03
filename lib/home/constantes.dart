@@ -14,6 +14,11 @@ const Decorations = BoxDecoration(
     ],
   ),
 );
+const thema = TextStyle(
+  color: blanco,
+  fontSize: 18,
+  fontWeight: FontWeight.w600,
+);
 final double horizontalPadding = 40;
 final double verticalPadding = 25;
 

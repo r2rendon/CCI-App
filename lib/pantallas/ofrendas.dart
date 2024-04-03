@@ -8,16 +8,7 @@ class Ofrendas extends StatelessWidget {
       backgroundColor: negro,
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                gris,
-                negro,
-              ],
-            ),
-          ),
+          decoration: Decorations,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

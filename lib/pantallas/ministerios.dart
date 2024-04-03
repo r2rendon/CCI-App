@@ -8,16 +8,7 @@ class Ministerios extends StatelessWidget {
       backgroundColor: negro,
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                gris,
-                negro,
-              ],
-            ),
-          ),
+          decoration: Decorations,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -62,7 +53,6 @@ class Ministerios extends StatelessWidget {
                         color: blanco,
                       ),
                     ),
-
                     //Desarrollo aqui
                   ],
                 ),
@@ -81,6 +71,10 @@ class Ministerios extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 23),
+                    //   child: MyApp(),
+                    // ),
                   ],
                 ),
               ),
