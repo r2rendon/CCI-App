@@ -27,12 +27,7 @@ class Iglesia extends StatelessWidget {
                     //logo cci
                     Text(
                       "Seamos Iglesia",
-                      style: TextStyle(
-                        color: blanco,
-                        fontSize: 35,
-                        height: 0,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: titulo,
                     ),
                     //logo cci
                     Image.asset(
@@ -71,10 +66,9 @@ class Iglesia extends StatelessWidget {
                   "conocimientos y habilidades, lo que nos permite aprender unos de otros y crecer juntos.",
                   // textAlign: TextAlign.justify,
                   style: TextStyle(
-                    color: blanco,
                     fontSize: 18,
                     height: 0,
-                    fontWeight: FontWeight.w300,
+                    color: blanco,
                   ),
                 ),
               ),

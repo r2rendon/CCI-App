@@ -19,6 +19,11 @@ const thema = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w600,
 );
+const titulo = TextStyle(
+  fontSize: 35,
+  height: 0,
+  color: blanco,
+);
 final double horizontalPadding = 40;
 final double verticalPadding = 25;
 

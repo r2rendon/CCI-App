@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Informacion/Worship.dart';
 import '../home/constantes.dart';
 
 class Ministerios extends StatelessWidget {
@@ -23,11 +24,7 @@ class Ministerios extends StatelessWidget {
                   children: [
                     Text(
                       "Ministerios CCI",
-                      style: TextStyle(
-                        fontSize: 35,
-                        color: blanco,
-                        height: 0,
-                      ),
+                      style: titulo,
                     ),
                     //logo cci
                     Image.asset(
@@ -67,14 +64,84 @@ class Ministerios extends StatelessWidget {
                       "La comunidad de CCI en San Pedro Sula está compuesta por muchos Ministerios con el fin de poder responder a las necesidades "
                       "que cada etapa de la vida nos presenta. Te invitamos a conocerlos para que puedas ser parte también!",
                       style: TextStyle(
-                        color: blanco,
+                        height: 0,
                         fontSize: 18,
+                        color: blanco,
                       ),
                     ),
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(horizontal: 23),
-                    //   child: MyApp(),
-                    // ),
+                  ],
+                ),
+              ),
+              //Apartado de alabanza
+              const SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.all(28.0),
+                child: Column(
+                  children: [
+                    Container(
+                      child: Image.asset("assets/images/alabanza.png"),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "En este apartado se le dara una introduccion al ministerio de aladdbanza",
+                      style: TextStyle(
+                        color: blanco,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FormWorship(),
+                            ),
+                          );
+                        },
+                        child: Text("Quiero formar parte!"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              //Apartado de produccion
+              const SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.all(28.0),
+                child: Column(
+                  children: [
+                    Image.asset("assets/images/produccion.png"),
+                    const SizedBox(height: 20),
+                    Text(
+                      "En este apartado se le dara una introduccion al ministerio de produccion",
+                      style: TextStyle(
+                        color: blanco,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              //Apartado de alive
+              const SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.all(28.0),
+                child: Column(
+                  children: [
+                    Image.asset("assets/images/alive.png"),
+                    const SizedBox(height: 20),
+                    Text(
+                      "En este apartado se le dara una introduccion al ministerio de alive",
+                      style: TextStyle(
+                        color: blanco,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
                   ],
                 ),
               ),

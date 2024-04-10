@@ -23,11 +23,7 @@ class Ofrendas extends StatelessWidget {
                   children: [
                     Text(
                       "Dar",
-                      style: TextStyle(
-                        color: blanco,
-                        fontSize: 35,
-                        height: 0,
-                      ),
+                      style: titulo,
                     ),
                     //logo cci
                     Image.asset(
@@ -66,8 +62,9 @@ class Ofrendas extends StatelessWidget {
                     Text(
                       "Hemos dispuesto nuestras cuentas bancarias para que puedas dar tus diezmos y ofrendas",
                       style: TextStyle(
-                        color: blanco,
                         fontSize: 18,
+                        height: 0,
+                        color: blanco,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -83,9 +80,8 @@ class Ofrendas extends StatelessWidget {
                     ),
                     Text(
                       'Honra al Señor con tus riquezas y con lo mejor de todo lo que produces. Entonces él llenará tus graneros,  y tus tinajas se desbordarán de buen vino.',
-                      textAlign: TextAlign.justify,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 15,
                         fontStyle: FontStyle.italic,
                         color: blanco,
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../home/constantes.dart';
-import '../utils/YouTubePlayer.dart';
+import '../utils/Transmision_Live.dart';
+import '../utils/Transmision_Reciente.dart';
 
 class Transmisiones extends StatelessWidget {
   @override
@@ -24,11 +25,7 @@ class Transmisiones extends StatelessWidget {
                   children: [
                     Text(
                       "En vivo",
-                      style: TextStyle(
-                        fontSize: 35,
-                        height: 0,
-                        color: blanco,
-                      ),
+                      style: titulo,
                     ),
                     //logo cci
                     Image.asset(
@@ -83,13 +80,41 @@ class Transmisiones extends StatelessWidget {
                       "Hola Familia! Aquí puedes conectarte a nuestras transmisiones en vivo de "
                       "todas las celebraciones para que no te pierdas esa palabra que Dios tiene para ti. Disfrutemos juntos de este tiempo!",
                       style: TextStyle(
-                        color: blanco,
+                        height: 0,
                         fontSize: 18,
-                        fontWeight: FontWeight.w300,
+                        color: blanco,
                       ),
                     ),
                     const SizedBox(height: 20),
                     Divider(),
+                  ],
+                ),
+              ),
+              //Descripcion 2
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 23),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Aqui puedes ver nuestra mensaje mas reciente!",
+                      style: TextStyle(
+                        height: 0,
+                        fontSize: 18,
+                        color: blanco,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              //Predica anterior
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    YoutubePlayerComponent1(),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),

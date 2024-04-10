@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
 
 class Eventos extends StatelessWidget {
@@ -24,12 +25,7 @@ class Eventos extends StatelessWidget {
                     //Eventos del mes
                     Text(
                       "Eventos del mes",
-                      style: TextStyle(
-                        color: blanco,
-                        fontSize: 35,
-                        height: 0,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: titulo,
                     ),
                     //logo cci
                     Image.asset(
@@ -69,9 +65,9 @@ class Eventos extends StatelessWidget {
                       "Hola! Tú eres parte de la gran familia de CCI San Pedro Sula, y por esto queremos que estés enterado de todo lo que se viene! "
                       "Aquí encontrarás los próximos eventos para que puedas agendar las fechas y no te pierdas de nada.",
                       style: TextStyle(
+                        height: 0,
                         fontSize: 18,
                         color: blanco,
-                        fontWeight: FontWeight.w300,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -135,6 +131,7 @@ class Eventos extends StatelessWidget {
                     const SizedBox(height: 20),
                     Divider(),
                     const SizedBox(height: 20),
+                    //           APARTADO DE EVENTOS
                     Text(
                       "EVENTOS DE ABRIL",
                       style: TextStyle(
@@ -142,42 +139,133 @@ class Eventos extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: blanco),
                     ),
-                    Card(
-                      elevation: 1,
-                      color: gris,
-                      borderOnForeground: true,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 20),
-                          Text(
-                            "Conferencia Especializada",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: blanco,
-                              fontWeight: FontWeight.w300,
+                    // Conferencia especializada viernes 26 de Abril
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 100,
+                      ),
+                      child: Card(
+                        elevation: 1,
+                        color: gris,
+                        borderOnForeground: true,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              "Conferencia Especializada",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            " - Viernes 26 de Abril",
-                            style: TextStyle(
-                              // fontSize: 18,
-                              color: blanco,
-                              fontWeight: FontWeight.w300,
+                            Text(
+                              " - Viernes 26 de Abril",
+                              style: TextStyle(
+                                // fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "  - Templo CCI SPS",
-                            style: TextStyle(
-                              // fontSize: 18,
-                              color: blanco,
-                              fontWeight: FontWeight.w300,
+                            Text(
+                              "  - Templo CCI SPS",
+                              style: TextStyle(
+                                // fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     ),
+
+                    // Shift Viernes 12 de Abril
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 100,
+                      ),
+                      child: Card(
+                        elevation: 1,
+                        color: gris,
+                        borderOnForeground: true,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              "Shift Night",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              " - Viernes 12 de Abril",
+                              style: TextStyle(
+                                // fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Text(
+                              "  - Kilo Bistro",
+                              style: TextStyle(
+                                // fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Externa('mapa'),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Otro evento sabado 13
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 100,
+                      ),
+                      child: Card(
+                        elevation: 1,
+                        color: gris,
+                        borderOnForeground: true,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              "Otro Evento/Actrividad",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              " - Sabado 13 de Abril",
+                              style: TextStyle(
+                                // fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Text(
+                              "  - Actividad de muestra como ejemplo de Witget plus",
+                              style: TextStyle(
+                                // fontSize: 18,
+                                color: blanco,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
