@@ -282,7 +282,7 @@ class Iglesia extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 23),
                 child: Card(
-                  color: Color.fromARGB(28, 255, 255, 255),
+                  color: Color.fromARGB(10, 255, 255, 255),
                   child: Column(
                     children: [
                       Text(

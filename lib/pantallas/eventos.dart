@@ -146,37 +146,39 @@ class Eventos extends StatelessWidget {
                       ),
                       child: Card(
                         elevation: 1,
-                        color: gris,
+                        color: Color.fromARGB(10, 255, 255, 255),
                         borderOnForeground: true,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Text(
-                              "Conferencia Especializada",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.bold,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                "Conferencia Especializada",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              " - Viernes 26 de Abril",
-                              style: TextStyle(
-                                // fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                " - Viernes 26 de Abril",
+                                style: TextStyle(
+                                  // fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "  - Templo CCI SPS",
-                              style: TextStyle(
-                                // fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                "  - Templo CCI SPS",
+                                style: TextStyle(
+                                  // fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
+                              const SizedBox(height: 20),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -188,38 +190,40 @@ class Eventos extends StatelessWidget {
                       ),
                       child: Card(
                         elevation: 1,
-                        color: gris,
+                        color: Color.fromARGB(10, 255, 255, 255),
                         borderOnForeground: true,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Text(
-                              "Shift Night",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.bold,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                "Shift Night",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              " - Viernes 12 de Abril",
-                              style: TextStyle(
-                                // fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                " - Viernes 12 de Abril",
+                                style: TextStyle(
+                                  // fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "  - Kilo Bistro",
-                              style: TextStyle(
-                                // fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                "  - Kilo Bistro",
+                                style: TextStyle(
+                                  // fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                            Externa('mapa'),
-                            const SizedBox(height: 20),
-                          ],
+                              Externa('mapa'),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -231,37 +235,39 @@ class Eventos extends StatelessWidget {
                       ),
                       child: Card(
                         elevation: 1,
-                        color: gris,
+                        color: Color.fromARGB(10, 255, 255, 255),
                         borderOnForeground: true,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Text(
-                              "Otro Evento/Actrividad",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.bold,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                "Otro Evento/Actrividad",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              " - Sabado 13 de Abril",
-                              style: TextStyle(
-                                // fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                " - Sabado 13 de Abril",
+                                style: TextStyle(
+                                  // fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "  - Actividad de muestra como ejemplo de Witget plus",
-                              style: TextStyle(
-                                // fontSize: 18,
-                                color: blanco,
-                                fontWeight: FontWeight.w300,
+                              Text(
+                                "  - ejemplo de Witget plus",
+                                style: TextStyle(
+                                  // fontSize: 18,
+                                  color: blanco,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
+                              const SizedBox(height: 20),
+                            ],
+                          ),
                         ),
                       ),
                     ),
