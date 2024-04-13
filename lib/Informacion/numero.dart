@@ -35,11 +35,15 @@ class Telefono extends StatelessWidget {
   }
 
   _launchURL() async {
-    const url = 'tel:+504 2510 1731';
-    if (await canLaunch(url)) {
-      await launch(url);
+    // const url = 'tel:+504 2510 1731';
+    final telUri = Uri(
+      scheme: 'tel',
+      path: '+504 2510 1731',
+    );
+    if (await canLaunchUrl(telUri)) {
+      await launchUrl(telUri);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $telUri';
     }
   }
 }
