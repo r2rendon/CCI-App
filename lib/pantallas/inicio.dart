@@ -7,14 +7,24 @@ class Inicio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: Decorations,
-      child: Center(
-        child: IconButton(
-          icon: Image.asset('assets/images/logo.png'),
-          iconSize: 50,
-          onPressed: () {
-            Navigator.of(context).push(_createRoute());
-          },
-        ),
+      child: Column(
+        children: [
+          Center(
+            child: IconButton(
+              icon: Image.asset('assets/images/logo.png'),
+              iconSize: 50,
+              onPressed: () {
+                Navigator.of(context).push(_createRoute());
+              },
+            ),
+          ),
+          Container(
+            child: Image.asset(
+              'assets/images/tap.png',
+              scale: 1,
+            ),
+          ),
+        ],
       ),
     );
   }
