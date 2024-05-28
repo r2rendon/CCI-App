@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class Eventos extends StatelessWidget {
+  Future<String> getSerieTitle() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('serieTitle').get();
+    if (snapshot.exists) {
+      return snapshot.value as String;
+    }
+
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +98,7 @@ class Eventos extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      "LA VERDADERA GRANDEZA",
+                      'LA VERDADERA GRANDEZA',
                       style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
@@ -140,6 +151,7 @@ class Eventos extends StatelessWidget {
                           color: blanco),
                     ),
                     // Conferencia especializada viernes 26 de Abril
+                    // EVENTOS PARES
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 100,
@@ -183,6 +195,7 @@ class Eventos extends StatelessWidget {
                       ),
                     ),
 
+                    // EVENTOS IMPARES
                     // Shift Viernes 12 de Abril
                     Padding(
                       padding: const EdgeInsets.only(

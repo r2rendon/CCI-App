@@ -56,7 +56,7 @@ class Transmisiones extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Divider(),
-              //Transmision
+              //TRANSMISION EN VIVO
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
@@ -107,7 +107,7 @@ class Transmisiones extends StatelessWidget {
                   ],
                 ),
               ),
-              //Predica anterior
+              //TRANSMISION ANTERIOR
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5),
                 child: Column(

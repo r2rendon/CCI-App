@@ -44,6 +44,7 @@ dependencies:
   flutter_inappwebview: 
   url_launcher: ^6.2.5
   firebase_database: ^10.4.9
+  firebase_core: ^2.27.0
 
 dev_dependencies:
   flutter_test:
