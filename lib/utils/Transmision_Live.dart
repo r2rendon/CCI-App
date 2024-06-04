@@ -1,6 +1,8 @@
+import 'package:cci_app/main.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class YoutubePlayerComponent extends StatefulWidget {
   const YoutubePlayerComponent({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class _YoutubePlayerState extends State<YoutubePlayerComponent> {
   void initState() {
     super.initState();
     _fetchVideoURL();
+    _listenForChanges();
   }
 
   Future<void> _fetchVideoURL() async {
@@ -28,7 +31,6 @@ class _YoutubePlayerState extends State<YoutubePlayerComponent> {
         if (value is String) {
           videoURL = value;
         } else if (value is Map<Object?, Object?>) {
-          // Assuming the map has a key "url" that contains the video URL
           videoURL = value['url'] as String?;
         } else {
           videoURL = '';
@@ -54,6 +56,49 @@ class _YoutubePlayerState extends State<YoutubePlayerComponent> {
         videoURL = '';
       });
     }
+  }
+
+  void _listenForChanges() {
+    final ref = FirebaseDatabase.instance.ref().child('trasmissionLive');
+    ref.onValue.listen((event) {
+      final newValue = event.snapshot.value;
+      if (newValue is String) {
+        videoURL = newValue;
+      } else if (newValue is Map<Object?, Object?>) {
+        videoURL = newValue['url'] as String?;
+      } else {
+        videoURL = '';
+      }
+
+      if (videoURL != null && videoURL!.isNotEmpty) {
+        final videoId = YoutubePlayer.convertUrlToId(videoURL!);
+        setState(() {
+          _controller?.load(videoId!);
+        });
+        _showNotification();
+      }
+    });
+  }
+
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      // 'your_channel_description',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Nueva Transmisión en Vivo',
+      'Haz clic para ver la transmisión en vivo.',
+      platformChannelSpecifics,
+    );
   }
 
   @override
