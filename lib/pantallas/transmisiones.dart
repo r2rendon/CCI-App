@@ -55,7 +55,9 @@ class Transmisiones extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Divider(),
+              Divider(
+                color: gris,
+              ),
               //TRANSMISION EN VIVO
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5),
@@ -67,7 +69,9 @@ class Transmisiones extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(),
+              Divider(
+                color: gris,
+              ),
               const SizedBox(height: 20),
 
               //Descripcion 1
@@ -85,11 +89,14 @@ class Transmisiones extends StatelessWidget {
                         color: blanco,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Divider(),
+                    const SizedBox(height: 40),
+                    Divider(
+                      color: gris,
+                    ),
                   ],
                 ),
               ),
+
               //Descripcion 2
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 23),
@@ -107,6 +114,7 @@ class Transmisiones extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
               //TRANSMISION ANTERIOR
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5),
@@ -119,6 +127,9 @@ class Transmisiones extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              Divider(
+                color: gris,
+              ),
             ],
           ),
         ),

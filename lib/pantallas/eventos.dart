@@ -1,16 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class Eventos extends StatelessWidget {
+  // Título de la Serie
   Future<String> getSerieTitle() async {
     final ref = FirebaseDatabase.instance.ref();
     final snapshot = await ref.child('serieTitle').get();
     if (snapshot.exists) {
       return snapshot.value as String;
     }
+    return '';
+  }
 
+  // Imagen de la Serie
+  Future<String> getSerieImage() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('serieImage').get();
+    if (snapshot.exists) {
+      return snapshot.value as String;
+    }
+    return '';
+  }
+
+  // Temas de la Serie
+  Future<String> getSerieThemes() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('serieThemes').get();
+    if (snapshot.exists) {
+      return snapshot.value as String;
+    }
+    return '';
+  }
+
+  // Eventos del mes
+  Future<String> getMonthlyEvents() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('monthlyEvents').get();
+    if (snapshot.exists) {
+      return snapshot.value as String;
+    }
     return '';
   }
 
@@ -33,12 +63,12 @@ class Eventos extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //Eventos del mes
+                    // Eventos del mes
                     Text(
                       "Eventos del mes",
                       style: titulo,
                     ),
-                    //logo cci
+                    // Logo CCI
                     Image.asset(
                       "assets/images/logo.png",
                       height: 45,
@@ -48,12 +78,8 @@ class Eventos extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
-              //Centro Cristiano Internacional
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
@@ -76,27 +102,25 @@ class Eventos extends StatelessWidget {
                       "Hola! Tú eres parte de la gran familia de CCI San Pedro Sula, y por esto queremos que estés enterado de todo lo que se viene! "
                       "Aquí encontrarás los próximos eventos para que puedas agendar las fechas y no te pierdas de nada.",
                       style: TextStyle(
-                        height: 0,
+                        height:
+                            1.5, // Ajusta la altura de la línea aquí si es necesario
                         fontSize: 18,
                         color: blanco,
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: gris,
+                    ),
                   ],
                 ),
               ),
-              //Serie implementado desde FireBase
+              // Serie implementada desde Firebase
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 23),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      "assets/images/Serie.png",
-                      opacity: AlwaysStoppedAnimation(.3),
-                    ),
-                    const SizedBox(height: 20),
                     Text(
                       'LA VERDADERA GRANDEZA',
                       style: TextStyle(
@@ -104,9 +128,17 @@ class Eventos extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: blanco),
                     ),
+                    const SizedBox(height: 20),
+
+                    Image.asset(
+                      "assets/images/Serie.png",
+                      opacity: AlwaysStoppedAnimation(.3),
+                    ),
+                    const SizedBox(height: 20),
+
                     Center(
                       child: Text(
-                        "Serie Mes de Abril",
+                        "Serie del Mes",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -140,8 +172,9 @@ class Eventos extends StatelessWidget {
                       style: TextStyle(color: barr),
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
-                    const SizedBox(height: 20),
+                    Divider(
+                      color: gris,
+                    ),
                     //           APARTADO DE EVENTOS
                     Text(
                       "EVENTOS DE ABRIL",
@@ -150,8 +183,7 @@ class Eventos extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: blanco),
                     ),
-                    // Conferencia especializada viernes 26 de Abril
-                    // EVENTOS PARES
+                    //              EVENTOS PARES
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 100,
@@ -195,8 +227,8 @@ class Eventos extends StatelessWidget {
                       ),
                     ),
 
-                    // EVENTOS IMPARES
-                    // Shift Viernes 12 de Abril
+                    //                  EVENTOS IMPARES
+                    //                  Shift Viernes 12 de Abril
                     Padding(
                       padding: const EdgeInsets.only(
                         right: 100,

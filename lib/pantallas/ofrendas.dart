@@ -68,7 +68,9 @@ class Ofrendas extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: gris,
+                    ),
                     Text(
                       "Proverbios 3:9-10",
                       textAlign: TextAlign.center,
@@ -87,7 +89,9 @@ class Ofrendas extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: gris,
+                    ),
                   ],
                 ),
               ),
@@ -105,6 +109,9 @@ class Ofrendas extends StatelessWidget {
                     "assets/images/atlantida.png",
                   ),
                   const SizedBox(height: 20),
+                  Divider(
+                    color: gris,
+                  ),
                 ],
               ),
             ],

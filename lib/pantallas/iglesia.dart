@@ -72,7 +72,9 @@ class Iglesia extends StatelessWidget {
                   ),
                 ),
               ),
-              Divider(),
+              Divider(
+                color: gris,
+              ),
 
               //Nuestro Pastor
               Padding(
@@ -157,7 +159,9 @@ class Iglesia extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Divider(),
+                      Divider(
+                        color: gris,
+                      ),
                     ],
                   ),
                 ),
@@ -173,7 +177,9 @@ class Iglesia extends StatelessWidget {
                       opacity: AlwaysStoppedAnimation(.3),
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: gris,
+                    ),
                   ],
                 ),
               ),
@@ -214,7 +220,9 @@ class Iglesia extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: gris,
+                    ),
                   ],
                 ),
               ),
