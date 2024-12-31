@@ -4,136 +4,123 @@ import '../utils/Transmision_Live.dart';
 import '../utils/Transmision_Reciente.dart';
 
 class Transmisiones extends StatelessWidget {
+  const Transmisiones({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: negro,
       body: SingleChildScrollView(
         child: Container(
-          decoration: Decorations,
+          decoration: decorations,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: verticalPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "En vivo",
-                      style: titulo,
-                    ),
-                    //logo cci
-                    Image.asset(
-                      "assets/images/logo.png",
-                      height: 45,
-                      color: blanco,
-                    ),
-                  ],
-                ),
-              ),
+              _buildHeader(),
               const SizedBox(height: 20),
-              //Descripcion de funtion
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "San Pedro Sula",
-                      style: TextStyle(
-                        color: blanco,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildLocation(),
               const SizedBox(height: 20),
-              Divider(
-                color: gris,
-              ),
-              //TRANSMISION EN VIVO
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    YoutubePlayerComponent(),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-              Divider(
-                color: gris,
-              ),
-              const SizedBox(height: 20),
-
-              //Descripcion 1
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 23),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Hola Familia! Aquí puedes conectarte a nuestras transmisiones en vivo de "
-                      "todas las celebraciones para que no te pierdas esa palabra que Dios tiene para ti. Disfrutemos juntos de este tiempo!",
-                      style: TextStyle(
-                        height: 0,
-                        fontSize: 18,
-                        color: blanco,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Divider(
-                      color: gris,
-                    ),
-                  ],
-                ),
-              ),
-
-              //Descripcion 2
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 23),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Aqui puedes ver nuestra mensaje mas reciente!",
-                      style: TextStyle(
-                        height: 0,
-                        fontSize: 18,
-                        color: blanco,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              //TRANSMISION ANTERIOR
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    YoutubePlayerComponent1(),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Divider(
-                color: gris,
-              ),
+              _buildLiveStream(),
+              _buildWelcomeMessage(),
+              _buildRecentStream(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: verticalPadding,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "En vivo",
+            style: titulo,
+          ),
+          Image.asset(
+            "assets/images/logo.png",
+            height: 45,
+            color: blanco,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocation() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Text(
+        "San Pedro Sula",
+        style: TextStyle(color: blanco),
+      ),
+    );
+  }
+
+  Widget _buildLiveStream() {
+    return Column(
+      children: const [
+        Divider(color: gris),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          child: YoutubePlayerComponent(),
+        ),
+        SizedBox(height: 20),
+        Divider(color: gris),
+      ],
+    );
+  }
+
+  Widget _buildWelcomeMessage() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 23),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            "Hola Familia! Aquí puedes conectarte a nuestras transmisiones en vivo de "
+            "todas las celebraciones para que no te pierdas esa palabra que Dios tiene para ti. "
+            "Disfrutemos juntos de este tiempo!",
+            style: TextStyle(
+              height: 1.5,
+              fontSize: 18,
+              color: blanco,
+            ),
+          ),
+          SizedBox(height: 20),
+          Divider(color: gris),
+          SizedBox(height: 20),
+          Text(
+            "Aquí puedes ver nuestro mensaje más reciente!",
+            style: TextStyle(
+              height: 1.5,
+              fontSize: 18,
+              color: blanco,
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentStream() {
+    return Column(
+      children: const [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          child: YoutubePlayerComponent1(),
+        ),
+        SizedBox(height: 20),
+        Divider(color: gris),
+      ],
     );
   }
 }

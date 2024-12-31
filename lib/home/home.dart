@@ -8,6 +8,8 @@ import '../pantallas/ofrendas.dart';
 import '../pantallas/transmisiones.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   HomeState createState() => HomeState();
 }
@@ -15,7 +17,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   int _currentIndex = 0;
 
-  final screens = [
+  final screens = const [
     Eventos(),
     Transmisiones(),
     Iglesia(),
@@ -26,7 +28,7 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+      backgroundColor: negro,
       body: screens[_currentIndex],
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -36,7 +38,11 @@ class HomeState extends State<Home> {
           selectedIndex: _currentIndex,
           tabBorderRadius: 100,
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          onTabChange: (index) => {setState(() => _currentIndex = index)},
+          onTabChange: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
           tabs: const [
             GButton(
               icon: Icons.groups_2_outlined,
@@ -47,7 +53,7 @@ class HomeState extends State<Home> {
             ),
             GButton(
               icon: Icons.videocam_outlined,
-              // backgroundColor: barr,
+              backgroundColor: barr,
               padding: EdgeInsets.all(15.0),
               iconActiveColor: negro,
             ),

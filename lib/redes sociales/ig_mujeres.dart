@@ -1,49 +1,16 @@
-// import 'package:cci_app/home/constantes.dart';
-import 'package:cci_app/home/constantes.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../widgets/social_link.dart';
 
-// ignore: must_be_immutable
 class IgMujeres extends StatelessWidget {
-  String ig;
-  IgMujeres(this.ig);
+  final String socialId;
+  const IgMujeres(this.socialId, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final barraiconos = Container(
-      child: Column(
-        children: [
-          InkWell(
-            child: Container(
-              child: Tooltip(
-                child: Text(
-                  'Conoce más de nosotros!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: blanco,
-                  ),
-                ),
-                message: 'Instagram: ' + ig.toString(),
-              ),
-            ),
-            onTap: () {
-              _launchURL();
-            },
-          ),
-        ],
-      ),
+    return SocialLink(
+      socialId: socialId,
+      url: 'https://www.instagram.com/mujeresenaccioncci',
+      platform: 'Instagram',
     );
-    return barraiconos;
-  }
-
-  _launchURL() async {
-    const url =
-        'https://www.instagram.com/mujeresenaccioncci?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
-    Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'No se puede abrir $url';
-    }
   }
 }

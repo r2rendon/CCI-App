@@ -15,25 +15,28 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(milliseconds: (1.2 * 1000).round()), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Inicio()),
-      );
-    });
+    _navigateToHome();
+  }
+
+  void _navigateToHome() {
+    Timer(duracion, () {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const Inicio(),),
+        );
+      }
+    },);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: negro,
-      body: content(),
-    );
-  }
-
-  Widget content() {
-    return Center(
-      child: Container(
-        child: Lottie.asset("assets/in.json"),
+      body: Center(
+        child: Lottie.asset(
+          "assets/in.json",
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

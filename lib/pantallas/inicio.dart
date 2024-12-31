@@ -1,53 +1,65 @@
-import 'package:cci_app/home/constantes.dart';
 import 'package:flutter/material.dart';
+import '../home/constantes.dart';
 import '../home/home.dart';
 
 class Inicio extends StatelessWidget {
+  const Inicio({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: Decorations,
-      child: Column(
-        children: [
-          Center(
-            child: IconButton(
-              icon: Image.asset('assets/images/logo.png'),
-              iconSize: 50,
-              onPressed: () {
-                Navigator.of(context).push(_createRoute());
-              },
-            ),
-          ),
-          Container(
-            child: Image.asset(
-              'assets/images/tap.png',
-              scale: 1,
-            ),
-          ),
-        ],
+    return Scaffold(
+      body: Container(
+        decoration: decorations,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLogo(context),
+            const SizedBox(height: 20),
+            _buildTapImage(),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildLogo(BuildContext context) {
+    return Center(
+      child: IconButton(
+        icon: Image.asset('assets/images/logo.png'),
+        iconSize: 150,
+        onPressed: () => _navigateToHome(context),
+      ),
+    );
+  }
+
+  Widget _buildTapImage() {
+    return Image.asset(
+      'assets/images/tap.png',
+      scale: 1,
+      height: 100,
+    );
+  }
+
+  void _navigateToHome(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      _createRoute(),
     );
   }
 }
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => Home(),
+    pageBuilder: (context, animation, secondaryAnimation) => const Home(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(
-        0.0,
-        1.0,
-      );
+      const begin = Offset(0.0, 1.0);
       const end = Offset.zero;
-      const curve = Curves.ease;
+      const curve = Curves.easeInOut;
 
-      var tween = Tween(
+      final tween = Tween(
         begin: begin,
         end: end,
       ).chain(
-        CurveTween(
-          curve: curve,
-        ),
+        CurveTween(curve: curve),
       );
 
       return SlideTransition(
@@ -55,5 +67,6 @@ Route _createRoute() {
         child: child,
       );
     },
+    transitionDuration: const Duration(milliseconds: 500),
   );
 }
