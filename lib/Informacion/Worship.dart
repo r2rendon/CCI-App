@@ -11,8 +11,9 @@ class FormWorship extends StatefulWidget {
 class _FormWorshipState extends State<FormWorship> {
   double _progress = 0;
   late InAppWebViewController _webViewController;
-  
-  final String _formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeSv6nSoPoHBHAw0vYOHGWHDyyNmG39IItbdUNhba5JctsR9g/viewform';
+
+  final String _formUrl =
+      'https://docs.google.com/forms/d/e/1FAIpQLSeSv6nSoPoHBHAw0vYOHGWHDyyNmG39IItbdUNhba5JctsR9g/viewform';
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,9 @@ class _FormWorshipState extends State<FormWorship> {
             children: [
               InAppWebView(
                 initialUrlRequest: URLRequest(
-                  url: Uri.parse(_formUrl),
+                  url: WebUri.uri(
+                    Uri.parse(_formUrl),
+                  ),
                 ),
                 onWebViewCreated: (controller) {
                   _webViewController = controller;
@@ -60,7 +63,8 @@ class _FormWorshipState extends State<FormWorship> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Error al cargar el formulario. Por favor, intenta de nuevo.'),
+        content:
+            Text('Error al cargar el formulario. Por favor, intenta de nuevo.'),
         duration: Duration(seconds: 3),
       ),
     );

@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import '../Informacion/produccion.dart';
 import '../Informacion/Worship.dart';
 import '../home/constantes.dart';
-import '../redes sociales/fb_hombres.dart';
 import '../redes sociales/ig_alive.dart';
-import '../redes sociales/ig_matrimonios.dart';
-import '../redes sociales/ig_mujeres.dart';
-import '../redes sociales/ig_next.dart';
-import '../redes sociales/ig_shift.dart';
 
 class Ministerios extends StatelessWidget {
   const Ministerios({super.key});

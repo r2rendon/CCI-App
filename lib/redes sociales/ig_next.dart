@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/social_link.dart';
+// import '../widgets/social_link.dart';
+import '../utils/social_link.dart';
 
 class IgNext extends StatelessWidget {
   final String socialId;

@@ -30,11 +30,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'CCI San Pedro Sula',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-    ),
-    home: const SplashScreen(),
-  );
+        debugShowCheckedModeBanner: false,
+        title: 'CCI San Pedro Sula',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const SplashScreen(),
+      );
 }
