@@ -11,8 +11,9 @@ class FormProduccion extends StatefulWidget {
 class _FormProduccionState extends State<FormProduccion> {
   double _progress = 0;
   late InAppWebViewController _webViewController;
-  
-  final String _formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeSv6nSoPoHBHAw0vYOHGWHDyyNmG39IItbdUNhba5JctsR9g/viewform';
+
+  final String _formUrl =
+      'https://docs.google.com/forms/d/e/1FAIpQLSeSv6nSoPoHBHAw0vYOHGWHDyyNmG39IItbdUNhba5JctsR9g/viewform';
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,9 @@ class _FormProduccionState extends State<FormProduccion> {
             children: [
               InAppWebView(
                 initialUrlRequest: URLRequest(
-                  url: Uri.parse(_formUrl),
+                  url: WebUri.uri(
+                    Uri.parse(_formUrl),
+                  ),
                 ),
                 onWebViewCreated: (controller) {
                   _webViewController = controller;
