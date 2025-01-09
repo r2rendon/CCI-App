@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
 
-class Eventos extends StatefulWidget { // Cambiar a StatefulWidget para manejar estados
+class Eventos extends StatefulWidget {
   const Eventos({super.key});
 
   @override
@@ -11,7 +11,6 @@ class Eventos extends StatefulWidget { // Cambiar a StatefulWidget para manejar 
 }
 
 class _EventosState extends State<Eventos> {
-  // Controladores para los datos de Firebase
   final _database = FirebaseDatabase.instance.ref();
   String _serieTitle = '';
   String _serieImage = '';
@@ -49,7 +48,8 @@ class _EventosState extends State<Eventos> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Error al cargar los datos. Por favor, intenta de nuevo.'),
+        content:
+            Text('Error al cargar los datos. Por favor, intenta de nuevo.'),
         duration: Duration(seconds: 3),
       ),
     );
@@ -145,18 +145,21 @@ class _EventosState extends State<Eventos> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'LA VERDADERA GRANDEZA',
-            style: TextStyle(
+          Text(
+            _serieTitle.toUpperCase(),
+            style: const TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.bold,
               color: blanco,
             ),
           ),
           const SizedBox(height: 20),
-          Image.asset(
-            "assets/images/Serie.png",
-            opacity: const AlwaysStoppedAnimation(.3),
+          Image.network(
+            _serieImage,
+            errorBuilder: (context, error, stackTrace) => Image.asset(
+              "assets/images/Serie.png",
+              opacity: const AlwaysStoppedAnimation(.3),
+            ),
           ),
           const SizedBox(height: 20),
           _buildSeriesContent(),
@@ -167,9 +170,10 @@ class _EventosState extends State<Eventos> {
   }
 
   Widget _buildSeriesContent() {
+    final themes = _serieThemes.split(',');
     return Column(
-      children: const [
-        Center(
+      children: [
+        const Center(
           child: Text(
             "Serie del Mes",
             textAlign: TextAlign.center,
@@ -180,24 +184,19 @@ class _EventosState extends State<Eventos> {
             ),
           ),
         ),
-        Text(
-          "No hay mejor manera de servir",
-          style: TextStyle(
-            color: blanco,
-            fontSize: 18,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-        Text("1. Como el que sirve.", style: TextStyle(color: barr)),
-        Text("2. Acciones Sinceras.", style: TextStyle(color: barr)),
-        Text("3. Unidos.", style: TextStyle(color: barr)),
-        Text("4. Confiables.", style: TextStyle(color: barr)),
-        SizedBox(height: 20),
+        ...themes
+            .map((theme) => Text(
+                  theme.trim(),
+                  style: const TextStyle(color: barr),
+                ))
+            .toList(),
+        const SizedBox(height: 20),
       ],
     );
   }
 
   Widget _buildEventsSection() {
+    final events = _monthlyEvents.split('|');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 23),
       child: Column(
@@ -211,32 +210,28 @@ class _EventosState extends State<Eventos> {
               color: blanco,
             ),
           ),
-          _buildEventCard(
-            "Conferencia Especializada",
-            "Viernes 26 de Abril",
-            "Templo CCI SPS",
-            true,
-          ),
-          _buildEventCard(
-            "Shift Night",
-            "Viernes 12 de Abril",
-            "Kilo Bistro",
-            false,
-            showMap: true,
-          ),
-          _buildEventCard(
-            "Otro Evento/Actividad",
-            "Sabado 13 de Abril",
-            "ejemplo de Widget plus",
-            true,
-          ),
+          ...events.asMap().entries.map((entry) {
+            final eventData = entry.value.split(',');
+            if (eventData.length >= 3) {
+              return _buildEventCard(
+                eventData[0].trim(),
+                eventData[1].trim(),
+                eventData[2].trim(),
+                entry.key % 2 == 0,
+                showMap: eventData.length > 3 && eventData[3].trim() == 'true',
+              );
+            }
+            return const SizedBox.shrink();
+          }).toList(),
           const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _buildEventCard(String title, String date, String location, bool isRight, {bool showMap = false}) {
+  Widget _buildEventCard(
+      String title, String date, String location, bool isRight,
+      {bool showMap = false}) {
     return Padding(
       padding: EdgeInsets.only(
         left: isRight ? 100 : 0,
@@ -257,14 +252,14 @@ class _EventosState extends State<Eventos> {
               ),
             ),
             Text(
-              " - $date",
+              date,
               style: const TextStyle(
                 color: blanco,
                 fontWeight: FontWeight.w300,
               ),
             ),
             Text(
-              "  - $location",
+              location,
               style: const TextStyle(
                 color: blanco,
                 fontWeight: FontWeight.w300,
