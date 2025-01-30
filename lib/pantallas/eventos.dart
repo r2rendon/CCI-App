@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
+import '../services/aws_services.dart';
 
 class Eventos extends StatefulWidget {
   const Eventos({super.key});
@@ -16,11 +17,33 @@ class _EventosState extends State<Eventos> {
   String _serieImage = '';
   String _serieThemes = '';
   String _monthlyEvents = '';
+  List<Anuncio> _anuncios = [];
+  bool _loadingAnuncio = true;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    if (_anuncios.isEmpty) {
+      _loadingAnuncios();
+    }else{
+      setState(() {
+        _loadingAnuncio = false;
+      });
+    }
+  }
+
+  Future<void> _loadingAnuncios() async {
+    try {
+      _anuncios = await fetchAnuncios();
+      print("Se cargaron los anuncios");
+      setState(() {
+        _loadingAnuncio = false;
+      });
+    } catch (e) {
+      debugPrint('Error cargando anuncios: $e');
+      _showErrorMessage();
+    }
   }
 
   Future<void> _loadData() async {
@@ -74,6 +97,7 @@ class _EventosState extends State<Eventos> {
                 _buildLocation(),
                 const SizedBox(height: 20),
                 _buildWelcomeMessage(),
+                _buildAnuncios(),
                 _buildSeriesSection(),
                 _buildEventsSection(),
               ],
@@ -270,6 +294,85 @@ class _EventosState extends State<Eventos> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAnuncios() {
+    if (_loadingAnuncio) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (_anuncios.isEmpty) {
+      return const Center(
+        child: Text(
+          'No hay anuncios disponibles',
+          style: TextStyle(color: blanco),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 23),
+        child: Text(
+        "Anuncios",
+        style: TextStyle(
+          fontSize: 23,
+          fontWeight: FontWeight.bold,
+          color: blanco,
+        ),
+        ),
+      ),
+      SizedBox(
+        height: 200,
+        child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _anuncios.length,
+        itemBuilder: (context, index) {
+          final anuncio = _anuncios[index];
+          return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Card(
+            elevation: 5,
+            child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(
+              anuncio.imagenUrl,
+              width: 300,
+              height: 150,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                Image.asset(
+                "assets/images/transmision.png",
+                width: 300,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+              ),
+              Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                anuncio.titulo,
+                style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                ),
+              ),
+              ),
+            ],
+            ),
+          ),
+          );
+        },
+        ),
+      ),
+      ],
     );
   }
 }
