@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../home/constantes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WhatsApp extends StatelessWidget {
+final phoneProvider = Provider<String>((ref) => '31750015');
+
+class WhatsApp extends ConsumerWidget {
   final String mapa;
   const WhatsApp(this.mapa, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final phoneNumber = ref.watch(phoneProvider);
     return InkWell(
-      onTap: () => _launchWhatsApp(context),
+      onTap: () => _launchWhatsApp(context, phoneNumber),
       child: Tooltip(
         message: 'WhatsApp: $mapa',
         child: const Text(
           'Acompañamiento Espiritual',
           textAlign: TextAlign.center,
-          style: TextStyle(color: blanco),
+          style: TextStyle(color: Colors.white),
         ),
       ),
     );
   }
 
-  Future<void> _launchWhatsApp(BuildContext context) async {
-    const phoneNumber = '31750015';
-    const url =
-        'https://api.whatsapp.com/send/?phone=$phoneNumber&text&type=phone_number&app_absent=0';
+  Future<void> _launchWhatsApp(BuildContext context, String number) async {
+    final url =
+        'https://api.whatsapp.com/send/?phone=$number&text&type=phone_number&app_absent=0';
     final uri = Uri.parse(url);
 
     try {

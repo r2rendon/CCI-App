@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'package:cci_app/home/constantes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../pantallas/inicio.dart';
 
-class SplashScreen extends StatefulWidget {
+// Provider para manejar el estado de navegación
+final splashNavigationProvider = StateProvider<bool>((ref) => false);
+
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  SplashScreenState createState() => SplashScreenState();
+  ConsumerState<SplashScreen> createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -21,15 +25,22 @@ class SplashScreenState extends State<SplashScreen> {
   void _navigateToHome() {
     Timer(duracion, () {
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const Inicio(),),
-        );
+        ref.read(splashNavigationProvider.notifier).state = true;
       }
-    },);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Escuchar cambios en el provider
+    ref.listen(splashNavigationProvider, (previous, next) {
+      if (next) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const Inicio()),
+        );
+      }
+    });
+
     return Scaffold(
       backgroundColor: negro,
       body: Center(

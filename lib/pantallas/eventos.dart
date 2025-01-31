@@ -1,64 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
-import '../services/aws_services.dart';
+import '../services/notifierProvider.dart';
 
-class Eventos extends StatefulWidget {
-  const Eventos({super.key});
+class Eventos extends ConsumerStatefulWidget {
+  const Eventos({Key? key}) : super(key: key);
 
   @override
-  State<Eventos> createState() => _EventosState();
+  ConsumerState<Eventos> createState() => _EventosState();
 }
 
-class _EventosState extends State<Eventos> {
-  final _database = FirebaseDatabase.instance.ref();
+class _EventosState extends ConsumerState<Eventos> {
+  // final _database = FirebaseDatabase.instance.ref();
   String _serieTitle = '';
   String _serieImage = '';
   String _serieThemes = '';
   String _monthlyEvents = '';
-  List<Anuncio> _anuncios = [];
-  bool _loadingAnuncio = true;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
-    if (_anuncios.isEmpty) {
-      _loadingAnuncios();
-    }else{
-      setState(() {
-        _loadingAnuncio = false;
-      });
-    }
   }
 
-  Future<void> _loadingAnuncios() async {
-    try {
-      _anuncios = await fetchAnuncios();
-      print("Se cargaron los anuncios");
-      setState(() {
-        _loadingAnuncio = false;
-      });
-    } catch (e) {
-      debugPrint('Error cargando anuncios: $e');
-      _showErrorMessage();
-    }
-  }
 
   Future<void> _loadData() async {
     try {
-      final serieTitle = await _database.child('serieTitle').get();
-      final serieImage = await _database.child('serieImage').get();
-      final serieThemes = await _database.child('serieThemes').get();
-      final monthlyEvents = await _database.child('monthlyEvents').get();
-
+      // Here you would call your AWS service methods
+      // Example:
+      // final data = await awsService.getEventData();
       if (mounted) {
         setState(() {
-          _serieTitle = serieTitle.value?.toString() ?? '';
-          _serieImage = serieImage.value?.toString() ?? '';
-          _serieThemes = serieThemes.value?.toString() ?? '';
-          _monthlyEvents = monthlyEvents.value?.toString() ?? '';
+          // Update state with AWS data when implemented
+          _serieTitle = 'Test Title';
+          _serieImage = 'Test Image';
+          _serieThemes = 'Test Themes';
+          _monthlyEvents = 'Test Events';
         });
       }
     } catch (e) {
@@ -80,6 +57,9 @@ class _EventosState extends State<Eventos> {
 
   @override
   Widget build(BuildContext context) {
+    final noticias = ref.watch(proveedorNoticias);
+    print("tamaño de noticias");
+    print(noticias.length);
     return Scaffold(
       backgroundColor: negro,
       body: RefreshIndicator(
@@ -97,7 +77,7 @@ class _EventosState extends State<Eventos> {
                 _buildLocation(),
                 const SizedBox(height: 20),
                 _buildWelcomeMessage(),
-                _buildAnuncios(),
+                _buildAnuncios(noticias),
                 _buildSeriesSection(),
                 _buildEventsSection(),
               ],
@@ -297,22 +277,8 @@ class _EventosState extends State<Eventos> {
     );
   }
 
-  Widget _buildAnuncios() {
-    if (_loadingAnuncio) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (_anuncios.isEmpty) {
-      return const Center(
-        child: Text(
-          'No hay anuncios disponibles',
-          style: TextStyle(color: blanco),
-        ),
-      );
-    }
-
+  Widget _buildAnuncios(List<dynamic> _anuncios) {  
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

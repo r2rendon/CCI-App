@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Informacion/produccion.dart';
 import '../Informacion/Worship.dart';
 import '../home/constantes.dart';
 import '../redes sociales/ig_alive.dart';
 
-class Ministerios extends StatelessWidget {
+class Ministerios extends ConsumerWidget {
   const Ministerios({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: negro,
       body: SingleChildScrollView(

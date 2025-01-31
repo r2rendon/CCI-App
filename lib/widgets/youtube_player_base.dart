@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class YoutubePlayerBase extends StatelessWidget {
+class YoutubePlayerBase extends ConsumerWidget {
   final String videoId;
   final String title;
 
@@ -12,7 +13,7 @@ class YoutubePlayerBase extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return YoutubePlayer(
       controller: YoutubePlayerController(
         initialVideoId: videoId,

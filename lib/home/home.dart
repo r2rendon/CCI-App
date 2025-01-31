@@ -1,48 +1,41 @@
-import 'package:cci_app/home/constantes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../pantallas/eventos.dart';
 import '../pantallas/iglesia.dart';
 import '../pantallas/ministerios.dart';
 import '../pantallas/ofrendas.dart';
 import '../pantallas/transmisiones.dart';
+import 'constantes.dart';
 
-class Home extends StatefulWidget {
+final currentIndexProvider = StateProvider<int>((ref) => 0);
+
+class Home extends ConsumerWidget {
   const Home({super.key});
 
   @override
-  HomeState createState() => HomeState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentIndex = ref.watch(currentIndexProvider);
+    final screens = const [
+      Eventos(),
+      Transmisiones(),
+      Iglesia(),
+      Ministerios(),
+      Ofrendas(),
+    ];
 
-class HomeState extends State<Home> {
-  int _currentIndex = 0;
-
-  final screens = const [
-    Eventos(),
-    Transmisiones(),
-    Iglesia(),
-    Ministerios(),
-    Ofrendas(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: negro,
-      body: screens[_currentIndex],
+      body: screens[currentIndex],
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: GNav(
           tabBackgroundColor: blanco,
           color: blanco,
-          selectedIndex: _currentIndex,
+          selectedIndex: currentIndex,
           tabBorderRadius: 100,
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          onTabChange: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
+          onTabChange: (index) => ref.read(currentIndexProvider.notifier).state = index,
           tabs: const [
             GButton(
               icon: Icons.groups_2_outlined,

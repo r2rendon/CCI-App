@@ -1,13 +1,14 @@
 import 'package:cci_app/home/constantes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Telefono extends StatelessWidget {
+class Telefono extends ConsumerWidget {
   final String celular;
   const Telefono(this.celular, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       child: Column(
         children: [

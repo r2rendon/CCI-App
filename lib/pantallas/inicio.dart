@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../home/constantes.dart';
 import '../home/home.dart';
 
-class Inicio extends StatelessWidget {
+class Inicio extends ConsumerWidget {
   const Inicio({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Container(
         decoration: decorations,
@@ -55,13 +56,9 @@ Route _createRoute() {
       const end = Offset.zero;
       const curve = Curves.easeInOut;
 
-      final tween = Tween(
-        begin: begin,
-        end: end,
-      ).chain(
+      final tween = Tween(begin: begin, end: end).chain(
         CurveTween(curve: curve),
       );
-
       return SlideTransition(
         position: animation.drive(tween),
         child: child,

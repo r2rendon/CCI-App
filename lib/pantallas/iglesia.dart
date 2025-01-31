@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Informacion/mapa.dart';
 import '../Informacion/whatsapp.dart';
 import '../Informacion/numero.dart';
 import '../home/constantes.dart';
 
-class Iglesia extends StatelessWidget {
+class Iglesia extends ConsumerWidget {
   const Iglesia({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: negro,
       body: SingleChildScrollView(

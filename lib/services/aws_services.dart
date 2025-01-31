@@ -25,12 +25,15 @@ Future<List<Anuncio>> fetchAnuncios() async {
 
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body);
-    return data.map((anuncio) => Anuncio(
+    final res= data.map((anuncio) => Anuncio(
       imagenUrl: anuncio['imagenUrl'],
       titulo: anuncio['titulo'],
       fecha: DateTime.parse(anuncio['fecha']),
       descripcion: anuncio['descripcion'],
     )).toList();
+    // print(res);
+    print("Anuncios cargados: ${res.length}");
+    return res;
   } else {
     throw Exception('Failed to load Anuncios');
   }

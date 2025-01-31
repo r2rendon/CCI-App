@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-class FormProduccion extends StatefulWidget {
-  const FormProduccion({super.key});
+final progressProvider = StateProvider<double>((ref) => 0);
+
+class FormProduccion extends ConsumerStatefulWidget {
+  const FormProduccion({Key? key}) : super(key: key);
 
   @override
-  State<FormProduccion> createState() => _FormProduccionState();
+  ConsumerState<FormProduccion> createState() => _FormProduccionState();
 }
 
-class _FormProduccionState extends State<FormProduccion> {
-  double _progress = 0;
+class _FormProduccionState extends ConsumerState<FormProduccion> {
   late InAppWebViewController _webViewController;
-
-  final String _formUrl =
+  final _formUrl =
       'https://docs.google.com/forms/d/e/1FAIpQLSeSv6nSoPoHBHAw0vYOHGWHDyyNmG39IItbdUNhba5JctsR9g/viewform';
 
   @override
   Widget build(BuildContext context) {
+    final progress = ref.watch(progressProvider);
+
     return WillPopScope(
       onWillPop: () async {
         if (await _webViewController.canGoBack()) {
@@ -30,28 +33,19 @@ class _FormProduccionState extends State<FormProduccion> {
           body: Stack(
             children: [
               InAppWebView(
-                initialUrlRequest: URLRequest(
-                  url: WebUri.uri(
-                    Uri.parse(_formUrl),
-                  ),
-                ),
+                initialUrlRequest: URLRequest(url: WebUri(_formUrl)),
                 onWebViewCreated: (controller) {
                   _webViewController = controller;
                 },
-                onProgressChanged: (controller, progress) {
-                  setState(() {
-                    _progress = progress / 100;
-                  });
+                onProgressChanged: (controller, value) {
+                  ref.read(progressProvider.notifier).state = value / 100;
                 },
                 onLoadError: (controller, url, code, message) {
                   debugPrint('Error cargando formulario: $message');
-                  // Mostrar mensaje de error al usuario
                 },
               ),
-              if (_progress < 1)
-                LinearProgressIndicator(
-                  value: _progress,
-                ),
+              if (progress < 1)
+                LinearProgressIndicator(value: progress),
             ],
           ),
         ),

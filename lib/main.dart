@@ -1,40 +1,54 @@
 import 'package:cci_app/home/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'utils/Anuncio.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+// Providers
+final notificationsPluginProvider = Provider<FlutterLocalNotificationsPlugin>((ref) {
+  return FlutterLocalNotificationsPlugin();
+});
 
-void main() async {
+// Theme provider
+final themeProvider = Provider<ThemeData>((ref) {
+  return ThemeData(
+    primarySwatch: Colors.blue,
+    // Add more theme configurations here
+  );
+});
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  
+  // Initialize notifications
+  const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+  final initSettings = InitializationSettings(android: androidSettings);
+  
+  final notifications = FlutterLocalNotificationsPlugin();
+  await notifications.initialize(initSettings);
 
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  runApp(MyApp());
+  // Initialize Hive
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(AnuncioAdapter());
+  }
+  // await Hive.openBox('noticiasBox');
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'CCI San Pedro Sula',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const SplashScreen(),
-      );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
+    
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'CCI San Pedro Sula',
+      theme: theme,
+      home: const SplashScreen(),
+    );
+  }
 }

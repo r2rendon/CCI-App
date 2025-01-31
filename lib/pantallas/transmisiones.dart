@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../home/constantes.dart';
 import '../utils/Transmision_Live.dart';
 import '../utils/Transmision_Reciente.dart';
 
-class Transmisiones extends StatelessWidget {
+class Transmisiones extends ConsumerWidget {
   const Transmisiones({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: negro,
       body: SingleChildScrollView(

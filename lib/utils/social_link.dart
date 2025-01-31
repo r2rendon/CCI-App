@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../home/constantes.dart';
 
-class SocialLink extends StatelessWidget {
+class SocialLink extends ConsumerWidget {
   final String socialId;
   final String url;
   final String platform;
@@ -15,7 +16,7 @@ class SocialLink extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(

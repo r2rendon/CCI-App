@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../home/constantes.dart';
 
-class Ofrendas extends StatelessWidget {
+class Ofrendas extends ConsumerWidget {
   const Ofrendas({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: negro,
       body: SingleChildScrollView(
