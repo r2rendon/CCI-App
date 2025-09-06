@@ -8,117 +8,137 @@ class Transmisiones extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: negro,
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: decorations,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              _buildHeader(),
-              const SizedBox(height: 20),
-              _buildLocation(),
-              const SizedBox(height: 20),
-              _buildLiveStream(),
-              _buildWelcomeMessage(),
-              _buildRecentStream(),
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            decoration: decorations,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenHeight * 0.02),
+                _buildHeader(screenWidth, screenHeight),
+                SizedBox(height: screenHeight * 0.02),
+                _buildLocation(screenWidth),
+                SizedBox(height: screenHeight * 0.02),
+                _buildLiveStream(screenWidth, screenHeight),
+                _buildWelcomeMessage(screenWidth),
+                _buildRecentStream(screenWidth, screenHeight),
+                SizedBox(height: screenHeight * 0.05),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(double screenWidth, double screenHeight) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: verticalPadding,
+      padding: EdgeInsets.symmetric(
+        horizontal: getHorizontalPadding(screenWidth),
+        vertical: getVerticalPadding(screenWidth),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "En vivo",
-            style: titulo,
+          Expanded(
+            child: Text(
+              "En vivo",
+              style: getTitulo(screenWidth),
+            ),
           ),
           Image.asset(
             "assets/images/logo.png",
-            height: 45,
+            height: screenHeight * 0.05,
             color: blanco,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.videocam,
+                size: screenHeight * 0.05,
+                color: blanco,
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLocation() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+  Widget _buildLocation(double screenWidth) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getHorizontalPadding(screenWidth)),
       child: Text(
         "San Pedro Sula",
-        style: TextStyle(color: blanco),
+        style: TextStyle(
+          color: blanco,
+          fontSize: screenWidth < 360 ? 14 : 16,
+        ),
       ),
     );
   }
 
-  Widget _buildLiveStream() {
+  Widget _buildLiveStream(double screenWidth, double screenHeight) {
     return Column(
-      children: const [
+      children: [
         Divider(color: gris),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5),
-          child: YoutubePlayerComponent(),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+          child: const YoutubePlayerComponent(),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: screenHeight * 0.02),
         Divider(color: gris),
       ],
     );
   }
 
-  Widget _buildWelcomeMessage() {
+  Widget _buildWelcomeMessage(double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 23),
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             "Hola Familia! Aquí puedes conectarte a nuestras transmisiones en vivo de "
             "todas las celebraciones para que no te pierdas esa palabra que Dios tiene para ti. "
             "Disfrutemos juntos de este tiempo!",
             style: TextStyle(
               height: 1.5,
-              fontSize: 18,
+              fontSize: screenWidth < 360 ? 16 : 18,
               color: blanco,
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: screenWidth * 0.05),
           Divider(color: gris),
-          SizedBox(height: 20),
+          SizedBox(height: screenWidth * 0.05),
           Text(
             "Aquí puedes ver nuestro mensaje más reciente!",
             style: TextStyle(
               height: 1.5,
-              fontSize: 18,
+              fontSize: screenWidth < 360 ? 16 : 18,
               color: blanco,
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: screenWidth * 0.02),
         ],
       ),
     );
   }
 
-  Widget _buildRecentStream() {
+  Widget _buildRecentStream(double screenWidth, double screenHeight) {
     return Column(
-      children: const [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5),
-          child: YoutubePlayerComponent1(),
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+          child: const YoutubePlayerComponent1(),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: screenHeight * 0.02),
         Divider(color: gris),
       ],
     );

@@ -8,14 +8,45 @@ class WhatsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: () => _launchWhatsApp(context),
-      child: Tooltip(
-        message: 'WhatsApp: $mapa',
-        child: const Text(
-          'Acompañamiento Espiritual',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: blanco),
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenWidth * 0.02,
+        ),
+        decoration: BoxDecoration(
+          color: colorWithOpacity(const Color(0xFF25D366), 0.2),
+          borderRadius: BorderRadius.circular(borderRadius),
+          border:
+              Border.all(color: colorWithOpacity(const Color(0xFF25D366), 0.5)),
+          boxShadow: defaultShadow,
+        ),
+        child: Tooltip(
+          message: 'WhatsApp: $mapa',
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.chat,
+                color: const Color(0xFF25D366),
+                size: screenWidth < 360 ? 18 : 20,
+              ),
+              SizedBox(width: screenWidth * 0.02),
+              Text(
+                'Acompañamiento Espiritual',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blanco,
+                  fontSize: screenWidth < 360 ? 14 : 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -37,7 +68,12 @@ class WhatsApp extends StatelessWidget {
       debugPrint('Error al abrir WhatsApp: $e');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se pudo abrir WhatsApp')),
+          SnackBar(
+            content: const Text('No se pudo abrir WhatsApp'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+          ),
         );
       }
     }

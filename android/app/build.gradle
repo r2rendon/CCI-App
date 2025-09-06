@@ -6,6 +6,7 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -28,7 +29,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.cci_app"
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -36,21 +37,36 @@ android {
 
     defaultConfig {
         applicationId "com.example.cci_app"
-        minSdkVersion 21  // Actualizado a 21
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true  // Agregado
+        multiDexEnabled true
     }
 
+    // Elimina o comenta signingConfigs si no tienes key.jks
+    /*
+    signingConfigs {
+        release {
+            storeFile file("../key.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+    */
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            // Elimina o comenta esta línea si no tienes key.jks:
+            // signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     compileOptions {
-        coreLibraryDesugaringEnabled true  // Agregado
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -62,9 +78,10 @@ android {
 
 flutter {
     source '../..'
+    // NO pongas deferred-components-support aquí
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'  // Agregado
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
     implementation 'androidx.browser:browser:1.3.0'
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../Informacion/actividades_externas.dart';
 import '../home/constantes.dart';
 
@@ -11,11 +10,11 @@ class Eventos extends StatefulWidget {
 }
 
 class _EventosState extends State<Eventos> {
-  final _database = FirebaseDatabase.instance.ref();
-  String _serieTitle = '';
+  String _serieTitle = 'Serie de ejemplo';
   String _serieImage = '';
-  String _serieThemes = '';
-  String _monthlyEvents = '';
+  String _serieThemes = 'Tema 1, Tema 2, Tema 3';
+  String _monthlyEvents = 'Evento 1|Evento 2|Evento 3';
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -24,192 +23,252 @@ class _EventosState extends State<Eventos> {
   }
 
   Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      final serieTitle = await _database.child('serieTitle').get();
-      final serieImage = await _database.child('serieImage').get();
-      final serieThemes = await _database.child('serieThemes').get();
-      final monthlyEvents = await _database.child('monthlyEvents').get();
+      // Simular carga de datos
+      await Future.delayed(const Duration(milliseconds: 500));
 
       if (mounted) {
         setState(() {
-          _serieTitle = serieTitle.value?.toString() ?? '';
-          _serieImage = serieImage.value?.toString() ?? '';
-          _serieThemes = serieThemes.value?.toString() ?? '';
-          _monthlyEvents = monthlyEvents.value?.toString() ?? '';
+          _isLoading = false;
         });
       }
     } catch (e) {
-      debugPrint('Error cargando datos: $e');
-      _showErrorMessage();
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showErrorMessage('Error al cargar los eventos');
+      }
     }
   }
 
-  void _showErrorMessage() {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content:
-            Text('Error al cargar los datos. Por favor, intenta de nuevo.'),
-        duration: Duration(seconds: 3),
-      ),
-    );
+  void _showErrorMessage(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: negro,
-      body: RefreshIndicator(
-        onRefresh: _loadData,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Container(
-            decoration: decorations,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                _buildHeader(),
-                const SizedBox(height: 20),
-                _buildLocation(),
-                const SizedBox(height: 20),
-                _buildWelcomeMessage(),
-                _buildSeriesSection(),
-                _buildEventsSection(),
-              ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: _loadData,
+              color: blanco,
+              backgroundColor: negro,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  decoration: decorations,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: screenHeight * 0.02),
+                      _buildHeader(screenWidth, screenHeight),
+                      SizedBox(height: screenHeight * 0.02),
+                      _buildLocation(screenWidth),
+                      SizedBox(height: screenHeight * 0.02),
+                      _buildWelcomeMessage(screenWidth),
+                      _buildSeriesSection(screenWidth, screenHeight),
+                      _buildEventsSection(screenWidth, screenHeight),
+                      SizedBox(height: screenHeight * 0.05),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+            if (_isLoading)
+              Container(
+                color: colorWithOpacity(negro, 0.7),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: blanco,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(double screenWidth, double screenHeight) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: verticalPadding,
+      padding: EdgeInsets.symmetric(
+        horizontal: getHorizontalPadding(screenWidth),
+        vertical: getVerticalPadding(screenWidth),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "Eventos del mes",
-            style: titulo,
+          Expanded(
+            child: Text(
+              "Eventos del mes",
+              style: getTitulo(screenWidth),
+            ),
           ),
           Image.asset(
             "assets/images/logo.png",
-            height: 45,
+            height: screenHeight * 0.05,
             color: blanco,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.event,
+                size: screenHeight * 0.05,
+                color: blanco,
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLocation() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+  Widget _buildLocation(double screenWidth) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getHorizontalPadding(screenWidth)),
       child: Text(
         "San Pedro Sula",
-        style: TextStyle(color: blanco),
+        style: TextStyle(
+          color: blanco,
+          fontSize: screenWidth < 360 ? 14 : 16,
+        ),
       ),
     );
   }
 
-  Widget _buildWelcomeMessage() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 23),
+  Widget _buildWelcomeMessage(double screenWidth) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
+      child: Text(
+        "Hola! Tú eres parte de la gran familia de CCI San Pedro Sula, y por esto queremos que estés enterado de todo lo que se viene! "
+        "Aquí encontrarás los próximos eventos para que puedas agendar las fechas y no te pierdas de nada.",
+        style: TextStyle(
+          height: 1.5,
+          fontSize: screenWidth < 360 ? 16 : 18,
+          color: blanco,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSeriesSection(double screenWidth, double screenHeight) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Hola! Tú eres parte de la gran familia de CCI San Pedro Sula, y por esto queremos que estés enterado de todo lo que se viene! "
-            "Aquí encontrarás los próximos eventos para que puedas agendar las fechas y no te pierdas de nada.",
+            _serieTitle.toUpperCase(),
             style: TextStyle(
-              height: 1.5,
-              fontSize: 18,
+              fontSize: screenWidth < 360 ? 20 : 23,
+              fontWeight: FontWeight.bold,
               color: blanco,
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: screenHeight * 0.02),
+          Container(
+            width: double.infinity,
+            height: screenHeight * 0.2,
+            child: Image.network(
+              _serieImage,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                decoration: BoxDecoration(
+                  color: colorWithOpacity(gris, 0.3),
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  border: Border.all(color: colorWithOpacity(blanco, 0.2)),
+                ),
+                child: Image.asset(
+                  "assets/images/Serie.png",
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.image,
+                      size: screenHeight * 0.1,
+                      color: colorWithOpacity(blanco, 0.5),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          _buildSeriesContent(screenWidth),
           Divider(color: gris),
         ],
       ),
     );
   }
 
-  Widget _buildSeriesSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 23),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _serieTitle.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 23,
-              fontWeight: FontWeight.bold,
-              color: blanco,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Image.network(
-            _serieImage,
-            errorBuilder: (context, error, stackTrace) => Image.asset(
-              "assets/images/Serie.png",
-              opacity: const AlwaysStoppedAnimation(.3),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildSeriesContent(),
-          const Divider(color: gris),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSeriesContent() {
+  Widget _buildSeriesContent(double screenWidth) {
     final themes = _serieThemes.split(',');
     return Column(
       children: [
-        const Center(
+        Center(
           child: Text(
             "Serie del Mes",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: screenWidth < 360 ? 16 : 18,
               color: blanco,
               fontStyle: FontStyle.italic,
             ),
           ),
         ),
         ...themes
-            .map((theme) => Text(
-                  theme.trim(),
-                  style: const TextStyle(color: barr),
+            .map((theme) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    theme.trim(),
+                    style: TextStyle(
+                      color: barr,
+                      fontSize: screenWidth < 360 ? 14 : 16,
+                    ),
+                  ),
                 ))
             .toList(),
-        const SizedBox(height: 20),
+        SizedBox(height: screenWidth * 0.05),
       ],
     );
   }
 
-  Widget _buildEventsSection() {
+  Widget _buildEventsSection(double screenWidth, double screenHeight) {
     final events = _monthlyEvents.split('|');
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 23),
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "EVENTOS DE ABRIL",
             style: TextStyle(
-              fontSize: 23,
+              fontSize: screenWidth < 360 ? 20 : 23,
               fontWeight: FontWeight.bold,
               color: blanco,
             ),
           ),
+          SizedBox(height: screenHeight * 0.02),
           ...events.asMap().entries.map((entry) {
             final eventData = entry.value.split(',');
             if (eventData.length >= 3) {
@@ -218,56 +277,73 @@ class _EventosState extends State<Eventos> {
                 eventData[1].trim(),
                 eventData[2].trim(),
                 entry.key % 2 == 0,
+                screenWidth,
+                screenHeight,
                 showMap: eventData.length > 3 && eventData[3].trim() == 'true',
               );
             }
             return const SizedBox.shrink();
           }).toList(),
-          const SizedBox(height: 20),
+          SizedBox(height: screenHeight * 0.02),
         ],
       ),
     );
   }
 
-  Widget _buildEventCard(
-      String title, String date, String location, bool isRight,
+  Widget _buildEventCard(String title, String date, String location,
+      bool isRight, double screenWidth, double screenHeight,
       {bool showMap = false}) {
     return Padding(
       padding: EdgeInsets.only(
-        left: isRight ? 100 : 0,
-        right: isRight ? 0 : 100,
+        left: isRight ? screenWidth * 0.25 : 0,
+        right: isRight ? 0 : screenWidth * 0.25,
+        bottom: screenHeight * 0.02,
       ),
       child: Card(
-        elevation: 1,
-        color: const Color.fromARGB(10, 255, 255, 255),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                color: blanco,
-                fontWeight: FontWeight.bold,
+        elevation: 2,
+        color: const Color.fromARGB(20, 255, 255, 255),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(screenWidth * 0.04),
+          child: Column(
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: screenWidth < 360 ? 16 : 18,
+                  color: blanco,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            Text(
-              date,
-              style: const TextStyle(
-                color: blanco,
-                fontWeight: FontWeight.w300,
+              SizedBox(height: screenHeight * 0.01),
+              Text(
+                date,
+                style: TextStyle(
+                  color: blanco,
+                  fontWeight: FontWeight.w300,
+                  fontSize: screenWidth < 360 ? 14 : 16,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            Text(
-              location,
-              style: const TextStyle(
-                color: blanco,
-                fontWeight: FontWeight.w300,
+              Text(
+                location,
+                style: TextStyle(
+                  color: blanco,
+                  fontWeight: FontWeight.w300,
+                  fontSize: screenWidth < 360 ? 14 : 16,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            if (showMap) const Externa('mapa'),
-            const SizedBox(height: 20),
-          ],
+              if (showMap)
+                Padding(
+                  padding: EdgeInsets.only(top: screenHeight * 0.01),
+                  child: const Externa('mapa'),
+                ),
+            ],
+          ),
         ),
       ),
     );

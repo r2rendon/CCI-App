@@ -17,13 +17,12 @@ class _FormWorshipState extends State<FormWorship> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (await _webViewController.canGoBack()) {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop && await _webViewController.canGoBack()) {
           _webViewController.goBack();
-          return false;
         }
-        return true;
       },
       child: SafeArea(
         child: Scaffold(
@@ -43,8 +42,9 @@ class _FormWorshipState extends State<FormWorship> {
                     _progress = progress / 100;
                   });
                 },
-                onLoadError: (controller, url, code, message) {
-                  debugPrint('Error cargando formulario: $message');
+                onReceivedError: (controller, request, error) {
+                  debugPrint(
+                      'Error cargando formulario: \\${error.description}');
                   _showErrorMessage();
                 },
               ),

@@ -16,20 +16,45 @@ class SocialLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
       child: InkWell(
         onTap: () => _launchURL(context),
-        borderRadius: BorderRadius.circular(8.0),
-        child: Tooltip(
-          message: '$platform: $socialId',
-          child: const Text(
-            'Conoce más de nosotros!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: blanco,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenWidth * 0.02,
+          ),
+          decoration: BoxDecoration(
+            color: colorWithOpacity(blanco, 0.1),
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(color: colorWithOpacity(blanco, 0.3)),
+            boxShadow: defaultShadow,
+          ),
+          child: Tooltip(
+            message: '$platform: $socialId',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _getPlatformIcon(platform),
+                  color: blanco,
+                  size: screenWidth < 360 ? 18 : 20,
+                ),
+                SizedBox(width: screenWidth * 0.02),
+                Text(
+                  'Conoce más de nosotros!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: blanco,
+                    fontSize: screenWidth < 360 ? 14 : 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -37,9 +62,24 @@ class SocialLink extends StatelessWidget {
     );
   }
 
+  IconData _getPlatformIcon(String platform) {
+    switch (platform.toLowerCase()) {
+      case 'instagram':
+        return Icons.camera_alt;
+      case 'facebook':
+        return Icons.facebook;
+      case 'youtube':
+        return Icons.play_circle;
+      case 'whatsapp':
+        return Icons.chat;
+      default:
+        return Icons.link;
+    }
+  }
+
   Future<void> _launchURL(BuildContext context) async {
     final uri = Uri.parse(url);
-    
+
     try {
       if (await canLaunchUrl(uri)) {
         await launchUrl(
@@ -55,6 +95,7 @@ class SocialLink extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('No se pudo abrir $platform'),
+            backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
             behavior: SnackBarBehavior.floating,
           ),

@@ -9,80 +9,99 @@ class Iglesia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: negro,
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: decorations,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              _buildHeader(),
-              const SizedBox(height: 20),
-              _buildLocation(),
-              _buildIntroText(),
-              const Divider(color: gris),
-              _buildPastorSection(),
-              _buildScheduleSection(),
-              _buildVisionMisionSection(),
-              _buildPastoresSection(),
-              _buildContactSection(context),
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            decoration: decorations,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenHeight * 0.02),
+                _buildHeader(screenWidth, screenHeight),
+                SizedBox(height: screenHeight * 0.02),
+                _buildLocation(screenWidth),
+                _buildIntroText(screenWidth),
+                Divider(color: gris),
+                _buildPastorSection(screenWidth),
+                _buildScheduleSection(screenWidth, screenHeight),
+                _buildVisionMisionSection(screenWidth),
+                _buildPastoresSection(screenWidth, screenHeight),
+                _buildContactSection(context, screenWidth),
+                SizedBox(height: screenHeight * 0.05),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(double screenWidth, double screenHeight) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: verticalPadding,
+      padding: EdgeInsets.symmetric(
+        horizontal: getHorizontalPadding(screenWidth),
+        vertical: getVerticalPadding(screenWidth),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            "Seamos Iglesia",
-            style: titulo,
+          Expanded(
+            child: Text(
+              "Seamos Iglesia",
+              style: getTitulo(screenWidth),
+            ),
           ),
           Image.asset(
             "assets/images/logo.png",
-            height: 45,
+            height: screenHeight * 0.05,
             color: blanco,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.church,
+                size: screenHeight * 0.05,
+                color: blanco,
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLocation() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+  Widget _buildLocation(double screenWidth) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getHorizontalPadding(screenWidth)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "San Pedro Sula",
-            style: TextStyle(color: blanco),
+            style: TextStyle(
+              color: blanco,
+              fontSize: screenWidth < 360 ? 14 : 16,
+            ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: screenWidth * 0.05),
         ],
       ),
     );
   }
 
-  Widget _buildIntroText() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 23),
+  Widget _buildIntroText(double screenWidth) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Text(
         "Ser comunidad es fundamental para crecer juntos y fortalecernos. "
         "Cuando nos unimos como comunidad, podemos compartir nuestras experiencias, "
         "conocimientos y habilidades, lo que nos permite aprender unos de otros y crecer juntos.",
         style: TextStyle(
-          fontSize: 18,
+          fontSize: screenWidth < 360 ? 16 : 18,
           height: 1.5,
           color: blanco,
         ),
@@ -90,33 +109,34 @@ class Iglesia extends StatelessWidget {
     );
   }
 
-  Widget _buildPastorSection() {
+  Widget _buildPastorSection(double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 23),
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            opacity: .2,
+            opacity: 0.2,
             scale: 1,
-            image: AssetImage("assets/images/logo.png"),
+            image: const AssetImage("assets/images/logo.png"),
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text("- Nuestro Pastor", style: thema),
-            SizedBox(height: 6),
+          children: [
+            Text("- Nuestro Pastor", style: getThema(screenWidth)),
+            SizedBox(height: screenWidth * 0.02),
             Text(
               'Mario Valencia.',
               style: TextStyle(
                 color: blanco,
-                fontSize: 18,
+                fontSize: screenWidth < 360 ? 16 : 18,
                 fontStyle: FontStyle.italic,
               ),
             ),
-            _PastorMessage(),
-            SizedBox(height: 20),
+            const _PastorMessage(),
+            SizedBox(height: screenWidth * 0.05),
             Divider(color: gris),
           ],
         ),
@@ -124,28 +144,42 @@ class Iglesia extends StatelessWidget {
     );
   }
 
-  Widget _buildScheduleSection() {
+  Widget _buildScheduleSection(double screenWidth, double screenHeight) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding:
+          EdgeInsets.symmetric(horizontal: getHorizontalPadding(screenWidth)),
       child: Column(
         children: [
-          Image.asset(
-            "assets/images/horarios.png",
-            opacity: const AlwaysStoppedAnimation(.3),
+          Container(
+            width: double.infinity,
+            height: screenHeight * 0.18,
+            child: Image.asset(
+              "assets/images/horarios.png",
+              fit: BoxFit.contain,
+              opacity: AlwaysStoppedAnimation(0.3),
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.schedule,
+                  size: screenHeight * 0.1,
+                  color: colorWithOpacity(blanco, 0.3),
+                );
+              },
+            ),
           ),
-          const SizedBox(height: 20),
-          const Divider(color: gris),
+          SizedBox(height: screenHeight * 0.02),
+          Divider(color: gris),
         ],
       ),
     );
   }
 
-  Widget _buildVisionMisionSection() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 23),
+  Widget _buildVisionMisionSection(double screenWidth) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: const [
           _VisionSection(),
           _MisionSection(),
           SizedBox(height: 20),
@@ -155,15 +189,15 @@ class Iglesia extends StatelessWidget {
     );
   }
 
-  Widget _buildPastoresSection() {
+  Widget _buildPastoresSection(double screenWidth, double screenHeight) {
     return Column(
       children: [
-        const Center(
-          child: Text("Pastores", style: thema),
+        Center(
+          child: Text("Pastores", style: getThema(screenWidth)),
         ),
         Container(
-          margin: const EdgeInsets.symmetric(vertical: 20.0),
-          height: 200.0,
+          margin: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
+          height: screenHeight * 0.18,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: const [
@@ -182,22 +216,33 @@ class Iglesia extends StatelessWidget {
     );
   }
 
-  Widget _buildContactSection(BuildContext context) {
+  Widget _buildContactSection(BuildContext context, double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 23),
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Card(
-        color: const Color.fromARGB(10, 255, 255, 255),
-        child: Column(
-          children: const [
-            Text("Contáctanos", style: thema),
-            SizedBox(height: 20),
-            Mapa('mapa'),
-            SizedBox(height: 20),
-            Telefono('celular'),
-            SizedBox(height: 20),
-            WhatsApp('mapa'),
-            SizedBox(height: 20),
-          ],
+        color: const Color.fromARGB(20, 255, 255, 255),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(screenWidth * 0.04),
+          child: Column(
+            children: const [
+              Text("Contáctanos",
+                  style: TextStyle(
+                      color: blanco,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18)),
+              SizedBox(height: 20),
+              Mapa('mapa'),
+              SizedBox(height: 20),
+              Telefono('celular'),
+              SizedBox(height: 20),
+              WhatsApp('mapa'),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -247,12 +292,13 @@ class _PastorText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Text(
       text,
       textAlign: TextAlign.justify,
       style: TextStyle(
         color: blanco,
-        fontSize: 18,
+        fontSize: screenWidth < 360 ? 15 : 18,
         fontWeight: isItalic ? FontWeight.normal : FontWeight.w300,
         fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
       ),
@@ -265,17 +311,18 @@ class _VisionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text("Visión", style: thema),
+      children: [
+        Text("Visión", style: getThema(screenWidth)),
         Text(
           "Ser una iglesia comprometida con la restauración de individuos, familias y ministerios, "
           "que provoca cambios sostenidos, logrando así alcanzar con el evangelio de Jesús a nuestra comunidad, la nación y el mundo.",
           textAlign: TextAlign.justify,
           style: TextStyle(
             color: blanco,
-            fontSize: 18,
+            fontSize: screenWidth < 360 ? 15 : 18,
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -289,17 +336,18 @@ class _MisionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text("Misión", style: thema),
+      children: [
+        Text("Misión", style: getThema(screenWidth)),
         Text(
           "Alcanzar con el evangelio a la sociedad de San Pedro Sula, Honduras y el Mundo, formando en cada creyente un discípulo de Cristo "
           "altamente involucrado en la restauración de la salud espiritual, moral y material de las familias de nuestra comunidad y del mundo.",
           textAlign: TextAlign.justify,
           style: TextStyle(
             color: blanco,
-            fontSize: 18,
+            fontSize: screenWidth < 360 ? 15 : 18,
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -315,10 +363,29 @@ class _PastorImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      child: Image.asset("assets/images/$name.png"),
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      width: screenHeight * 0.13,
+      height: screenHeight * 0.13,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: colorWithOpacity(blanco, 0.1),
+        border: Border.all(color: colorWithOpacity(blanco, 0.2)),
+      ),
+      child: ClipOval(
+        child: Image.asset(
+          "assets/images/$name.png",
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(
+              Icons.person,
+              size: screenHeight * 0.08,
+              color: colorWithOpacity(blanco, 0.5),
+            );
+          },
+        ),
+      ),
     );
   }
 }
-
-//develop branch promotion test...full process.

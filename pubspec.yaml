@@ -1,5 +1,5 @@
 name: cci_app
-description: "A new Flutter project."
+description: "Aplicación oficial de CCI San Pedro Sula para eventos, información y notificaciones."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -14,13 +14,11 @@ dependencies:
   flutter_svg: ^2.0.10+1
   animated_text_kit: ^4.2.2
   lottie: ^3.1.0
-  youtube_player_flutter: ^9.1.1
+  youtube_player_iframe: ^5.2.1
   google_nav_bar: ^5.0.6
   flutter_inappwebview: ^6.1.5
   url_launcher: ^6.2.5
-  firebase_database: ^11.3.0
-  firebase_core: ^3.10.0
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^17.1.2
   webview_flutter: ^4.0.5
 
 dev_dependencies:
@@ -35,3 +33,10 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/logo.png
+  fonts:
+    - family: SF Pro Display
+      fonts:
+        - asset: assets/fonts/SFProDisplay-Regular.ttf
+        - asset: assets/fonts/SFProDisplay-Bold.ttf
+          weight: 700

@@ -16,6 +16,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   int _currentIndex = 0;
+  bool _isLoading = false;
 
   final screens = const [
     Eventos(),
@@ -27,58 +28,107 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print('Home: build');
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: negro,
-      body: screens[_currentIndex],
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: GNav(
-          tabBackgroundColor: blanco,
-          color: blanco,
-          selectedIndex: _currentIndex,
-          tabBorderRadius: 100,
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          onTabChange: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          tabs: const [
-            GButton(
-              icon: Icons.groups_2_outlined,
-              backgroundColor: barr,
-              rippleColor: blanco,
-              padding: EdgeInsets.all(15.0),
-              iconActiveColor: blanco,
-            ),
-            GButton(
-              icon: Icons.videocam_outlined,
-              backgroundColor: barr,
-              padding: EdgeInsets.all(15.0),
-              iconActiveColor: negro,
-            ),
-            GButton(
-              icon: Icons.church_outlined,
-              backgroundColor: barr,
-              rippleColor: blanco,
-              padding: EdgeInsets.all(15.0),
-              iconActiveColor: blanco,
-            ),
-            GButton(
-              icon: Icons.person_3,
-              backgroundColor: barr,
-              rippleColor: blanco,
-              padding: EdgeInsets.all(15.0),
-              iconActiveColor: blanco,
-            ),
-            GButton(
-              icon: Icons.mobile_friendly,
-              backgroundColor: barr,
-              rippleColor: blanco,
-              padding: EdgeInsets.all(15.0),
-              iconActiveColor: blanco,
-            ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            screens[_currentIndex],
+            if (_isLoading)
+              Container(
+                color: colorWithOpacity(negro, 0.7),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: blanco,
+                  ),
+                ),
+              ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: negro,
+          boxShadow: defaultShadow,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: getHorizontalPadding(screenWidth) * 0.3,
+              vertical: 10,
+            ),
+            child: GNav(
+              tabBackgroundColor: blanco,
+              color: blanco,
+              selectedIndex: _currentIndex,
+              tabBorderRadius: borderRadius,
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.015,
+                horizontal: screenWidth * 0.02,
+              ),
+              onTabChange: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              tabs: [
+                GButton(
+                  icon: Icons.groups_2_outlined,
+                  backgroundColor: barr,
+                  rippleColor: blanco,
+                  padding: EdgeInsets.all(screenWidth * 0.035),
+                  iconActiveColor: negro,
+                  iconColor: blanco,
+                  textColor: negro,
+                  text: screenWidth > 600 ? 'Eventos' : '',
+                ),
+                GButton(
+                  icon: Icons.videocam_outlined,
+                  backgroundColor: barr,
+                  rippleColor: blanco,
+                  padding: EdgeInsets.all(screenWidth * 0.035),
+                  iconActiveColor: negro,
+                  iconColor: blanco,
+                  textColor: negro,
+                  text: screenWidth > 600 ? 'En Vivo' : '',
+                ),
+                GButton(
+                  icon: Icons.church_outlined,
+                  backgroundColor: barr,
+                  rippleColor: blanco,
+                  padding: EdgeInsets.all(screenWidth * 0.035),
+                  iconActiveColor: negro,
+                  iconColor: blanco,
+                  textColor: negro,
+                  text: screenWidth > 600 ? 'Iglesia' : '',
+                ),
+                GButton(
+                  icon: Icons.person_3,
+                  backgroundColor: barr,
+                  rippleColor: blanco,
+                  padding: EdgeInsets.all(screenWidth * 0.035),
+                  iconActiveColor: negro,
+                  iconColor: blanco,
+                  textColor: negro,
+                  text: screenWidth > 600 ? 'Ministerios' : '',
+                ),
+                GButton(
+                  icon: Icons.mobile_friendly,
+                  backgroundColor: barr,
+                  rippleColor: blanco,
+                  padding: EdgeInsets.all(screenWidth * 0.035),
+                  iconActiveColor: negro,
+                  iconColor: blanco,
+                  textColor: negro,
+                  text: screenWidth > 600 ? 'Dar' : '',
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

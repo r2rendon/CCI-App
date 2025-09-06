@@ -1,7 +1,4 @@
-import 'dart:async';
-import 'package:cci_app/home/constantes.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import '../pantallas/inicio.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,27 +12,33 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
-  }
-
-  void _navigateToHome() {
-    Timer(duracion, () {
+    print('SplashScreen: initState');
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
+        print('SplashScreen: Navegando a Inicio');
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const Inicio(),),
+          MaterialPageRoute(builder: (_) => const Inicio()),
         );
       }
-    },);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print('SplashScreen: build');
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: negro,
+      backgroundColor: Colors.white,
       body: Center(
-        child: Lottie.asset(
-          "assets/in.json",
+        child: Image.asset(
+          'assets/images/logo.png', // Usa cualquier imagen de tu carpeta assets/images/
+          width: screenWidth * 0.5,
+          height: screenHeight * 0.3,
           fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.error, size: 100, color: Colors.red);
+          },
         ),
       ),
     );

@@ -8,14 +8,45 @@ class Mapa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: () => _launchMaps(context),
-      child: Tooltip(
-        message: 'Ubicación: $mapa',
-        child: const Text(
-          'Ver ubicación',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: blanco),
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenWidth * 0.02,
+        ),
+        decoration: BoxDecoration(
+          color: colorWithOpacity(const Color(0xFF4285F4), 0.2),
+          borderRadius: BorderRadius.circular(borderRadius),
+          border:
+              Border.all(color: colorWithOpacity(const Color(0xFF4285F4), 0.5)),
+          boxShadow: defaultShadow,
+        ),
+        child: Tooltip(
+          message: 'Ubicación: $mapa',
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.location_on,
+                color: const Color(0xFF4285F4),
+                size: screenWidth < 360 ? 18 : 20,
+              ),
+              SizedBox(width: screenWidth * 0.02),
+              Text(
+                'Ver ubicación',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blanco,
+                  fontSize: screenWidth < 360 ? 14 : 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -35,7 +66,12 @@ class Mapa extends StatelessWidget {
       debugPrint('Error al abrir Maps: $e');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se pudo abrir Maps')),
+          SnackBar(
+            content: const Text('No se pudo abrir Maps'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+          ),
         );
       }
     }

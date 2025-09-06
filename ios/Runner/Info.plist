@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Cci App</string>
+	<string>CCI San Pedro Sula</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -47,5 +47,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Esta app requiere acceso a la cámara para tomar fotos de perfil y escanear códigos QR.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Esta app requiere acceso a la galería para seleccionar imágenes de perfil.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Esta app puede requerir tu ubicación para mostrar eventos cercanos.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Esta app puede usar tu información para mejorar la experiencia del usuario.</string>
 </dict>
 </plist>
