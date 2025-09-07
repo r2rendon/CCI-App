@@ -34,9 +34,10 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/logo.png
-  fonts:
-    - family: SF Pro Display
-      fonts:
-        - asset: assets/fonts/SFProDisplay-Regular.ttf
-        - asset: assets/fonts/SFProDisplay-Bold.ttf
-          weight: 700
+  # SF Pro Display es una fuente nativa de iOS, no necesita archivos de fuente
+  # fonts:
+  #   - family: SF Pro Display
+  #     fonts:
+  #       - asset: assets/fonts/SFProDisplay-Regular.ttf
+  #       - asset: assets/fonts/SFProDisplay-Bold.ttf
+  #         weight: 700
