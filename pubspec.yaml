@@ -34,6 +34,8 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/logo.png
+    - assets/images/home_screen.png
+    - assets/images/menu.png
   # SF Pro Display es una fuente nativa de iOS, no necesita archivos de fuente
   # fonts:
   #   - family: SF Pro Display

@@ -28,13 +28,14 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    print('Home: build');
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: negro,
-      body: SafeArea(
+      extendBody: true,
+      body: Container(
+        decoration: decorations,
         child: Stack(
           children: [
             screens[_currentIndex],
@@ -84,7 +85,7 @@ class HomeState extends State<Home> {
                   iconActiveColor: negro,
                   iconColor: blanco,
                   textColor: negro,
-                  text: screenWidth > 600 ? 'Eventos' : '',
+                  text: isTablet(screenWidth) ? 'Eventos' : '',
                 ),
                 GButton(
                   icon: Icons.videocam_outlined,
@@ -94,7 +95,7 @@ class HomeState extends State<Home> {
                   iconActiveColor: negro,
                   iconColor: blanco,
                   textColor: negro,
-                  text: screenWidth > 600 ? 'En Vivo' : '',
+                  text: isTablet(screenWidth) ? 'En Vivo' : '',
                 ),
                 GButton(
                   icon: Icons.church_outlined,
@@ -104,7 +105,7 @@ class HomeState extends State<Home> {
                   iconActiveColor: negro,
                   iconColor: blanco,
                   textColor: negro,
-                  text: screenWidth > 600 ? 'Iglesia' : '',
+                  text: isTablet(screenWidth) ? 'Iglesia' : '',
                 ),
                 GButton(
                   icon: Icons.person_3,
@@ -114,7 +115,7 @@ class HomeState extends State<Home> {
                   iconActiveColor: negro,
                   iconColor: blanco,
                   textColor: negro,
-                  text: screenWidth > 600 ? 'Ministerios' : '',
+                  text: isTablet(screenWidth) ? 'Ministerios' : '',
                 ),
                 GButton(
                   icon: Icons.mobile_friendly,
@@ -124,7 +125,7 @@ class HomeState extends State<Home> {
                   iconActiveColor: negro,
                   iconColor: blanco,
                   textColor: negro,
-                  text: screenWidth > 600 ? 'Dar' : '',
+                  text: isTablet(screenWidth) ? 'Dar' : '',
                 ),
               ],
             ),

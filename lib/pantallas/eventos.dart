@@ -53,6 +53,7 @@ class _EventosState extends State<Eventos> {
           content: Text(message),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
@@ -65,44 +66,39 @@ class _EventosState extends State<Eventos> {
 
     return Scaffold(
       backgroundColor: negro,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            RefreshIndicator(
-              onRefresh: _loadData,
-              color: blanco,
-              backgroundColor: negro,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Container(
-                  decoration: decorations,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: screenHeight * 0.02),
-                      _buildHeader(screenWidth, screenHeight),
-                      SizedBox(height: screenHeight * 0.02),
-                      _buildLocation(screenWidth),
-                      SizedBox(height: screenHeight * 0.02),
-                      _buildWelcomeMessage(screenWidth),
-                      _buildSeriesSection(screenWidth, screenHeight),
-                      _buildEventsSection(screenWidth, screenHeight),
-                      SizedBox(height: screenHeight * 0.05),
-                    ],
-                  ),
+      body: Container(
+        decoration: decorations,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: screenHeight * 0.02),
+                    _buildHeader(screenWidth, screenHeight),
+                    SizedBox(height: screenHeight * 0.02),
+                    _buildLocation(screenWidth),
+                    SizedBox(height: screenHeight * 0.02),
+                    _buildWelcomeMessage(screenWidth),
+                    _buildSerieSection(screenWidth, screenHeight),
+                    _buildMonthlyEventsSection(screenWidth, screenHeight),
+                    _buildExternalActivities(screenWidth, screenHeight),
+                    SizedBox(height: screenHeight * 0.05),
+                  ],
                 ),
               ),
-            ),
-            if (_isLoading)
-              Container(
-                color: colorWithOpacity(negro, 0.7),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: blanco,
+              if (_isLoading)
+                Container(
+                  color: colorWithOpacity(negro, 0.7),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: blanco,
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -119,12 +115,12 @@ class _EventosState extends State<Eventos> {
         children: [
           Expanded(
             child: Text(
-              "Eventos del mes",
+              "Eventos",
               style: getTitulo(screenWidth),
             ),
           ),
           Image.asset(
-            "assets/images/logo.png",
+            "assets/images/Serie.png",
             height: screenHeight * 0.05,
             color: blanco,
             errorBuilder: (context, error, stackTrace) {
@@ -158,193 +154,206 @@ class _EventosState extends State<Eventos> {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: getHorizontalPadding(screenWidth) * 0.6),
-      child: Text(
-        "Hola! Tú eres parte de la gran familia de CCI San Pedro Sula, y por esto queremos que estés enterado de todo lo que se viene! "
-        "Aquí encontrarás los próximos eventos para que puedas agendar las fechas y no te pierdas de nada.",
-        style: TextStyle(
-          height: 1.5,
-          fontSize: screenWidth < 360 ? 16 : 18,
-          color: blanco,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        decoration: BoxDecoration(
+          color: colorWithOpacity(azulPrimario, 0.2),
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: Border.all(color: azulPrimario),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.calendar_today,
+              color: azulPrimario,
+              size: screenWidth * 0.06,
+            ),
+            SizedBox(height: screenWidth * 0.02),
+            Text(
+              "¡Mantente al día con nuestros eventos!",
+              style: TextStyle(
+                color: blanco,
+                fontSize: screenWidth < 360 ? 16 : 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: screenWidth * 0.02),
+            Text(
+              "Descubre las próximas actividades, series especiales y eventos "
+              "que tenemos preparados para ti y tu familia.",
+              style: TextStyle(
+                color: blanco,
+                fontSize: screenWidth < 360 ? 14 : 15,
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSeriesSection(double screenWidth, double screenHeight) {
+  Widget _buildSerieSection(double screenWidth, double screenHeight) {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: screenHeight * 0.03),
           Text(
-            _serieTitle.toUpperCase(),
-            style: TextStyle(
-              fontSize: screenWidth < 360 ? 20 : 23,
-              fontWeight: FontWeight.bold,
-              color: blanco,
-            ),
+            "Serie Actual",
+            style: getThema(screenWidth),
           ),
           SizedBox(height: screenHeight * 0.02),
           Container(
             width: double.infinity,
-            height: screenHeight * 0.2,
-            child: Image.network(
-              _serieImage,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                decoration: BoxDecoration(
-                  color: colorWithOpacity(gris, 0.3),
-                  borderRadius: BorderRadius.circular(borderRadius),
-                  border: Border.all(color: colorWithOpacity(blanco, 0.2)),
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            decoration: BoxDecoration(
+              color: colorWithOpacity(blanco, 0.1),
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(color: colorWithOpacity(blanco, 0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _serieTitle,
+                  style: TextStyle(
+                    color: blanco,
+                    fontSize: screenWidth < 360 ? 16 : 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Image.asset(
-                  "assets/images/Serie.png",
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.image,
-                      size: screenHeight * 0.1,
-                      color: colorWithOpacity(blanco, 0.5),
-                    );
-                  },
+                SizedBox(height: screenWidth * 0.02),
+                if (_serieImage.isNotEmpty)
+                  Container(
+                    width: double.infinity,
+                    height: screenHeight * 0.15,
+                    child: Image.asset(
+                      "assets/images/$_serieImage.png",
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: colorWithOpacity(gris, 0.3),
+                            borderRadius: BorderRadius.circular(borderRadius),
+                          ),
+                          child: Icon(
+                            Icons.image,
+                            size: screenWidth * 0.2,
+                            color: colorWithOpacity(blanco, 0.5),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                SizedBox(height: screenWidth * 0.02),
+                Text(
+                  "Temas: $_serieThemes",
+                  style: TextStyle(
+                    color: colorWithOpacity(blanco, 0.8),
+                    fontSize: screenWidth < 360 ? 13 : 14,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-          SizedBox(height: screenHeight * 0.02),
-          _buildSeriesContent(screenWidth),
-          Divider(color: gris),
         ],
       ),
     );
   }
 
-  Widget _buildSeriesContent(double screenWidth) {
-    final themes = _serieThemes.split(',');
-    return Column(
-      children: [
-        Center(
-          child: Text(
-            "Serie del Mes",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: screenWidth < 360 ? 16 : 18,
-              color: blanco,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ),
-        ...themes
-            .map((theme) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    theme.trim(),
-                    style: TextStyle(
-                      color: barr,
-                      fontSize: screenWidth < 360 ? 14 : 16,
-                    ),
-                  ),
-                ))
-            .toList(),
-        SizedBox(height: screenWidth * 0.05),
-      ],
-    );
-  }
-
-  Widget _buildEventsSection(double screenWidth, double screenHeight) {
-    final events = _monthlyEvents.split('|');
+  Widget _buildMonthlyEventsSection(double screenWidth, double screenHeight) {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: getHorizontalPadding(screenWidth) * 0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: screenHeight * 0.03),
           Text(
-            "EVENTOS DE ABRIL",
-            style: TextStyle(
-              fontSize: screenWidth < 360 ? 20 : 23,
-              fontWeight: FontWeight.bold,
-              color: blanco,
-            ),
+            "Eventos del Mes",
+            style: getThema(screenWidth),
           ),
           SizedBox(height: screenHeight * 0.02),
-          ...events.asMap().entries.map((entry) {
-            final eventData = entry.value.split(',');
-            if (eventData.length >= 3) {
-              return _buildEventCard(
-                eventData[0].trim(),
-                eventData[1].trim(),
-                eventData[2].trim(),
-                entry.key % 2 == 0,
-                screenWidth,
-                screenHeight,
-                showMap: eventData.length > 3 && eventData[3].trim() == 'true',
-              );
-            }
-            return const SizedBox.shrink();
-          }).toList(),
-          SizedBox(height: screenHeight * 0.02),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            decoration: BoxDecoration(
+              color: colorWithOpacity(blanco, 0.1),
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(color: colorWithOpacity(blanco, 0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Próximos Eventos:",
+                  style: TextStyle(
+                    color: blanco,
+                    fontSize: screenWidth < 360 ? 15 : 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: screenWidth * 0.02),
+                ..._monthlyEvents.split('|').map((event) => Padding(
+                      padding: EdgeInsets.only(bottom: screenWidth * 0.01),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.event_note,
+                            color: azulPrimario,
+                            size: screenWidth * 0.04,
+                          ),
+                          SizedBox(width: screenWidth * 0.02),
+                          Expanded(
+                            child: Text(
+                              event.trim(),
+                              style: TextStyle(
+                                color: blanco,
+                                fontSize: screenWidth < 360 ? 13 : 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildEventCard(String title, String date, String location,
-      bool isRight, double screenWidth, double screenHeight,
-      {bool showMap = false}) {
+  Widget _buildExternalActivities(double screenWidth, double screenHeight) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: isRight ? screenWidth * 0.25 : 0,
-        right: isRight ? 0 : screenWidth * 0.25,
-        bottom: screenHeight * 0.02,
-      ),
-      child: Card(
-        elevation: 2,
-        color: const Color.fromARGB(20, 255, 255, 255),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.04),
-          child: Column(
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: screenWidth < 360 ? 16 : 18,
-                  color: blanco,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: screenHeight * 0.01),
-              Text(
-                date,
-                style: TextStyle(
-                  color: blanco,
-                  fontWeight: FontWeight.w300,
-                  fontSize: screenWidth < 360 ? 14 : 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                location,
-                style: TextStyle(
-                  color: blanco,
-                  fontWeight: FontWeight.w300,
-                  fontSize: screenWidth < 360 ? 14 : 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              if (showMap)
-                Padding(
-                  padding: EdgeInsets.only(top: screenHeight * 0.01),
-                  child: const Externa('mapa'),
-                ),
-            ],
+      padding: EdgeInsets.symmetric(
+          horizontal: getHorizontalPadding(screenWidth) * 0.6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenHeight * 0.03),
+          Text(
+            "Actividades Externas",
+            style: getThema(screenWidth),
           ),
-        ),
+          SizedBox(height: screenHeight * 0.02),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(screenWidth * 0.04),
+            decoration: BoxDecoration(
+              color: colorWithOpacity(blanco, 0.1),
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(color: colorWithOpacity(blanco, 0.2)),
+            ),
+            child: ActividadesExternas(),
+          ),
+        ],
       ),
     );
   }

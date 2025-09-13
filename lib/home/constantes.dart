@@ -1,4 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cci_app/home/splash_screen.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Configuración de orientación y UI para pantalla completa
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+
+  // Configuración de notificaciones
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  try {
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  } catch (e) {
+    debugPrint('Error inicializando notificaciones: $e');
+  }
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'CCI San Pedro Sula',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+          fontFamily: 'SF Pro Display',
+        ),
+        home: const SplashScreen(),
+      );
+}
 
 // Colores principales
 const Color negro = Color.fromARGB(255, 0, 0, 0);
@@ -7,6 +64,10 @@ const Color blanco = Color.fromARGB(255, 255, 255, 255);
 const Color barr = Color.fromARGB(64, 255, 255, 255);
 const Color grisClaro = Color.fromARGB(255, 128, 128, 128);
 const Color azulPrimario = Color.fromARGB(255, 33, 150, 243);
+
+// Nuevos colores para Welcome Screen
+const Color beigeClaro = Color(0xFFF5F5DC);
+const Color grisOscuro = Color(0xFF2C2C2C);
 
 // Gradientes
 const decorations = BoxDecoration(
@@ -31,7 +92,7 @@ const decorationsAlt = BoxDecoration(
   ),
 );
 
-// Tipografías responsivas
+// Tipografías responsivas mejoradas
 TextStyle getThema(double screenWidth) {
   double fontSize = screenWidth < 360 ? 16 : 18;
   return const TextStyle(
@@ -51,17 +112,30 @@ TextStyle getTitulo(double screenWidth) {
   ).copyWith(fontSize: fontSize);
 }
 
-// Padding responsivo
+// Padding responsivo mejorado
 double getHorizontalPadding(double screenWidth) {
-  if (screenWidth < 360) return 20;
-  if (screenWidth < 600) return 40;
-  return 60;
+  if (screenWidth < 360) return 16;
+  if (screenWidth < 600) return 24;
+  if (screenWidth < 900) return 32;
+  return 40;
 }
 
 double getVerticalPadding(double screenWidth) {
-  if (screenWidth < 360) return 15;
-  if (screenWidth < 600) return 25;
-  return 35;
+  if (screenWidth < 360) return 12;
+  if (screenWidth < 600) return 16;
+  if (screenWidth < 900) return 20;
+  return 24;
+}
+
+// Función para SafeArea responsivo
+EdgeInsets getSafeAreaPadding(BuildContext context) {
+  final mediaQuery = MediaQuery.of(context);
+  return EdgeInsets.only(
+    top: mediaQuery.padding.top,
+    bottom: mediaQuery.padding.bottom,
+    left: mediaQuery.padding.left,
+    right: mediaQuery.padding.right,
+  );
 }
 
 // Constantes para diferentes tamaños de pantalla
@@ -104,4 +178,22 @@ Color colorWithOpacity(Color color, double opacity) {
     (color.g * 255).round(),
     (color.b * 255).round(),
   );
+}
+
+// Función para determinar si es tablet
+bool isTablet(double screenWidth) {
+  return screenWidth >= 600;
+}
+
+// Función para determinar si es desktop
+bool isDesktop(double screenWidth) {
+  return screenWidth >= 900;
+}
+
+// Función para obtener tamaño de fuente responsivo
+double getResponsiveFontSize(double screenWidth, double baseFontSize) {
+  if (screenWidth < 360) return baseFontSize * 0.9;
+  if (screenWidth < 600) return baseFontSize;
+  if (screenWidth < 900) return baseFontSize * 1.1;
+  return baseFontSize * 1.2;
 }

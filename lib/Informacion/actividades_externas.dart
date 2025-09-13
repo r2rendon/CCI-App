@@ -3,6 +3,25 @@ import 'package:cci_app/home/constantes.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class ActividadesExternas extends StatelessWidget {
+  const ActividadesExternas({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Column(
+      children: [
+        Externa('Facebook'),
+        SizedBox(height: screenWidth * 0.02),
+        Externa('Instagram'),
+        SizedBox(height: screenWidth * 0.02),
+        Externa('YouTube'),
+      ],
+    );
+  }
+}
+
 class Externa extends StatelessWidget {
   final String actividad;
   const Externa(this.actividad, {super.key});
@@ -18,38 +37,36 @@ class Externa extends StatelessWidget {
             onTap: () => _launchURL(context),
             borderRadius: BorderRadius.circular(borderRadius),
             child: Container(
+              width: double.infinity,
               padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.02,
-                vertical: screenWidth * 0.01,
+                horizontal: screenWidth * 0.04,
+                vertical: screenWidth * 0.03,
               ),
               decoration: BoxDecoration(
                 color: colorWithOpacity(blanco, 0.1),
                 borderRadius: BorderRadius.circular(borderRadius),
                 border: Border.all(color: colorWithOpacity(blanco, 0.3)),
+                boxShadow: defaultShadow,
               ),
-              child: Tooltip(
-                message: 'Mapa: $actividad',
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.location_on,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _getPlatformIcon(actividad),
+                    color: blanco,
+                    size: screenWidth < 360 ? 18 : 20,
+                  ),
+                  SizedBox(width: screenWidth * 0.02),
+                  Text(
+                    'Síguenos en $actividad',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       color: blanco,
-                      size: screenWidth < 360 ? 16 : 18,
+                      fontSize: screenWidth < 360 ? 14 : 16,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(width: screenWidth * 0.02),
-                    Expanded(
-                      child: Text(
-                        'Kilo Bistro, GXP5+PFC, 21102 San Pedro Sula, Cortés, Honduras.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: blanco,
-                          fontSize: screenWidth < 360 ? 12 : 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -58,23 +75,54 @@ class Externa extends StatelessWidget {
     );
   }
 
+  IconData _getPlatformIcon(String platform) {
+    switch (platform.toLowerCase()) {
+      case 'instagram':
+        return Icons.camera_alt;
+      case 'facebook':
+        return Icons.facebook;
+      case 'youtube':
+        return Icons.play_circle;
+      case 'whatsapp':
+        return Icons.chat;
+      default:
+        return Icons.link;
+    }
+  }
+
   Future<void> _launchURL(BuildContext context) async {
-    const url =
-        'https://www.google.com/maps/place/Kilo+Bistro/@15.5368038,-88.0413544,17z/data=!3m1!4b1!4m6!3m5!1s0x8f665b414c15ac45:0xc6f3e6b4517ae5df!8m2!3d15.5368038!4d-88.0413544!16s%2Fg%2F11s9whqklr?entry=ttu';
+    String url = '';
+    switch (actividad.toLowerCase()) {
+      case 'facebook':
+        url = 'https://facebook.com/ccisanpedrosula';
+        break;
+      case 'instagram':
+        url = 'https://instagram.com/ccisanpedrosula';
+        break;
+      case 'youtube':
+        url = 'https://youtube.com/ccisanpedrosula';
+        break;
+      default:
+        url = 'https://ccisanpedrosula.com';
+    }
+
     final uri = Uri.parse(url);
 
     try {
       if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
       } else {
-        throw 'No se puede abrir $url';
+        throw 'No se puede abrir $actividad';
       }
     } catch (e) {
-      debugPrint('Error al abrir URL: $e');
+      debugPrint('Error al abrir $actividad: $e');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('No se pudo abrir el mapa'),
+            content: Text('No se pudo abrir $actividad'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
             behavior: SnackBarBehavior.floating,

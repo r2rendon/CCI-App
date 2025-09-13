@@ -14,10 +14,10 @@ class Ministerios extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: negro,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            decoration: decorations,
+      body: Container(
+        decoration: decorations,
+        child: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

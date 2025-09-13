@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pantallas/inicio.dart';
+import '../pantallas/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,9 +15,9 @@ class SplashScreenState extends State<SplashScreen> {
     print('SplashScreen: initState');
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        print('SplashScreen: Navegando a Inicio');
+        print('SplashScreen: Navegando a WelcomeScreen');
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const Inicio()),
+          MaterialPageRoute(builder: (_) => const WelcomeScreen()),
         );
       }
     });
@@ -32,7 +32,7 @@ class SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset(
-          'assets/images/logo.png', // Usa cualquier imagen de tu carpeta assets/images/
+          'assets/images/logo.png',
           width: screenWidth * 0.5,
           height: screenHeight * 0.3,
           fit: BoxFit.contain,

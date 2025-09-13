@@ -11,12 +11,13 @@ class Iglesia extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: negro,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            decoration: decorations,
+      body: Container(
+        decoration: decorations,
+        child: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
