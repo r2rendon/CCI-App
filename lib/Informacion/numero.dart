@@ -13,19 +13,23 @@ class Telefono extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          InkWell(
-            onTap: () => _launchURL(context),
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: Container(
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _launchURL(context),
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.04,
                 vertical: screenWidth * 0.02,
               ),
               decoration: BoxDecoration(
-                color: colorWithOpacity(azulPrimario, 0.2),
+                color: grisCard,
                 borderRadius: BorderRadius.circular(borderRadius),
-                border: Border.all(color: colorWithOpacity(azulPrimario, 0.5)),
-                boxShadow: defaultShadow,
+                border: Border.all(
+                  color: colorWithOpacity(blanco, 0.1),
+                  width: 0.5,
+                ),
               ),
               child: Tooltip(
                 message: 'Teléfono: $celular',
@@ -33,22 +37,25 @@ class Telefono extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.phone,
-                      color: azulPrimario,
+                      Icons.phone_outlined,
+                      color: accent,
                       size: screenWidth < 360 ? 18 : 20,
                     ),
                     SizedBox(width: screenWidth * 0.02),
                     Text(
                       '+504 2510-1731',
                       style: TextStyle(
+                        fontFamily: 'SF Pro Display',
                         color: blanco,
-                        fontSize: screenWidth < 360 ? 14 : 16,
+                        fontSize: screenWidth < 360 ? 15 : 17,
                         fontWeight: FontWeight.w500,
+                        letterSpacing: -0.41,
                       ),
                     ),
                   ],
                 ),
               ),
+            ),
             ),
           ),
         ],

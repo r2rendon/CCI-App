@@ -23,8 +23,8 @@ class AppConfig {
   };
 
   // Videos de YouTube
-  static const String liveVideoId = 'Zy8JB0yOh2g';
-  static const String recentVideoId = 'Zy8JB0yOh2g';
+  static const String liveVideoId = 'zyrzZK0eKKI';
+  static const String recentVideoId = 'c5GWRFVO9MM';
 
   // Configuraciones de animación
   static const Duration splashDuration = Duration(seconds: 3);

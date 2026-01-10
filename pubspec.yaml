@@ -20,6 +20,7 @@ dependencies:
   url_launcher: ^6.2.5
   flutter_local_notifications: ^17.1.2
   webview_flutter: ^4.0.5
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:

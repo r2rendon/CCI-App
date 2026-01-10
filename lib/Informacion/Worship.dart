@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import '../widgets/swipe_back_wrapper.dart';
 
 class FormWorship extends StatefulWidget {
   const FormWorship({super.key});
@@ -10,22 +11,34 @@ class FormWorship extends StatefulWidget {
 
 class _FormWorshipState extends State<FormWorship> {
   double _progress = 0;
-  late InAppWebViewController _webViewController;
+  InAppWebViewController? _webViewController;
 
   final String _formUrl =
       'https://docs.google.com/forms/d/e/1FAIpQLSeSv6nSoPoHBHAw0vYOHGWHDyyNmG39IItbdUNhba5JctsR9g/viewform';
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (!didPop && await _webViewController.canGoBack()) {
-          _webViewController.goBack();
+    return SwipeBackWrapper(
+      onBack: () async {
+        if (_webViewController != null) {
+          if (await _webViewController!.canGoBack()) {
+            _webViewController!.goBack();
+            return;
+          }
+        }
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
         }
       },
-      child: SafeArea(
-        child: Scaffold(
+      child: PopScope(
+        canPop: true,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (!didPop && _webViewController != null && await _webViewController!.canGoBack()) {
+            _webViewController!.goBack();
+          }
+        },
+        child: SafeArea(
+          child: Scaffold(
           body: Stack(
             children: [
               InAppWebView(
@@ -55,6 +68,7 @@ class _FormWorshipState extends State<FormWorship> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

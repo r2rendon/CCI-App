@@ -33,20 +33,24 @@ class Externa extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          InkWell(
-            onTap: () => _launchURL(context),
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: Container(
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _launchURL(context),
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.04,
                 vertical: screenWidth * 0.03,
               ),
               decoration: BoxDecoration(
-                color: colorWithOpacity(blanco, 0.1),
+                color: colorWithOpacity(blanco, 0.05),
                 borderRadius: BorderRadius.circular(borderRadius),
-                border: Border.all(color: colorWithOpacity(blanco, 0.3)),
-                boxShadow: defaultShadow,
+                border: Border.all(
+                  color: colorWithOpacity(blanco, 0.1),
+                  width: 0.5,
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -61,13 +65,16 @@ class Externa extends StatelessWidget {
                     'Síguenos en $actividad',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: 'SF Pro Display',
                       color: blanco,
                       fontSize: screenWidth < 360 ? 14 : 16,
                       fontWeight: FontWeight.w500,
+                      letterSpacing: 0.0,
                     ),
                   ),
                 ],
               ),
+            ),
             ),
           ),
         ],

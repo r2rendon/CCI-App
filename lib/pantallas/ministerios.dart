@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Informacion/produccion.dart';
 import '../Informacion/Worship.dart';
 import '../home/constantes.dart';
+import '../widgets/swipe_back_wrapper.dart';
 import '../redes sociales/ig_alive.dart';
 
 class Ministerios extends StatelessWidget {
@@ -12,72 +13,56 @@ class Ministerios extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: negro,
-      body: Container(
-        decoration: decorations,
+    return SwipeBackWrapper(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: getGradientBackground(),
         child: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: screenHeight * 0.02),
-                _buildHeader(screenWidth, screenHeight),
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: getHorizontalPadding(screenWidth),
+            ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: screenHeight * 0.02),
+                  _buildHeader(screenWidth),
                 SizedBox(height: screenHeight * 0.02),
                 _buildLocation(screenWidth),
+                SizedBox(height: screenHeight * 0.04),
                 _buildDescription(screenWidth),
                 _buildMinisteriosList(screenWidth, screenHeight),
-                SizedBox(height: screenHeight * 0.05),
+                SizedBox(height: screenHeight * 0.08),
               ],
             ),
           ),
         ),
       ),
+      ),
     );
   }
 
-  Widget _buildHeader(double screenWidth, double screenHeight) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: getHorizontalPadding(screenWidth),
-        vertical: getVerticalPadding(screenWidth),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              "Ministerios CCI",
-              style: getTitulo(screenWidth),
-            ),
-          ),
-          Image.asset(
-            "assets/images/logo.png",
-            height: screenHeight * 0.05,
-            color: blanco,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.people,
-                size: screenHeight * 0.05,
-                color: blanco,
-              );
-            },
-          ),
-        ],
-      ),
+  Widget _buildHeader(double screenWidth) {
+    return Text(
+      "Ministerios CCI",
+      overflow: TextOverflow.visible,
+      style: getTitulo(screenWidth),
     );
   }
 
   Widget _buildLocation(double screenWidth) {
-    return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: getHorizontalPadding(screenWidth)),
-      child: Text(
-        "San Pedro Sula",
-        style: TextStyle(
-          color: blanco,
-          fontSize: screenWidth < 360 ? 14 : 16,
-        ),
+    return Text(
+      "San Pedro Sula",
+      overflow: TextOverflow.visible,
+      style: TextStyle(
+        fontFamily: 'SF Pro Display',
+        color: grisMedio,
+        fontSize: screenWidth < 360 ? 15 : 17,
+        fontWeight: FontWeight.w400,
+        letterSpacing: -0.41,
       ),
     );
   }
@@ -90,6 +75,7 @@ class Ministerios extends StatelessWidget {
         "La comunidad de CCI en San Pedro Sula está compuesta por muchos Ministerios "
         "con el fin de poder responder a las necesidades que cada etapa de la vida "
         "nos presenta. Te invitamos a conocerlos para que puedas ser parte también!",
+        overflow: TextOverflow.visible,
         style: TextStyle(
           height: 1.5,
           fontSize: screenWidth < 360 ? 16 : 18,
@@ -174,6 +160,7 @@ class Ministerios extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           Text(
             description,
+            overflow: TextOverflow.visible,
             style: TextStyle(
               color: blanco,
               fontSize: screenWidth < 360 ? 14 : 15,
@@ -247,6 +234,7 @@ class Ministerios extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           Text(
             description,
+            overflow: TextOverflow.visible,
             style: TextStyle(
               color: blanco,
               fontSize: screenWidth < 360 ? 14 : 15,
@@ -257,6 +245,7 @@ class Ministerios extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [socialButton],
           ),
         ],

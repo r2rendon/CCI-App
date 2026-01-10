@@ -57,27 +57,35 @@ class MyApp extends StatelessWidget {
       );
 }
 
-// Colores principales
-const Color negro = Color.fromARGB(255, 0, 0, 0);
-const Color gris = Color.fromARGB(255, 44, 49, 51);
-const Color blanco = Color.fromARGB(255, 255, 255, 255);
+// Paleta estilo lujo elegante (basada en referencia)
+const Color negro = Color(0xFF000000);
+const Color blanco = Color(0xFFFFFFFF);
+const Color grisClaro = Color(0xFFF5F5F7);
+const Color grisMedio = Color(0xFF8E8E93);
+const Color grisOscuro = Color(0xFF1C1C1E);
+const Color grisFondo = Color(0xFF1A1A1A); // Gris oscuro elegante
+const Color grisCard = Color(0xFF2A2A2A); // Para cards
+const Color primario = Color(0xFFFFFFFF); // Blanco para acentos
+const Color primarioOscuro = Color(0xFFE0E0E0);
+const Color accent =
+    Color(0xFF007AFF); // Azul sutil para elementos interactivos
+
+// Compatibilidad con código existente
+const Color gris = grisOscuro;
+const Color azulPrimario = primario;
 const Color barr = Color.fromARGB(64, 255, 255, 255);
-const Color grisClaro = Color.fromARGB(255, 128, 128, 128);
-const Color azulPrimario = Color.fromARGB(255, 33, 150, 243);
 
-// Nuevos colores para Welcome Screen
-const Color beigeClaro = Color(0xFFF5F5DC);
-const Color grisOscuro = Color(0xFF2C2C2C);
-
-// Gradientes
+// Gradientes elegantes
 const decorations = BoxDecoration(
   gradient: LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [
-      gris,
+      grisFondo,
+      Color(0xFF161616),
       negro,
     ],
+    stops: const [0.0, 0.6, 1.0],
   ),
 );
 
@@ -86,45 +94,116 @@ const decorationsAlt = BoxDecoration(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
+      grisFondo,
+      Color(0xFF161616),
       negro,
-      gris,
     ],
+    stops: const [0.0, 0.5, 1.0],
   ),
 );
 
-// Tipografías responsivas mejoradas
+// Helper para aplicar gradiente de fondo
+BoxDecoration getGradientBackground() {
+  return const BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        grisFondo,
+        Color(0xFF161616),
+        negro,
+      ],
+      stops: [0.0, 0.6, 1.0],
+    ),
+  );
+}
+
+// Tipografías minimalistas SF Pro Display
 TextStyle getThema(double screenWidth) {
-  double fontSize = screenWidth < 360 ? 16 : 18;
+  double fontSize = screenWidth < 360 ? 15 : 17;
   return const TextStyle(
     color: blanco,
     fontFamily: 'SF Pro Display',
     fontWeight: FontWeight.w400,
+    letterSpacing: -0.41,
+    height: 1.35,
+    decoration: TextDecoration.none,
   ).copyWith(fontSize: fontSize);
 }
 
 TextStyle getTitulo(double screenWidth) {
-  double fontSize = screenWidth < 360 ? 28 : 35;
+  double fontSize = screenWidth < 360 ? 42 : 56;
   return const TextStyle(
-    height: 0,
     color: blanco,
     fontFamily: 'SF Pro Display',
     fontWeight: FontWeight.w700,
+    letterSpacing: -0.5,
+    height: 1.1,
+    decoration: TextDecoration.none,
   ).copyWith(fontSize: fontSize);
 }
 
-// Padding responsivo mejorado
+TextStyle getHeroSubtitle(double screenWidth) {
+  double fontSize = screenWidth < 360 ? 11 : 13;
+  return const TextStyle(
+    color: grisMedio,
+    fontFamily: 'SF Pro Display',
+    fontWeight: FontWeight.w500,
+    letterSpacing: 2.0,
+    height: 1.2,
+    decoration: TextDecoration.none,
+  ).copyWith(fontSize: fontSize);
+}
+
+TextStyle getHeroDescription(double screenWidth) {
+  double fontSize = screenWidth < 360 ? 15 : 17;
+  return const TextStyle(
+    color: grisMedio,
+    fontFamily: 'SF Pro Display',
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.0,
+    height: 1.6,
+    decoration: TextDecoration.none,
+  ).copyWith(fontSize: fontSize);
+}
+
+TextStyle getSubtitulo(double screenWidth) {
+  double fontSize = screenWidth < 360 ? 20 : 24;
+  return const TextStyle(
+    color: grisMedio,
+    fontFamily: 'SF Pro Display',
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.38,
+    height: 1.2,
+    decoration: TextDecoration.none,
+  ).copyWith(fontSize: fontSize);
+}
+
+// Padding responsivo mejorado para todos los dispositivos
 double getHorizontalPadding(double screenWidth) {
-  if (screenWidth < 360) return 16;
-  if (screenWidth < 600) return 24;
-  if (screenWidth < 900) return 32;
-  return 40;
+  // Móviles pequeños
+  if (screenWidth < 360) return 20;
+  // Móviles estándar
+  if (screenWidth < 400) return 24;
+  // Móviles grandes
+  if (screenWidth < 600) return 32;
+  // Tablets pequeñas
+  if (screenWidth < 900) return 48;
+  // Tablets grandes / Desktop
+  return 64;
 }
 
 double getVerticalPadding(double screenWidth) {
-  if (screenWidth < 360) return 12;
-  if (screenWidth < 600) return 16;
-  if (screenWidth < 900) return 20;
-  return 24;
+  // Móviles pequeños
+  if (screenWidth < 360) return 16;
+  // Móviles estándar
+  if (screenWidth < 400) return 20;
+  // Móviles grandes
+  if (screenWidth < 600) return 24;
+  // Tablets
+  if (screenWidth < 900) return 32;
+  // Desktop
+  return 40;
 }
 
 // Función para SafeArea responsivo
@@ -143,19 +222,23 @@ const double smallScreenWidth = 360;
 const double mediumScreenWidth = 600;
 const double largeScreenWidth = 900;
 
-// Duración de animaciones
-const Duration duracion = Duration(milliseconds: 300);
-const Duration duracionLarga = Duration(milliseconds: 500);
+// Duración de animaciones sutiles
+const Duration duracion = Duration(milliseconds: 350);
+const Duration duracionLarga = Duration(milliseconds: 600);
+const Duration duracionCorta = Duration(milliseconds: 200);
+const Curve curvaSuave = Curves.easeOutCubic;
+const Curve curvaNatural = Curves.easeInOut;
 
 // Espaciado estándar
 const double defaultPadding = 16.0;
 const double smallPadding = 8.0;
 const double largePadding = 24.0;
 
-// Radio de bordes
-const double borderRadius = 12.0;
-const double borderRadiusSmall = 8.0;
-const double borderRadiusLarge = 16.0;
+// Radio de bordes minimalistas
+const double borderRadius = 16.0;
+const double borderRadiusSmall = 12.0;
+const double borderRadiusLarge = 20.0;
+const double borderRadiusXL = 28.0;
 
 // Sombras
 const List<BoxShadow> defaultShadow = [
@@ -172,12 +255,8 @@ const double appBarHeight = 56.0;
 
 // Utilidad para opacidad compatible
 Color colorWithOpacity(Color color, double opacity) {
-  return Color.fromARGB(
-    (opacity * 255).round(),
-    (color.r * 255).round(),
-    (color.g * 255).round(),
-    (color.b * 255).round(),
-  );
+  return color.withValues(
+      alpha: ((color.alpha / 255.0) * opacity).clamp(0.0, 1.0));
 }
 
 // Función para determinar si es tablet

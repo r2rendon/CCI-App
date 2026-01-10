@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../home/constantes.dart';
+import '../widgets/swipe_back_wrapper.dart';
 
 class Ofrendas extends StatelessWidget {
   const Ofrendas({super.key});
@@ -9,74 +10,57 @@ class Ofrendas extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: negro,
-      body: Container(
-        decoration: decorations,
+    return SwipeBackWrapper(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: getGradientBackground(),
         child: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: screenHeight * 0.02),
-                _buildHeader(screenWidth, screenHeight),
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: getHorizontalPadding(screenWidth),
+            ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: screenHeight * 0.02),
+                  _buildHeader(screenWidth),
                 SizedBox(height: screenHeight * 0.02),
                 _buildLocation(screenWidth),
-                SizedBox(height: screenHeight * 0.02),
+                SizedBox(height: screenHeight * 0.04),
                 _buildDescription(screenWidth),
                 _buildBiblicalQuote(screenWidth),
                 _buildBankAccounts(screenWidth, screenHeight),
-                SizedBox(height: screenHeight * 0.05),
+                SizedBox(height: screenHeight * 0.08),
               ],
             ),
           ),
         ),
       ),
+      ),
     );
   }
 
-  Widget _buildHeader(double screenWidth, double screenHeight) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: getHorizontalPadding(screenWidth),
-        vertical: getVerticalPadding(screenWidth),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              "Dar",
-              style: getTitulo(screenWidth),
-            ),
-          ),
-          Image.asset(
-            "assets/images/logo.png",
-            height: screenHeight * 0.05,
-            color: blanco,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.mobile_friendly,
-                size: screenHeight * 0.05,
-                color: blanco,
-              );
-            },
-          ),
-        ],
-      ),
+  Widget _buildHeader(double screenWidth) {
+    return Text(
+      "Dar",
+      overflow: TextOverflow.visible,
+      style: getTitulo(screenWidth),
     );
   }
 
   Widget _buildLocation(double screenWidth) {
-    return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: getHorizontalPadding(screenWidth)),
-      child: Text(
-        "San Pedro Sula",
-        style: TextStyle(
-          color: blanco,
-          fontSize: screenWidth < 360 ? 14 : 16,
-        ),
+    return Text(
+      "San Pedro Sula",
+      overflow: TextOverflow.visible,
+      style: TextStyle(
+        fontFamily: 'SF Pro Display',
+        color: grisMedio,
+        fontSize: screenWidth < 360 ? 15 : 17,
+        fontWeight: FontWeight.w400,
+        letterSpacing: -0.41,
       ),
     );
   }
@@ -89,6 +73,7 @@ class Ofrendas extends StatelessWidget {
         "La generosidad es una expresión de nuestro amor hacia Dios y hacia los demás. "
         "En CCI creemos que dar es un acto de adoración que nos permite ser parte de la "
         "obra de Dios en nuestra comunidad y en el mundo.",
+        overflow: TextOverflow.visible,
         style: TextStyle(
           height: 1.5,
           fontSize: screenWidth < 360 ? 16 : 18,
@@ -114,6 +99,7 @@ class Ofrendas extends StatelessWidget {
           children: [
             Text(
               '"Cada uno debe dar según lo que haya decidido en su corazón, no de mala gana ni por obligación, porque Dios ama al que da con alegría."',
+              overflow: TextOverflow.visible,
               style: TextStyle(
                 color: blanco,
                 fontSize: screenWidth < 360 ? 14 : 16,
@@ -146,6 +132,7 @@ class Ofrendas extends StatelessWidget {
         children: [
           Text(
             "Formas de Dar",
+            overflow: TextOverflow.visible,
             style: getThema(screenWidth),
           ),
           SizedBox(height: screenWidth * 0.04),
@@ -189,6 +176,7 @@ class Ofrendas extends StatelessWidget {
                 Text(
                   "Todas las ofrendas y diezmos son utilizados para el mantenimiento "
                   "de la iglesia, misiones, y programas comunitarios.",
+                  overflow: TextOverflow.visible,
                   style: TextStyle(
                     color: blanco,
                     fontSize: screenWidth < 360 ? 13 : 14,
@@ -223,6 +211,8 @@ class Ofrendas extends StatelessWidget {
         children: [
           Text(
             bankName,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
             style: TextStyle(
               color: blanco,
               fontSize: screenWidth < 360 ? 15 : 16,
@@ -232,6 +222,8 @@ class Ofrendas extends StatelessWidget {
           SizedBox(height: screenWidth * 0.02),
           Text(
             accountNumber,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
             style: TextStyle(
               color: colorWithOpacity(blanco, 0.9),
               fontSize: screenWidth < 360 ? 13 : 14,
@@ -241,6 +233,8 @@ class Ofrendas extends StatelessWidget {
           SizedBox(height: screenWidth * 0.01),
           Text(
             accountHolder,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
             style: TextStyle(
               color: colorWithOpacity(blanco, 0.7),
               fontSize: screenWidth < 360 ? 12 : 13,

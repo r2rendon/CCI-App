@@ -10,20 +10,23 @@ class WhatsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return InkWell(
-      onTap: () => _launchWhatsApp(context),
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _launchWhatsApp(context),
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: screenWidth * 0.04,
           vertical: screenWidth * 0.02,
         ),
         decoration: BoxDecoration(
-          color: colorWithOpacity(const Color(0xFF25D366), 0.2),
+          color: grisCard,
           borderRadius: BorderRadius.circular(borderRadius),
-          border:
-              Border.all(color: colorWithOpacity(const Color(0xFF25D366), 0.5)),
-          boxShadow: defaultShadow,
+          border: Border.all(
+            color: colorWithOpacity(blanco, 0.1),
+            width: 0.5,
+          ),
         ),
         child: Tooltip(
           message: 'WhatsApp: $mapa',
@@ -31,7 +34,7 @@ class WhatsApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.chat,
+                Icons.chat_outlined,
                 color: const Color(0xFF25D366),
                 size: screenWidth < 360 ? 18 : 20,
               ),
@@ -40,13 +43,16 @@ class WhatsApp extends StatelessWidget {
                 'Acompañamiento Espiritual',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontFamily: 'SF Pro Display',
                   color: blanco,
-                  fontSize: screenWidth < 360 ? 14 : 16,
+                  fontSize: screenWidth < 360 ? 15 : 17,
                   fontWeight: FontWeight.w500,
+                  letterSpacing: -0.41,
                 ),
               ),
             ],
           ),
+        ),
         ),
       ),
     );

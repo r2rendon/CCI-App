@@ -16,7 +16,7 @@ class YoutubePlayerComponent1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const YoutubePlayerBase(
-      videoId: 'Zy8JB0yOh2g',
+      videoId: 'c5GWRFVO9MM',
       title: 'Transmisión Reciente',
     );
   }
