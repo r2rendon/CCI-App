@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:ui';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 import 'eventos.dart';
 import 'iglesia.dart';
 import 'ministerios.dart';
 import 'transmisiones.dart';
 import 'ofrendas.dart';
-import 'next.dart';
+import 'youth.dart';
 import 'ubicacion.dart';
 
 class Inicio extends StatefulWidget {
@@ -20,11 +19,12 @@ class Inicio extends StatefulWidget {
 
 class _InicioState extends State<Inicio> with TickerProviderStateMixin {
   late AnimationController _heroAnimationController;
-  late AnimationController _logoTransitionController;
-  late Animation<double> _logoScaleAnimation;
-  late Animation<Offset> _logoSlideAnimation;
-  late Animation<double> _logoOpacityAnimation;
+  late AnimationController _textAnimationController;
+  late AnimationController _logoPositionController;
   late Animation<double> _textOpacityAnimation;
+  late Animation<Offset> _logoPositionAnimation;
+  late Animation<Offset> _textPositionAnimation;
+  late Animation<double> _logoPositionScaleAnimation;
 
   @override
   void initState() {
@@ -34,61 +34,80 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    // Animación para la transición del logo desde el centro
-    _logoTransitionController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+    // Animación para el texto con efecto desde la izquierda
+    _textAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
-    // Animación de escala: desde grande (centro) hasta tamaño final
-    _logoScaleAnimation = Tween<double>(
-      begin: 1.4, // Más grande al inicio (centro)
-      end: 1.0, // Tamaño final
-    ).animate(
-      CurvedAnimation(
-        parent: _logoTransitionController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-
-    // Animación de posición: desde el centro hacia la izquierda
-    _logoSlideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, -0.2), // Desde arriba y centrado
-      end: Offset.zero, // Posición final
-    ).animate(
-      CurvedAnimation(
-        parent: _logoTransitionController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-
-    // Opacidad del logo
-    _logoOpacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _logoTransitionController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeIn),
-      ),
-    );
-
-    // Opacidad del texto (aparece después)
+    // Opacidad del texto (efecto wipe de izquierda a derecha)
     _textOpacityAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(
       CurvedAnimation(
-        parent: _logoTransitionController,
-        curve: const Interval(0.4, 1.0, curve: Curves.easeIn),
+        parent: _textAnimationController,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    // Animación para mover el logo y texto a su posición final
+    _logoPositionController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    // Animación de posición del logo: desde el centro hacia la derecha
+    _logoPositionAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.0), // Posición inicial centrada
+      end: const Offset(1.25, 0.0), // Posición final: a la derecha
+    ).animate(
+      CurvedAnimation(
+        parent: _logoPositionController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    // Animación de posición del texto: desde el centro hacia la izquierda
+    _textPositionAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.0), // Posición inicial centrada
+      end:
+          const Offset(-0.65, 0.0), // Posición final: a la izquierda (ajustado)
+    ).animate(
+      CurvedAnimation(
+        parent: _logoPositionController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    // Escala del logo y texto durante la transición (se hace más pequeño)
+    _logoPositionScaleAnimation = Tween<double>(
+      begin: 1.0, // Tamaño inicial (centrado)
+      end: 0.85, // Tamaño final (un poco más pequeño)
+    ).animate(
+      CurvedAnimation(
+        parent: _logoPositionController,
+        curve: Curves.easeOutCubic,
       ),
     );
 
     // Delay para que la transición Hero se complete primero
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 600), () {
       if (mounted) {
-        _logoTransitionController.forward();
+        // El logo ya está en posición centrada después del Hero
         _heroAnimationController.forward();
+        // Iniciar animación del texto inmediatamente (aparece centrado)
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            _textAnimationController.forward();
+            // Después de 0.5s, mover todo desde el centro hacia la izquierda
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted) {
+                _logoPositionController.forward();
+              }
+            });
+          }
+        });
       }
     });
   }
@@ -96,7 +115,8 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
   @override
   void dispose() {
     _heroAnimationController.dispose();
-    _logoTransitionController.dispose();
+    _textAnimationController.dispose();
+    _logoPositionController.dispose();
     super.dispose();
   }
 
@@ -122,103 +142,103 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // SizedBox(height: screenHeight * 0.01),
-                // Logo grande con transición animada desde el centro
-                Center(
-                  child: Hero(
-                    tag: 'app_logo',
-                    child: FadeTransition(
-                      opacity: _logoOpacityAnimation,
-                      child: SlideTransition(
-                        position: _logoSlideAnimation,
-                        child: ScaleTransition(
-                          scale: _logoScaleAnimation,
-                          child: SizedBox(
-                            width: screenWidth -
-                                (getHorizontalPadding(screenWidth) * 1),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Logo grande con animación
-                                Image.asset(
-                                  'assets/images/Logo CCI SPS_Globo Gris Oscuro.png',
-                                  width: screenWidth * 0.20,
-                                  height: screenWidth * 0.20,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(
-                                      Icons.church,
-                                      size: screenWidth * 0.3,
-                                      color: blanco,
-                                    );
-                                  },
-                                ),
-                                SizedBox(width: screenWidth * 0.04),
-                                // Texto junto al logo con animación de fade
-                                Flexible(
-                                  child: FadeTransition(
-                                    opacity: _textOpacityAnimation,
+                // Logo y texto - Inicialmente centrados, luego se separan
+                ScaleTransition(
+                  scale: _logoPositionScaleAnimation,
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Texto que se mueve a la izquierda con efecto wipe
+                        SlideTransition(
+                          position: _textPositionAnimation,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: screenWidth * 0.02),
+                            child: AnimatedBuilder(
+                              animation: _textOpacityAnimation,
+                              builder: (context, child) {
+                                return ClipRect(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    widthFactor: _textOpacityAnimation.value,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          "CENTRO CRISTIANO",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
+                                          kChurchName,
+                                          overflow: TextOverflow.visible,
                                           style: TextStyle(
-                                            fontFamily: 'SF Pro Display',
+                                            fontFamily: kFontFamily,
                                             color: blanco,
-                                            fontSize:
-                                                screenWidth < 360 ? 12 : 13,
-                                            fontWeight: FontWeight.w700,
-                                            letterSpacing: 0.5,
-                                            height: 1.2,
+                                            fontSize: getFontSizeBodySmall(
+                                                screenWidth),
+                                            fontWeight: fontWeightBold,
+                                            letterSpacing: letterSpacingWider,
+                                            height: lineHeightLoose,
                                           ),
                                         ),
                                         Text(
-                                          "INTERNACIONAL",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
+                                          kChurchSubtitle,
+                                          overflow: TextOverflow.visible,
                                           style: TextStyle(
-                                            fontFamily: 'SF Pro Display',
+                                            fontFamily: kFontFamily,
                                             color: blanco,
-                                            fontSize:
-                                                screenWidth < 360 ? 12 : 13,
-                                            fontWeight: FontWeight.w700,
-                                            letterSpacing: 0.5,
-                                            height: 1.1,
+                                            fontSize: getFontSizeBodySmall(
+                                                screenWidth),
+                                            fontWeight: fontWeightBold,
+                                            letterSpacing: letterSpacingWider,
+                                            height: lineHeightNormal,
                                           ),
                                         ),
-                                        SizedBox(height: screenWidth * 0.01),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: screenWidth * 0.01),
-                                          child: Text(
-                                            "SAN PEDRO SULA",
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontFamily: 'SF Pro Display',
-                                              color: grisMedio,
-                                              fontSize:
-                                                  screenWidth < 360 ? 9 : 10,
-                                              fontWeight: FontWeight.w400,
-                                              letterSpacing: 0.3,
-                                              height: 1.2,
-                                            ),
+                                        SizedBox(
+                                            height:
+                                                screenWidth * widthSpacingXS),
+                                        Text(
+                                          kChurchCity,
+                                          overflow: TextOverflow.visible,
+                                          style: TextStyle(
+                                            fontFamily: kFontFamily,
+                                            color: grisMedio,
+                                            fontSize:
+                                                getFontSizeSmall(screenWidth),
+                                            fontWeight: fontWeightRegular,
+                                            letterSpacing: letterSpacingWide,
+                                            height: lineHeightLoose,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(width: screenWidth * 0.04),
+                        // Logo que se mueve a la derecha
+                        SlideTransition(
+                          position: _logoPositionAnimation,
+                          child: Hero(
+                            tag: 'app_logo',
+                            child: Image.asset(
+                              'assets/images/Logo CCI SPS_Globo Gris Oscuro.png',
+                              width: screenWidth * 0.20,
+                              height: screenWidth * 0.20,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.church,
+                                  size: screenWidth * 0.3,
+                                  color: blanco,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -247,54 +267,26 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
             children: [
               // MOSTREMOS - fuente más pequeña
               Text(
-                "MOSTREMOS",
-                style: TextStyle(
-                  color: blanco,
-                  fontFamily: 'SF Pro Display',
-                  fontSize: screenWidth < 360 ? 20 : 24,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.3,
-                  height: 1.2,
-                ),
+                kMainMessageLine1,
+                style: getHeroSmallTextStyle(screenWidth),
               ),
-              SizedBox(height: screenHeight * 0.015),
+              SizedBox(height: screenHeight * spacingS),
               // EL AMOR - fuente mucho más grande y negrita
               Text(
-                "EL AMOR",
-                style: TextStyle(
-                  color: blanco,
-                  fontFamily: 'SF Pro Display',
-                  fontSize: screenWidth < 360 ? 56 : 72,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1.0,
-                  height: 0.95,
-                ),
+                kMainMessageLine2,
+                style: getHeroTextStyle(screenWidth),
               ),
-              SizedBox(height: screenHeight * 0.005),
+              SizedBox(height: screenHeight * spacingXXS),
               // DE DIOS - fuente mucho más grande y negrita
               Text(
-                "DE DIOS",
-                style: TextStyle(
-                  color: blanco,
-                  fontFamily: 'SF Pro Display',
-                  fontSize: screenWidth < 360 ? 56 : 72,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1.0,
-                  height: 0.95,
-                ),
+                kMainMessageLine3,
+                style: getHeroTextStyle(screenWidth),
               ),
-              SizedBox(height: screenHeight * 0.015),
+              SizedBox(height: screenHeight * spacingS),
               // PARA QUE EL MUNDO CREA - fuente más pequeña
               Text(
-                "PARA QUE EL MUNDO CREA",
-                style: TextStyle(
-                  color: blanco,
-                  fontFamily: 'SF Pro Display',
-                  fontSize: screenWidth < 360 ? 20 : 24,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.3,
-                  height: 1.2,
-                ),
+                kMainMessageLine4,
+                style: getHeroSmallTextStyle(screenWidth),
               ),
             ],
           ),
@@ -354,9 +346,9 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
       },
       {
         'icon': Icons.arrow_forward_outlined,
-        'title': 'Next',
+        'title': 'Youth',
         'subtitle': 'Próximas generaciones',
-        'screen': const Next(),
+        'screen': const Youth(),
       },
       {
         'icon': Icons.location_on_outlined,
@@ -370,15 +362,8 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Explorar",
-          style: TextStyle(
-            fontFamily: 'SF Pro Display',
-            color: blanco,
-            fontSize: screenWidth < 360 ? 24 : 32,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.5,
-            height: 1.1,
-          ),
+          kSectionExplore,
+          style: getSectionTitleStyle(screenWidth),
         ),
         SizedBox(height: screenHeight * 0.04),
         ...menuItems.map((item) => Padding(
@@ -444,26 +429,12 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
-                        fontFamily: 'SF Pro Display',
-                        fontSize: screenWidth < 360 ? 19 : 22,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.5,
-                        color: blanco,
-                        height: 1.2,
-                      ),
+                      style: getCardTitleStyle(screenWidth),
                     ),
                     SizedBox(height: screenHeight * 0.006),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontFamily: 'SF Pro Display',
-                        fontSize: screenWidth < 360 ? 15 : 17,
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 0.0,
-                        color: grisMedio,
-                        height: 1.4,
-                      ),
+                      style: getCardSubtitleStyle(screenWidth),
                     ),
                   ],
                 ),
@@ -500,8 +471,8 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
                       sigmaY: blurValue,
                     ),
                     child: Container(
-                      color:
-                          Colors.black.withOpacity(0.3 * (1 - animation.value)),
+                      color: Colors.black.withValues(
+                          alpha: (0.3 * (1 - animation.value)).clamp(0.0, 1.0)),
                     ),
                   ),
                 ),
