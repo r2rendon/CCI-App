@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 
 class Ubicacion extends StatefulWidget {
@@ -19,8 +19,11 @@ class _UbicacionState extends State<Ubicacion> {
   bool _isLoadingWeather = true;
 
   // Coordenadas de la iglesia en San Pedro Sula
-  final double _churchLat = 15.5000;
-  final double _churchLng = -88.0300;
+  final double _churchLat = 15.4993977;
+  final double _churchLng = -88.0429316;
+  
+  // Dirección completa de la iglesia
+  final String _churchAddress = kChurchAddress;
 
   @override
   void initState() {
@@ -62,7 +65,11 @@ class _UbicacionState extends State<Ubicacion> {
   }
 
   String _formatTime(DateTime time) {
-    return "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+    final hour = time.hour % 12;
+    final hour12 = hour == 0 ? 12 : hour;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.hour < 12 ? 'AM' : 'PM';
+    return "$hour12:$minute $period";
   }
 
   String _formatDate(DateTime time) {
@@ -146,24 +153,43 @@ class _UbicacionState extends State<Ubicacion> {
 
   Future<void> _openInMaps(String app) async {
     String url;
+    final encodedAddress = Uri.encodeComponent("Centro Cristiano Internacional - CCI, 21 Avenida C, San Pedro Sula 21104, Honduras");
+    
     switch (app) {
       case 'google':
-        url =
-            "https://www.google.com/maps/search/?api=1&query=$_churchLat,$_churchLng";
+      case 'googlemaps':
+        // Usar coordenadas exactas para mejor precisión
+        url = "https://www.google.com/maps/search/?api=1&query=$_churchLat,$_churchLng";
+        // Alternativa con dirección: url = "https://www.google.com/maps/search/?api=1&query=$encodedAddress";
         break;
       case 'apple':
-        url = "http://maps.apple.com/?q=$_churchLat,$_churchLng";
+      case 'applemaps':
+        // Apple Maps con coordenadas
+        url = "https://maps.apple.com/?ll=$_churchLat,$_churchLng&q=$encodedAddress";
         break;
       case 'waze':
+        // Waze con coordenadas y navegación
         url = "https://waze.com/ul?ll=$_churchLat,$_churchLng&navigate=yes";
         break;
       default:
         return;
     }
 
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        // Fallback: intentar con URL alternativa
+        if (app == 'google' || app == 'googlemaps') {
+          final fallbackUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$_churchLat,$_churchLng");
+          if (await canLaunchUrl(fallbackUri)) {
+            await launchUrl(fallbackUri, mode: LaunchMode.externalApplication);
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error abriendo mapa: $e');
     }
   }
 
@@ -224,15 +250,9 @@ class _UbicacionState extends State<Ubicacion> {
         ),
         SizedBox(height: screenWidth * 0.02),
         Text(
-          "San Pedro Sula",
+          kLocationName,
           overflow: TextOverflow.visible,
-          style: TextStyle(
-            fontFamily: 'SF Pro Display',
-            color: grisMedio,
-            fontSize: screenWidth < 360 ? 15 : 17,
-            fontWeight: FontWeight.w400,
-            letterSpacing: -0.41,
-          ),
+          style: getLocationTextStyle(screenWidth),
         ),
       ],
     );
@@ -257,8 +277,8 @@ class _UbicacionState extends State<Ubicacion> {
             children: [
               Icon(
                 Icons.location_on,
-                color: const Color(0xFFF5F5DC),
-                size: screenWidth * 0.06,
+                color: beigeCream,
+                size: screenWidth * widthSpacingXL,
               ),
               SizedBox(width: screenWidth * 0.03),
               Expanded(
@@ -277,35 +297,27 @@ class _UbicacionState extends State<Ubicacion> {
           ),
           SizedBox(height: screenHeight * 0.02),
           Text(
-            "Centro Cristiano Internacional\nSan Pedro Sula, Honduras",
+            _churchAddress,
             overflow: TextOverflow.visible,
-            style: TextStyle(
-              color: colorWithOpacity(blanco, 0.8),
-              fontSize: screenWidth < 360 ? 14 : 16,
-              height: 1.4,
-            ),
+            style: getInfoTextStyle(screenWidth, color: colorWithOpacity(blanco, 0.8)),
           ),
           SizedBox(height: screenHeight * 0.02),
           Text(
             "Abrir en:",
             overflow: TextOverflow.visible,
-            style: TextStyle(
-              color: blanco,
-              fontSize: screenWidth < 360 ? 14 : 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: getLabelTextStyle(screenWidth),
           ),
           SizedBox(height: screenHeight * 0.015),
           Row(
             children: [
               _buildMapButton(
-                  "Google Maps", Icons.map, Colors.blue, screenWidth),
+                  "Google Maps", "assets/images/gmaps.png", Colors.blue, screenWidth),
               SizedBox(width: screenWidth * 0.03),
               _buildMapButton(
-                  "Apple Maps", Icons.navigation, Colors.grey, screenWidth),
+                  "Apple Maps", "assets/images/apmaps.png", Colors.grey, screenWidth),
               SizedBox(width: screenWidth * 0.03),
               _buildMapButton(
-                  "Waze", Icons.directions_car, Colors.purple, screenWidth),
+                  "Waze", "assets/images/waze.png", Colors.purple, screenWidth),
             ],
           ),
         ],
@@ -314,10 +326,17 @@ class _UbicacionState extends State<Ubicacion> {
   }
 
   Widget _buildMapButton(
-      String label, IconData icon, Color color, double screenWidth) {
+      String label, String imagePath, Color color, double screenWidth) {
+    String mapKey = label.toLowerCase();
+    if (mapKey == 'google maps') {
+      mapKey = 'googlemaps';
+    } else if (mapKey == 'apple maps') {
+      mapKey = 'applemaps';
+    }
+    
     return Expanded(
       child: GestureDetector(
-        onTap: () => _openInMaps(label.toLowerCase().replaceAll(' ', '')),
+        onTap: () => _openInMaps(mapKey.replaceAll(' ', '')),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: screenWidth * 0.03),
           decoration: BoxDecoration(
@@ -327,7 +346,19 @@ class _UbicacionState extends State<Ubicacion> {
           ),
           child: Column(
             children: [
-              Icon(icon, color: color, size: screenWidth * 0.05),
+              Image.asset(
+                imagePath,
+                width: screenWidth * 0.08,
+                height: screenWidth * 0.08,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.map,
+                    color: color,
+                    size: screenWidth * 0.05,
+                  );
+                },
+              ),
               SizedBox(height: screenWidth * 0.01),
               Text(
                 label,
@@ -379,19 +410,15 @@ class _UbicacionState extends State<Ubicacion> {
                         "Clima",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(
-                          color: blanco,
-                          fontSize: screenWidth < 360 ? 16 : 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      style: getCardContentStyle(screenWidth),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.01),
-                if (_isLoadingWeather)
+                  if (_isLoadingWeather)
                   CircularProgressIndicator(
-                    color: const Color(0xFFF5F5DC),
+                    color: beigeCream,
                     strokeWidth: 2,
                   )
                 else ...[
@@ -399,20 +426,15 @@ class _UbicacionState extends State<Ubicacion> {
                     _temperature,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: TextStyle(
-                      color: blanco,
-                      fontSize: screenWidth < 360 ? 24 : 28,
-                      fontWeight: FontWeight.bold,
+                    style: getCardContentStyle(screenWidth, color: blanco).copyWith(
+                      fontSize: getFontSizeHeadingLarge(screenWidth),
                     ),
                   ),
                   Text(
                     _weatherCondition,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: TextStyle(
-                      color: colorWithOpacity(blanco, 0.8),
-                      fontSize: screenWidth < 360 ? 12 : 14,
-                    ),
+                    style: getInfoTextStyle(screenWidth),
                   ),
                 ],
               ],
@@ -427,7 +449,7 @@ class _UbicacionState extends State<Ubicacion> {
                   children: [
                     Icon(
                       Icons.access_time,
-                      color: const Color(0xFFF5F5DC),
+                      color: beigeCream,
                       size: screenWidth * 0.06,
                     ),
                     SizedBox(width: screenWidth * 0.02),
@@ -436,11 +458,7 @@ class _UbicacionState extends State<Ubicacion> {
                         "Hora Local",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: TextStyle(
-                          color: blanco,
-                          fontSize: screenWidth < 360 ? 16 : 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      style: getCardContentStyle(screenWidth),
                       ),
                     ),
                   ],
@@ -498,15 +516,11 @@ class _UbicacionState extends State<Ubicacion> {
               ),
               SizedBox(width: screenWidth * 0.03),
               Expanded(
-                child: Text(
+                child:                 Text(
                   "Próxima Celebración",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: TextStyle(
-                    color: blanco,
-                    fontSize: screenWidth < 360 ? 18 : 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: getCardContentStyle(screenWidth),
                 ),
               ),
             ],
@@ -524,10 +538,8 @@ class _UbicacionState extends State<Ubicacion> {
           Text(
             "9:00 AM y 11:30 AM",
             overflow: TextOverflow.visible,
-            style: TextStyle(
-              color: blanco,
-              fontSize: screenWidth < 360 ? 16 : 18,
-              fontWeight: FontWeight.w600,
+            style: getLabelTextStyle(screenWidth, color: blanco).copyWith(
+              fontSize: getFontSizeBodyXLarge(screenWidth),
             ),
           ),
           SizedBox(height: screenHeight * 0.02),
@@ -535,10 +547,10 @@ class _UbicacionState extends State<Ubicacion> {
             width: double.infinity,
             padding: EdgeInsets.all(screenWidth * 0.04),
             decoration: BoxDecoration(
-              color: colorWithOpacity(const Color(0xFFF5F5DC), 0.1),
-              borderRadius: BorderRadius.circular(15),
+              color: colorWithOpacity(beigeCream, 0.1),
+              borderRadius: BorderRadius.circular(borderRadiusSmall),
               border: Border.all(
-                color: const Color(0xFFF5F5DC),
+                color: beigeCream,
                 width: 1,
               ),
             ),
@@ -557,10 +569,8 @@ class _UbicacionState extends State<Ubicacion> {
                   _formatCountdown(countdown),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: TextStyle(
-                    color: const Color(0xFFF5F5DC),
-                    fontSize: screenWidth < 360 ? 20 : 24,
-                    fontWeight: FontWeight.bold,
+                  style: getCardContentStyle(screenWidth, color: beigeCream).copyWith(
+                    fontSize: getFontSizeHeadingMedium(screenWidth),
                   ),
                 ),
               ],

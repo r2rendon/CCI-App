@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Informacion/actividades_externas.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
+import '../utils/aws_events_service.dart';
+import '../models/event_model.dart';
 
 class Eventos extends StatefulWidget {
   const Eventos({super.key});
@@ -11,9 +14,7 @@ class Eventos extends StatefulWidget {
 }
 
 class _EventosState extends State<Eventos> {
-  String _serieTitle = 'Serie de ejemplo';
-  String _serieThemes = 'Tema 1, Tema 2, Tema 3';
-  String _monthlyEvents = 'Evento 1|Evento 2|Evento 3';
+  List<EventModel> _events = [];
   bool _isLoading = false;
 
   @override
@@ -28,10 +29,10 @@ class _EventosState extends State<Eventos> {
     });
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-
+      final events = await AWSEventsService.getEvents();
       if (mounted) {
         setState(() {
+          _events = events;
           _isLoading = false;
         });
       }
@@ -43,6 +44,10 @@ class _EventosState extends State<Eventos> {
         _showErrorMessage('Error al cargar los eventos');
       }
     }
+  }
+
+  Future<void> _refreshEvents() async {
+    await _loadData();
   }
 
   void _showErrorMessage(String message) {
@@ -166,47 +171,83 @@ class _EventosState extends State<Eventos> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Próximos Eventos",
-          overflow: TextOverflow.visible,
-          style: TextStyle(
-            fontFamily: 'SF Pro Display',
-            color: blanco,
-            fontSize: screenWidth < 360 ? 24 : 32,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.5,
-            height: 1.1,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Próximos Eventos",
+              overflow: TextOverflow.visible,
+              style: TextStyle(
+                fontFamily: 'SF Pro Display',
+                color: blanco,
+                fontSize: screenWidth < 360 ? 24 : 32,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
+                height: 1.1,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh, color: blanco),
+              onPressed: _refreshEvents,
+              tooltip: 'Actualizar eventos',
+            ),
+          ],
         ),
         SizedBox(height: screenHeight * 0.04),
-        // Serie Actual Card
-        _buildEventCard(
-          screenWidth: screenWidth,
-          screenHeight: screenHeight,
-          title: _serieTitle,
-          description: "Una serie especial diseñada para profundizar en temas fundamentales de la fe y el crecimiento espiritual.",
-          location: "San Pedro Sula",
-          details: "Serie Actual",
-          themes: _serieThemes,
-        ),
-        SizedBox(height: screenHeight * 0.03),
-        // Eventos del Mes
-        ..._monthlyEvents.split('|').map((event) => Padding(
-              padding: EdgeInsets.only(bottom: screenHeight * 0.03),
-              child: _buildEventCard(
-                screenWidth: screenWidth,
-                screenHeight: screenHeight,
-                title: event.trim(),
-                description: "Únete a nosotros para este evento especial donde compartiremos momentos significativos de comunidad y crecimiento.",
-                location: "San Pedro Sula",
-                details: "Evento Mensual",
-                themes: "",
+        if (_events.isEmpty && !_isLoading)
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(screenWidth * 0.05),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.event_busy_outlined,
+                    color: grisMedio,
+                    size: 64,
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Text(
+                    'No hay eventos próximos',
+                    style: TextStyle(
+                      fontFamily: 'SF Pro Display',
+                      color: grisMedio,
+                      fontSize: screenWidth < 360 ? 16 : 18,
+                    ),
+                  ),
+                ],
               ),
-            )),
+            ),
+          )
+        else
+          ..._events.map((event) => Padding(
+                padding: EdgeInsets.only(bottom: screenHeight * 0.03),
+                child: _buildEventCardFromModel(
+                  screenWidth: screenWidth,
+                  screenHeight: screenHeight,
+                  event: event,
+                ),
+              )),
         SizedBox(height: screenHeight * 0.03),
         // Actividades Externas
         _buildExternalActivitiesCard(screenWidth, screenHeight),
       ],
+    );
+  }
+
+  Widget _buildEventCardFromModel({
+    required double screenWidth,
+    required double screenHeight,
+    required EventModel event,
+  }) {
+    return _buildEventCard(
+      screenWidth: screenWidth,
+      screenHeight: screenHeight,
+      title: event.name,
+      description: event.description,
+      location: event.location,
+      details: event.formattedDate,
+      imageUrl: event.imageUrl,
+      registrationLink: event.registrationLink,
     );
   }
 
@@ -217,7 +258,8 @@ class _EventosState extends State<Eventos> {
     required String description,
     required String location,
     required String details,
-    required String themes,
+    String? imageUrl,
+    String? registrationLink,
   }) {
     return Container(
       width: double.infinity,
@@ -232,7 +274,7 @@ class _EventosState extends State<Eventos> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image placeholder
+          // Event Image
           Container(
             width: double.infinity,
             height: screenHeight * 0.2,
@@ -243,13 +285,45 @@ class _EventosState extends State<Eventos> {
                 topRight: Radius.circular(borderRadius),
               ),
             ),
-            child: Center(
-              child: Icon(
-                Icons.event_outlined,
-                color: grisMedio,
-                size: 48,
-              ),
-            ),
+            child: imageUrl != null && imageUrl.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(borderRadius),
+                      topRight: Radius.circular(borderRadius),
+                    ),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Icon(
+                            Icons.event_outlined,
+                            color: grisMedio,
+                            size: 48,
+                          ),
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: accent,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : Center(
+                    child: Icon(
+                      Icons.event_outlined,
+                      color: grisMedio,
+                      size: 48,
+                    ),
+                  ),
           ),
           Padding(
             padding: EdgeInsets.all(screenWidth * 0.05),
@@ -319,17 +393,44 @@ class _EventosState extends State<Eventos> {
                     ),
                   ],
                 ),
-                if (themes.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.015),
-                  Text(
-                    "Temas: $themes",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    style: TextStyle(
-                      fontFamily: 'SF Pro Display',
-                      color: grisMedio,
-                      fontSize: screenWidth < 360 ? 13 : 15,
-                      fontWeight: FontWeight.w400,
+                if (registrationLink != null && registrationLink.isNotEmpty) ...[
+                  SizedBox(height: screenHeight * 0.02),
+                  GestureDetector(
+                    onTap: () async {
+                      final uri = Uri.parse(registrationLink);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.04,
+                        vertical: screenWidth * 0.03,
+                      ),
+                      decoration: BoxDecoration(
+                        color: accent,
+                        borderRadius: BorderRadius.circular(borderRadiusSmall),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.link,
+                            color: blanco,
+                            size: 18,
+                          ),
+                          SizedBox(width: screenWidth * 0.02),
+                          Text(
+                            'Inscripción',
+                            style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              color: blanco,
+                              fontSize: screenWidth < 360 ? 14 : 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

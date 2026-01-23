@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:ui';
 import '../navigation/main_navigation.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -108,17 +107,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   animation: animation,
                                   builder: (context, child) {
                                     final progress = animation.value;
-                                    // Escala que cambia durante la transición (de grande a pequeño)
-                                    final scale = 1.0 -
-                                        (progress *
-                                            0.875); // De 1.0 a 0.125 (40/320 aprox)
+                                    // Escala que cambia durante la transición
+                                    // De 1.0 (tamaño inicial: screenWidth * 0.5) a 0.4 (tamaño final: screenWidth * 0.20)
+                                    // 0.20 / 0.5 = 0.4
+                                    final scale =
+                                        1.0 - (progress * 0.6); // De 1.0 a 0.4
                                     // Opacidad que se ajusta durante la transición
                                     final opacity = 1.0 - (progress * 0.2);
 
                                     return Opacity(
                                       opacity: opacity.clamp(0.0, 1.0),
                                       child: Transform.scale(
-                                        scale: scale.clamp(0.125, 1.0),
+                                        scale: scale.clamp(0.4, 1.0),
                                         child: toHero.child,
                                       ),
                                     );
@@ -226,8 +226,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   sigmaY: blurValue,
                                 ),
                                 child: Container(
-                                  color: Colors.black
-                                      .withOpacity(0.3 * (1 - animation.value)),
+                                  color: Colors.black.withValues(
+                                      alpha: (0.3 * (1 - animation.value))
+                                          .clamp(0.0, 1.0)),
                                 ),
                               ),
                             ),

@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '13.0'
+platform :ios, '16.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -29,8 +29,14 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
+  use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  
+  # Excluir Firebase de iOS (requiere Xcode más reciente)
+  # Los pods de Firebase se instalarán pero no se compilarán debido a errores de Swift
+  # El código de Dart manejará la ausencia de Firebase en iOS
+  
   target 'RunnerTests' do
     inherit! :search_paths
   end
@@ -39,5 +45,17 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+      config.build_settings['SWIFT_VERSION'] = '5.9'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+      # Habilitar características experimentales de Swift necesarias para Firebase 11.15.0
+      swift_flags = config.build_settings['OTHER_SWIFT_FLAGS'] || ['$(inherited)']
+      swift_flags << '-Xfrontend'
+      swift_flags << '-enable-experimental-feature'
+      swift_flags << '-Xfrontend'
+      swift_flags << 'AccessLevelOnImport'
+      config.build_settings['OTHER_SWIFT_FLAGS'] = swift_flags
+    end
   end
 end

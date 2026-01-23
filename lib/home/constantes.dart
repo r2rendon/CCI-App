@@ -255,8 +255,7 @@ const double appBarHeight = 56.0;
 
 // Utilidad para opacidad compatible
 Color colorWithOpacity(Color color, double opacity) {
-  return color.withValues(
-      alpha: ((color.alpha / 255.0) * opacity).clamp(0.0, 1.0));
+  return color.withValues(alpha: (color.a * opacity).clamp(0.0, 1.0));
 }
 
 // Función para determinar si es tablet

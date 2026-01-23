@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:ui';
 import '../pantallas/welcome_screen.dart';
 
@@ -58,7 +57,7 @@ class SplashScreenState extends State<SplashScreen>
                           sigmaY: blurValue,
                         ),
                         child: Container(
-                          color: Colors.black.withOpacity(0.3 * (1 - animation.value)),
+                          color: Colors.black.withValues(alpha: (0.3 * (1 - animation.value)).clamp(0.0, 1.0)),
                         ),
                       ),
                     ),

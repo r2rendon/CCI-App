@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import '../Informacion/produccion.dart';
 import '../Informacion/Worship.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 import '../redes sociales/ig_alive.dart';
+import '../redes sociales/ig_next.dart';
+import '../redes sociales/ig_matrimonios.dart';
+import '../redes sociales/ig_mujeres.dart';
+import '../redes sociales/ig_shift.dart';
+import '../redes sociales/fb_hombres.dart';
 
 class Ministerios extends StatelessWidget {
   const Ministerios({super.key});
@@ -48,7 +53,6 @@ class Ministerios extends StatelessWidget {
   Widget _buildHeader(double screenWidth) {
     return Text(
       "Ministerios CCI",
-      overflow: TextOverflow.visible,
       style: getTitulo(screenWidth),
     );
   }
@@ -56,7 +60,6 @@ class Ministerios extends StatelessWidget {
   Widget _buildLocation(double screenWidth) {
     return Text(
       "San Pedro Sula",
-      overflow: TextOverflow.visible,
       style: TextStyle(
         fontFamily: 'SF Pro Display',
         color: grisMedio,
@@ -75,7 +78,6 @@ class Ministerios extends StatelessWidget {
         "La comunidad de CCI en San Pedro Sula está compuesta por muchos Ministerios "
         "con el fin de poder responder a las necesidades que cada etapa de la vida "
         "nos presenta. Te invitamos a conocerlos para que puedas ser parte también!",
-        overflow: TextOverflow.visible,
         style: TextStyle(
           height: 1.5,
           fontSize: screenWidth < 360 ? 16 : 18,
@@ -120,6 +122,51 @@ class Ministerios extends StatelessWidget {
           screenWidth,
           screenHeight,
         ),
+        _buildMinisterioSocialItem(
+          "next",
+          "Únete a Next Generation y sé parte de una comunidad que busca crecer "
+              "espiritualmente mientras se divierte y forma amistades duraderas. "
+              "Tenemos actividades, estudios bíblicos y eventos especiales diseñados "
+              "específicamente para jóvenes como tú.",
+          const IgNext('Instagram'),
+          screenWidth,
+          screenHeight,
+        ),
+        _buildMinisterioSocialItem(
+          "matrimonios",
+          "Un ministerio dedicado a fortalecer y enriquecer los matrimonios, "
+              "proporcionando herramientas, recursos y comunidad para parejas que buscan "
+              "crecer juntas en su relación y en su fe.",
+          const IgMatrimonios('Instagram'),
+          screenWidth,
+          screenHeight,
+        ),
+        _buildMinisterioSocialItem(
+          "hombres",
+          "Un ministerio enfocado en el crecimiento espiritual y personal de los hombres, "
+              "proporcionando un espacio de comunidad, apoyo y desarrollo donde los hombres "
+              "pueden fortalecer su fe y sus relaciones.",
+          const FbHombres('Facebook'),
+          screenWidth,
+          screenHeight,
+        ),
+        _buildMinisterioSocialItem(
+          "mujeres",
+          "Un ministerio dedicado a empoderar y fortalecer a las mujeres en su fe y vida diaria, "
+              "ofreciendo comunidad, apoyo y recursos para el crecimiento espiritual y personal.",
+          const IgMujeres('Instagram'),
+          screenWidth,
+          screenHeight,
+        ),
+        _buildMinisterioSocialItem(
+          "shift",
+          "Un ministerio dinámico enfocado en el crecimiento y desarrollo de la próxima generación, "
+              "proporcionando un espacio donde los jóvenes pueden conectarse, crecer espiritualmente "
+              "y hacer un impacto positivo en su comunidad.",
+          const IgShift('Instagram'),
+          screenWidth,
+          screenHeight,
+        ),
       ],
     );
   }
@@ -160,7 +207,6 @@ class Ministerios extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           Text(
             description,
-            overflow: TextOverflow.visible,
             style: TextStyle(
               color: blanco,
               fontSize: screenWidth < 360 ? 14 : 15,
@@ -234,7 +280,6 @@ class Ministerios extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           Text(
             description,
-            overflow: TextOverflow.visible,
             style: TextStyle(
               color: blanco,
               fontSize: screenWidth < 360 ? 14 : 15,

@@ -1,4 +1,4 @@
-import 'package:cci_app/home/constantes.dart';
+import 'package:cci_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../pantallas/eventos.dart';

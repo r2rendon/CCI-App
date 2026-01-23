@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "20060340278",
+    "project_id": "cci-app-5bac1",
+    "storage_bucket": "cci-app-5bac1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20060340278:android:7b563c3438e02780cc1897",
+        "android_client_info": {
+          "package_name": "com.example.cci_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBQygMHd_xDmAWgze-Q-Z6qCNC-ftcHaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

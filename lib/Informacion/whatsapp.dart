@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 
 class WhatsApp extends StatelessWidget {
   final String mapa;

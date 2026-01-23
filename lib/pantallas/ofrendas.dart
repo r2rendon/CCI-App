@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 
 class Ofrendas extends StatelessWidget {
@@ -17,28 +17,28 @@ class Ofrendas extends StatelessWidget {
         decoration: getGradientBackground(),
         child: SafeArea(
           child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: getHorizontalPadding(screenWidth),
-            ),
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: getHorizontalPadding(screenWidth),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: screenHeight * 0.02),
                   _buildHeader(screenWidth),
-                SizedBox(height: screenHeight * 0.02),
-                _buildLocation(screenWidth),
-                SizedBox(height: screenHeight * 0.04),
-                _buildDescription(screenWidth),
-                _buildBiblicalQuote(screenWidth),
-                _buildBankAccounts(screenWidth, screenHeight),
-                SizedBox(height: screenHeight * 0.08),
-              ],
+                  SizedBox(height: screenHeight * 0.02),
+                  _buildLocation(screenWidth),
+                  SizedBox(height: screenHeight * 0.04),
+                  _buildDescription(screenWidth),
+                  _buildBiblicalQuote(screenWidth),
+                  _buildBankAccounts(screenWidth, screenHeight),
+                  SizedBox(height: screenHeight * 0.08),
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -53,15 +53,9 @@ class Ofrendas extends StatelessWidget {
 
   Widget _buildLocation(double screenWidth) {
     return Text(
-      "San Pedro Sula",
+      kLocationName,
       overflow: TextOverflow.visible,
-      style: TextStyle(
-        fontFamily: 'SF Pro Display',
-        color: grisMedio,
-        fontSize: screenWidth < 360 ? 15 : 17,
-        fontWeight: FontWeight.w400,
-        letterSpacing: -0.41,
-      ),
+      style: getLocationTextStyle(screenWidth),
     );
   }
 
@@ -74,10 +68,8 @@ class Ofrendas extends StatelessWidget {
         "En CCI creemos que dar es un acto de adoración que nos permite ser parte de la "
         "obra de Dios en nuestra comunidad y en el mundo.",
         overflow: TextOverflow.visible,
-        style: TextStyle(
-          height: 1.5,
-          fontSize: screenWidth < 360 ? 16 : 18,
-          color: blanco,
+        style: getBodyLargeTextStyle(screenWidth, color: blanco).copyWith(
+          height: lineHeightVeryRelaxed,
         ),
       ),
     );
@@ -100,22 +92,13 @@ class Ofrendas extends StatelessWidget {
             Text(
               '"Cada uno debe dar según lo que haya decidido en su corazón, no de mala gana ni por obligación, porque Dios ama al que da con alegría."',
               overflow: TextOverflow.visible,
-              style: TextStyle(
-                color: blanco,
-                fontSize: screenWidth < 360 ? 14 : 16,
-                fontStyle: FontStyle.italic,
-                height: 1.4,
-              ),
+              style: getBiblicalQuoteStyle(screenWidth),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: screenWidth * 0.03),
             Text(
               '2 Corintios 9:7',
-              style: TextStyle(
-                color: colorWithOpacity(blanco, 0.8),
-                fontSize: screenWidth < 360 ? 12 : 14,
-                fontWeight: FontWeight.bold,
-              ),
+              style: getBiblicalReferenceStyle(screenWidth),
             ),
           ],
         ),
@@ -131,29 +114,26 @@ class Ofrendas extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Formas de Dar",
+            "Formas de Dar:\n",
             overflow: TextOverflow.visible,
             style: getThema(screenWidth),
           ),
+          Text(
+            'Transferencias Bancarias:',
+            style: getLabelTextStyle(screenWidth),
+          ),
           SizedBox(height: screenWidth * 0.04),
           _buildBankAccountCard(
-            "Banco Atlántida",
-            "Cuenta Corriente: 123-456-789",
-            "A nombre de: Centro Cristiano Internacional",
+            "BAC Credomatic",
+            "Cuenta en Lempiras/Cheques: 909536002",
+            "Centro Cristiano Internacional",
             screenWidth,
           ),
           SizedBox(height: screenWidth * 0.03),
           _buildBankAccountCard(
-            "Banco Ficohsa",
-            "Cuenta Ahorros: 987-654-321",
-            "A nombre de: Centro Cristiano Internacional",
-            screenWidth,
-          ),
-          SizedBox(height: screenWidth * 0.03),
-          _buildBankAccountCard(
-            "Transferencia Digital",
-            "Zelle / PayPal: info@ccisanpedrosula.com",
-            "Para donaciones internacionales",
+            "Atlántida",
+            "Cuenta en Lempiras/Cheques: 2100151261",
+            "Centro Cristiano Internacional",
             screenWidth,
           ),
           SizedBox(height: screenWidth * 0.05),
@@ -177,11 +157,7 @@ class Ofrendas extends StatelessWidget {
                   "Todas las ofrendas y diezmos son utilizados para el mantenimiento "
                   "de la iglesia, misiones, y programas comunitarios.",
                   overflow: TextOverflow.visible,
-                  style: TextStyle(
-                    color: blanco,
-                    fontSize: screenWidth < 360 ? 13 : 14,
-                    height: 1.4,
-                  ),
+                  style: getInfoTextStyle(screenWidth),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -213,10 +189,8 @@ class Ofrendas extends StatelessWidget {
             bankName,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-            style: TextStyle(
-              color: blanco,
-              fontSize: screenWidth < 360 ? 15 : 16,
-              fontWeight: FontWeight.bold,
+            style: getCardContentStyle(screenWidth, color: blanco).copyWith(
+              fontSize: getFontSizeBodyXLarge(screenWidth),
             ),
           ),
           SizedBox(height: screenWidth * 0.02),
@@ -224,21 +198,15 @@ class Ofrendas extends StatelessWidget {
             accountNumber,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
-            style: TextStyle(
-              color: colorWithOpacity(blanco, 0.9),
-              fontSize: screenWidth < 360 ? 13 : 14,
-              fontFamily: 'monospace',
-            ),
+            style: getMonospaceTextStyle(screenWidth),
           ),
           SizedBox(height: screenWidth * 0.01),
           Text(
             accountHolder,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
-            style: TextStyle(
-              color: colorWithOpacity(blanco, 0.7),
-              fontSize: screenWidth < 360 ? 12 : 13,
-            ),
+            style: getBodySmallTextStyle(screenWidth,
+                color: colorWithOpacity(blanco, 0.7)),
           ),
         ],
       ),

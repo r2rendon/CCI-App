@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:ui';
 import '../pantallas/inicio.dart';
 import '../pantallas/eventos.dart';
@@ -10,13 +9,18 @@ import '../pantallas/ofrendas.dart';
 import '../pantallas/next.dart';
 import '../pantallas/welcome_screen.dart';
 import '../pantallas/ubicacion.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
+
+  // Método estático para navegación desde notificaciones
+  static void navigateToPage(int index) {
+    _MainNavigationState._instance?._navigateToPage(index);
+  }
 }
 
 class _MainNavigationState extends State<MainNavigation> {
@@ -36,17 +40,25 @@ class _MainNavigationState extends State<MainNavigation> {
     const Next(),
   ];
 
+  // Instancia estática para acceso desde notificaciones
+  static _MainNavigationState? _instance;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    _instance = this;
   }
 
   @override
   void dispose() {
+    if (_instance == this) {
+      _instance = null;
+    }
     _pageController.dispose();
     super.dispose();
   }
+
 
   void _onPageChanged(int index) {
     setState(() {
@@ -132,7 +144,7 @@ class _MainNavigationState extends State<MainNavigation> {
                                   sigmaY: blurValue,
                                 ),
                                 child: Container(
-                                  color: Colors.black.withOpacity(0.3 * (1 - animation.value)),
+                                  color: Colors.black.withValues(alpha: (0.3 * (1 - animation.value)).clamp(0.0, 1.0)),
                                 ),
                               ),
                             ),

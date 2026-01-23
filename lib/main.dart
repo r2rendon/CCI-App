@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:io' show Platform;
 import 'home/splash_screen.dart';
+import 'utils/notification_service.dart';
+import 'utils/live_stream_monitor.dart';
+import 'utils/fcm_service.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+// Importar Firebase solo en Android
+import 'package:firebase_core/firebase_core.dart'
+    if (dart.library.io) 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart' if (dart.library.io) 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,18 +38,48 @@ void main() async {
     ),
   );
 
-  // Configuración de notificaciones
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+  // Inicializar Firebase solo en Android (iOS requiere Xcode más reciente)
+  if (Platform.isAndroid) {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      debugPrint('Firebase inicializado correctamente en Android');
+    } catch (e) {
+      debugPrint('Error inicializando Firebase: $e');
+    }
+  } else {
+    debugPrint('Firebase deshabilitado en iOS (requiere Xcode más reciente)');
+  }
 
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-
+  // Configuración de notificaciones locales
   try {
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await NotificationService().initialize();
   } catch (e) {
     debugPrint('Error inicializando notificaciones: $e');
+  }
+
+  // Inicializar FCM para notificaciones push solo en Android
+  if (Platform.isAndroid) {
+    try {
+      final fcmService = FCMService();
+      fcmService.setNavigatorKey(MyApp.navigatorKey);
+      await fcmService.initialize();
+      // Suscribirse a los temas
+      await fcmService.subscribeToTopic('cci_live_streams');
+      await fcmService.subscribeToTopic('cci_events');
+    } catch (e) {
+      debugPrint('Error inicializando FCM: $e');
+    }
+  } else {
+    debugPrint('FCM deshabilitado en iOS - usando solo notificaciones locales');
+  }
+
+  // Iniciar monitoreo de transmisiones en vivo (fallback local)
+  try {
+    LiveStreamMonitor().startMonitoring();
+  } catch (e) {
+    debugPrint('Error iniciando monitoreo de transmisiones: $e');
   }
 
   runApp(const MyApp());
@@ -53,8 +88,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) => MaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'CCI San Pedro Sula',
         theme: ThemeData(

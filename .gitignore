@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 *.g.dart
+
+# Firebase credentials (no subir a GitHub)
+fcm_service_account_json.txt
+*.json
+!pubspec.json
+!android/app/google-services.json
+!ios/Runner/GoogleService-Info.plist

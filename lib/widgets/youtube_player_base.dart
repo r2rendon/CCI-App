@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 
 class YoutubePlayerBase extends StatefulWidget {
   final String videoId;

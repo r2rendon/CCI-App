@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../home/constantes.dart';
+import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 import '../redes sociales/ig_next.dart';
 

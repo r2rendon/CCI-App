@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../home/constantes.dart';
+import 'constants.dart';
 
 class SocialLink extends StatelessWidget {
   final String socialId;

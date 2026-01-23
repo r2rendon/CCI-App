@@ -1,4 +1,4 @@
-import 'package:cci_app/home/constantes.dart';
+import 'package:cci_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
