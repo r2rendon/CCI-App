@@ -6,7 +6,7 @@ import 'utils/notification_service.dart';
 import 'utils/live_stream_monitor.dart';
 import 'utils/fcm_service.dart';
 
-// Importar Firebase solo en Android
+// Importar Firebase para Android e iOS
 import 'package:firebase_core/firebase_core.dart'
     if (dart.library.io) 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart' if (dart.library.io) 'firebase_options.dart';
@@ -38,18 +38,16 @@ void main() async {
     ),
   );
 
-  // Inicializar Firebase solo en Android (iOS requiere Xcode más reciente)
-  if (Platform.isAndroid) {
-    try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      debugPrint('Firebase inicializado correctamente en Android');
-    } catch (e) {
-      debugPrint('Error inicializando Firebase: $e');
-    }
-  } else {
-    debugPrint('Firebase deshabilitado en iOS (requiere Xcode más reciente)');
+  // Inicializar Firebase en Android e iOS
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint(
+        'Firebase inicializado correctamente en ${Platform.isAndroid ? "Android" : "iOS"}');
+  } catch (e) {
+    debugPrint('Error inicializando Firebase: $e');
+    // Continuar sin Firebase si hay error (puede ser por Xcode antiguo)
   }
 
   // Configuración de notificaciones locales
@@ -59,20 +57,19 @@ void main() async {
     debugPrint('Error inicializando notificaciones: $e');
   }
 
-  // Inicializar FCM para notificaciones push solo en Android
-  if (Platform.isAndroid) {
-    try {
-      final fcmService = FCMService();
-      fcmService.setNavigatorKey(MyApp.navigatorKey);
-      await fcmService.initialize();
-      // Suscribirse a los temas
-      await fcmService.subscribeToTopic('cci_live_streams');
-      await fcmService.subscribeToTopic('cci_events');
-    } catch (e) {
-      debugPrint('Error inicializando FCM: $e');
-    }
-  } else {
-    debugPrint('FCM deshabilitado en iOS - usando solo notificaciones locales');
+  // Inicializar FCM para notificaciones push en Android e iOS
+  try {
+    final fcmService = FCMService();
+    fcmService.setNavigatorKey(MyApp.navigatorKey);
+    await fcmService.initialize();
+    // Suscribirse a los temas
+    await fcmService.subscribeToTopic('cci_live_streams');
+    await fcmService.subscribeToTopic('cci_events');
+    debugPrint(
+        'FCM inicializado correctamente en ${Platform.isAndroid ? "Android" : "iOS"}');
+  } catch (e) {
+    debugPrint('Error inicializando FCM: $e');
+    // Continuar sin FCM si hay error (puede ser por Xcode antiguo o falta de APNs)
   }
 
   // Iniciar monitoreo de transmisiones en vivo (fallback local)

@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>io.flutter.embedded_views_preview</key>
-	<string>YES</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -26,6 +26,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Esta app requiere acceso a la cámara para tomar fotos de perfil y escanear códigos QR.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Esta app puede requerir tu ubicación para mostrar eventos cercanos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Esta app requiere acceso a la galería para seleccionar imágenes de perfil.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Esta app puede usar tu información para mejorar la experiencia del usuario.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -43,17 +53,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Esta app requiere acceso a la cámara para tomar fotos de perfil y escanear códigos QR.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Esta app requiere acceso a la galería para seleccionar imágenes de perfil.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Esta app puede requerir tu ubicación para mostrar eventos cercanos.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Esta app puede usar tu información para mejorar la experiencia del usuario.</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<string>YES</string>
 </dict>
 </plist>

@@ -1,10 +1,8 @@
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'notification_service.dart';
 import '../navigation/main_navigation.dart';
 
-// Importar Firebase solo en Android - en iOS estos imports fallarán silenciosamente
-// porque los pods no están instalados
+// Importar Firebase para Android e iOS
 import 'package:firebase_messaging/firebase_messaging.dart' if (dart.library.io) 'package:firebase_messaging/firebase_messaging.dart';
 
 /// Handler para notificaciones cuando la app está en segundo plano
@@ -13,6 +11,35 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint('Notificación recibida en segundo plano: ${message.messageId}');
   debugPrint('Título: ${message.notification?.title}');
   debugPrint('Cuerpo: ${message.notification?.body}');
+  debugPrint('Datos: ${message.data}');
+  
+  // Inicializar el servicio de notificaciones locales
+  await NotificationService().initialize();
+  
+  // Mostrar la notificación localmente si tiene título y cuerpo
+  if (message.notification != null) {
+    final notificationType = message.data['type'] ?? 'general';
+    await NotificationService().showNotification(
+      id: message.hashCode,
+      title: message.notification!.title ?? 'CCI San Pedro Sula',
+      body: message.notification!.body ?? '',
+      payload: notificationType,
+    );
+    debugPrint('Notificación mostrada en segundo plano');
+  } else if (message.data.isNotEmpty) {
+    // Si solo hay datos sin notification, mostrar notificación con los datos
+    final notificationType = message.data['type'] ?? 'general';
+    final title = message.data['title'] ?? 'CCI San Pedro Sula';
+    final body = message.data['body'] ?? 'Nueva notificación';
+    
+    await NotificationService().showNotification(
+      id: message.hashCode,
+      title: title,
+      body: body,
+      payload: notificationType,
+    );
+    debugPrint('Notificación mostrada desde datos en segundo plano');
+  }
 }
 
 class FCMService {
@@ -33,13 +60,6 @@ class FCMService {
   /// Inicializa el servicio FCM
   Future<void> initialize() async {
     if (_initialized) return;
-    
-    // Solo inicializar en Android
-    if (!Platform.isAndroid) {
-      debugPrint('FCM no disponible en iOS con esta versión de Xcode');
-      _initialized = true;
-      return;
-    }
 
     try {
       _messaging = FirebaseMessaging.instance;

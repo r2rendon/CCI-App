@@ -33,10 +33,6 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   
-  # Excluir Firebase de iOS (requiere Xcode más reciente)
-  # Los pods de Firebase se instalarán pero no se compilarán debido a errores de Swift
-  # El código de Dart manejará la ausencia de Firebase en iOS
-  
   target 'RunnerTests' do
     inherit! :search_paths
   end
@@ -49,13 +45,20 @@ post_install do |installer|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
       config.build_settings['SWIFT_VERSION'] = '5.9'
       config.build_settings['ENABLE_BITCODE'] = 'NO'
-      # Habilitar características experimentales de Swift necesarias para Firebase 11.15.0
-      swift_flags = config.build_settings['OTHER_SWIFT_FLAGS'] || ['$(inherited)']
-      swift_flags << '-Xfrontend'
-      swift_flags << '-enable-experimental-feature'
-      swift_flags << '-Xfrontend'
-      swift_flags << 'AccessLevelOnImport'
-      config.build_settings['OTHER_SWIFT_FLAGS'] = swift_flags
+      
+      # Habilitar características experimentales de Swift para Firebase
+      if target.name.include?('Firebase')
+        swift_flags = config.build_settings['OTHER_SWIFT_FLAGS'] || ['$(inherited)']
+        swift_flags << '-Xfrontend'
+        swift_flags << '-enable-experimental-feature'
+        swift_flags << '-Xfrontend'
+        swift_flags << 'SendingArgsAndResults'
+        swift_flags << '-Xfrontend'
+        swift_flags << '-enable-experimental-feature'
+        swift_flags << '-Xfrontend'
+        swift_flags << 'AccessLevelOnImport'
+        config.build_settings['OTHER_SWIFT_FLAGS'] = swift_flags
+      end
     end
   end
 end
