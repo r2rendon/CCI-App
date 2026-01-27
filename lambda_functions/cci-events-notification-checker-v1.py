@@ -34,11 +34,25 @@ def send_fcm_notification_v1(project_id, access_token, topic, title, body, data)
             },
             'data': {str(k): str(v) for k, v in data.items()},
             'android': {
-                'priority': 'high'
+                'priority': 'high',
+                'notification': {
+                    'channel_id': 'cci_notifications',
+                    'sound': 'default',
+                    'click_action': 'FLUTTER_NOTIFICATION_CLICK'
+                }
             },
             'apns': {
                 'headers': {
                     'apns-priority': '10'
+                },
+                'payload': {
+                    'aps': {
+                        'sound': 'default',
+                        'alert': {
+                            'title': title,
+                            'body': body
+                        }
+                    }
                 }
             }
         }
