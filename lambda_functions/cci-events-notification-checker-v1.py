@@ -153,9 +153,31 @@ def lambda_handler(event, context):
         }
 
 def _format_date(date_str):
-    """Formatea la fecha para mostrar en la notificación"""
+    """Formatea la fecha para mostrar en la notificación (formato AM/PM)"""
     try:
+        # Parsear fecha ISO (ej: "2026-12-23T09:00:00Z")
         dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
-        return dt.strftime('%d/%m/%Y %H:%M')
-    except:
-        return date_str
+        
+        # Convertir UTC a hora local de Honduras (UTC-6)
+        from datetime import timedelta, timezone
+        honduras_offset = timedelta(hours=-6)
+        honduras_tz = timezone(honduras_offset)
+        dt_local = dt.astimezone(honduras_tz)
+        
+        # Formatear en formato 12 horas con AM/PM
+        hour = dt_local.hour
+        hour12 = 12 if hour == 0 else (hour if hour <= 12 else hour - 12)
+        minute = dt_local.minute
+        period = 'AM' if hour < 12 else 'PM'
+        
+        return f'{dt_local.day:02d}/{dt_local.month:02d}/{dt_local.year} {hour12}:{minute:02d} {period}'
+    except Exception as e:
+        # Si falla, intentar formato simple sin conversión de zona horaria
+        try:
+            dt = datetime.fromisoformat(date_str.replace('Z', ''))
+            hour = dt.hour
+            hour12 = 12 if hour == 0 else (hour if hour <= 12 else hour - 12)
+            period = 'AM' if hour < 12 else 'PM'
+            return f'{dt.day:02d}/{dt.month:02d}/{dt.year} {hour12}:{dt.minute:02d} {period}'
+        except:
+            return date_str

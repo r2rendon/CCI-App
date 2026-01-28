@@ -2,7 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import '../utils/app_config.dart';
-import '../navigation/main_navigation.dart';
+import 'fcm_service.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -84,30 +84,11 @@ class NotificationService {
   void _onNotificationTapped(NotificationResponse response) {
     print('Notificación presionada: ${response.id}, payload: ${response.payload}');
     
-    // Navegar según el tipo de notificación (payload)
+    // Usar FCMService para manejar la navegación (tiene mejor manejo de estados)
     if (response.payload != null) {
-      final notificationType = response.payload;
-      if (notificationType == 'live_stream') {
-        // Navegar a la pantalla de Transmisiones (índice 4)
-        _navigateFromNotification(4);
-      } else if (notificationType == 'new_event') {
-        // Navegar a la pantalla de Eventos (índice 1)
-        _navigateFromNotification(1);
-      }
+      final fcmService = FCMService();
+      fcmService.navigateFromLocalNotification(response.payload);
     }
-  }
-
-  /// Navega desde una notificación local
-  void _navigateFromNotification(int screenIndex) {
-    // Importar MainNavigation dinámicamente para evitar dependencias circulares
-    Future.delayed(const Duration(milliseconds: 300), () {
-      try {
-        // Usar el método estático de MainNavigation
-        MainNavigation.navigateToPage(screenIndex);
-      } catch (e) {
-        print('Error navegando desde notificación: $e');
-      }
-    });
   }
 
   /// Programa notificaciones recurrentes para transmisiones en vivo

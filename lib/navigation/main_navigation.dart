@@ -10,6 +10,7 @@ import '../pantallas/next.dart';
 import '../pantallas/welcome_screen.dart';
 import '../pantallas/ubicacion.dart';
 import '../utils/constants.dart';
+import '../utils/fcm_service.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -48,6 +49,11 @@ class _MainNavigationState extends State<MainNavigation> {
     super.initState();
     _pageController = PageController(initialPage: 0);
     _instance = this;
+    
+    // Notificar a FCMService que MainNavigation está listo para manejar navegación pendiente
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FCMService().onMainNavigationReady();
+    });
   }
 
   @override
