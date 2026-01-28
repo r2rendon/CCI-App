@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:io' show Platform;
+import 'dart:async';
 import 'home/splash_screen.dart';
 import 'utils/notification_service.dart';
 import 'utils/live_stream_monitor.dart';
@@ -13,6 +16,13 @@ import 'firebase_options.dart' if (dart.library.io) 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Asegura que NO estén activados los overlays de debug (líneas amarillas, etc.)
+  debugPaintBaselinesEnabled = false;
+  debugPaintSizeEnabled = false;
+  debugPaintPointersEnabled = false;
+  debugPaintLayerBordersEnabled = false;
+  debugRepaintRainbowEnabled = false;
 
   // Deshabilitar visualización de errores de overflow en modo debug
   ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -79,7 +89,48 @@ void main() async {
     debugPrint('Error iniciando monitoreo de transmisiones: $e');
   }
 
-  runApp(const MyApp());
+  runApp(const _ForceDisableDebugOverlays(child: MyApp()));
+}
+
+/// En algunas sesiones, DevTools puede dejar activados overlays (baselines,
+/// guidelines, etc.) aunque el toggle aparezca "apagado".
+/// Este wrapper fuerza a apagarlos en debug para evitar líneas amarillas.
+class _ForceDisableDebugOverlays extends StatefulWidget {
+  final Widget child;
+  const _ForceDisableDebugOverlays({required this.child});
+
+  @override
+  State<_ForceDisableDebugOverlays> createState() => _ForceDisableDebugOverlaysState();
+}
+
+class _ForceDisableDebugOverlaysState extends State<_ForceDisableDebugOverlays> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // En debug y profile puede quedar "pegado" algún overlay desde DevTools.
+    // En release DevTools no está disponible, así que no aplica.
+    if (!kReleaseMode) {
+      _timer = Timer.periodic(const Duration(milliseconds: 250), (_) {
+        debugPaintBaselinesEnabled = false;
+        debugPaintSizeEnabled = false;
+        debugPaintPointersEnabled = false;
+        debugPaintLayerBordersEnabled = false;
+        debugRepaintRainbowEnabled = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class MyApp extends StatelessWidget {
@@ -93,6 +144,18 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'CCI San Pedro Sula',
+        builder: (context, child) {
+          // Evita que algunos Text caigan en `errorTextStyle` (subrayado amarillo)
+          // cuando se usan pantallas que no envuelven su contenido en Scaffold/Material.
+          final safeChild = child ?? const SizedBox.shrink();
+          return Material(
+            type: MaterialType.transparency,
+            child: DefaultTextStyle.merge(
+              style: const TextStyle(decoration: TextDecoration.none),
+              child: safeChild,
+            ),
+          );
+        },
         theme: ThemeData(
           useMaterial3: true,
           fontFamily: 'SF Pro Display',
