@@ -52,11 +52,12 @@ class _TransmisionLiveState extends State<TransmisionLive> {
       return _LoadingWidget(title: widget.title);
     }
 
-    // Si no hay videoId, mostramos un placeholder (imagen o mensaje)
+    // Cuando no hay transmisión (API devuelve liveVideoId vacío), mostramos
+    // siempre la imagen live_placeholder.png.
     if (_liveVideoId == null || _liveVideoId!.isEmpty) {
       return _LiveFallback(
         title: widget.title,
-        imagePath: widget.fallbackImagePath ?? 'assets/images/live_placeholder.png',
+        imagePath: widget.fallbackImagePath ?? kLivePlaceholderAsset,
       );
     }
 
@@ -74,62 +75,41 @@ class _LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.04),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: 'SF Pro Display',
-                        color: blanco,
-                        fontSize: screenWidth < 360 ? 20 : 22,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.5,
-                        height: 1.2,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-                        decoration: BoxDecoration(
-                          color: grisCard,
-                          borderRadius: BorderRadius.circular(borderRadius),
-                          border: Border.all(
-                            color: colorWithOpacity(blanco, 0.1),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: accent,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: colorWithOpacity(negro, 0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: colorWithOpacity(accent, 0.08),
+                blurRadius: 20,
+                offset: const Offset(0, 2),
+                spreadRadius: -4,
+              ),
+            ],
+          ),
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: Container(
+              color: negro,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF007AFF)),
+                ),
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -146,91 +126,68 @@ class _LiveFallback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenWidth * 0.04),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: 'SF Pro Display',
-                        color: blanco,
-                        fontSize: screenWidth < 360 ? 20 : 22,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.5,
-                        height: 1.2,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: colorWithOpacity(negro, 0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: colorWithOpacity(accent, 0.08),
+                blurRadius: 20,
+                offset: const Offset(0, 2),
+                spreadRadius: -4,
+              ),
+            ],
+          ),
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: negro,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.live_tv_outlined,
+                            color: grisMedio,
+                            size: screenWidth * 0.12,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'No hay transmisión en vivo',
+                            style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              color: grisMedio,
+                              fontSize: screenWidth < 360 ? 14 : 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-                        decoration: BoxDecoration(
-                          color: grisCard,
-                          borderRadius: BorderRadius.circular(borderRadius),
-                          border: Border.all(
-                            color: colorWithOpacity(blanco, 0.1),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(borderRadius),
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: grisCard,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.live_tv_outlined,
-                                        color: grisMedio,
-                                        size: screenWidth * 0.12,
-                                      ),
-                                      SizedBox(height: screenHeight * 0.01),
-                                      Text(
-                                        'No hay transmisión en vivo',
-                                        style: TextStyle(
-                                          fontFamily: 'SF Pro Display',
-                                          color: grisMedio,
-                                          fontSize: screenWidth < 360 ? 14 : 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

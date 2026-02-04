@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../pantallas/welcome_screen.dart';
+import '../navigation/main_navigation.dart';
+import '../utils/fcm_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -34,13 +36,30 @@ class SplashScreenState extends State<SplashScreen>
 
     _animationController.forward();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        print('SplashScreen: Navegando a WelcomeScreen');
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const WelcomeScreen(),
+    Future.delayed(const Duration(seconds: 2), () async {
+      if (!mounted) return;
+      await FCMService().ensureInitialMessage();
+      if (!mounted) return;
+      final openFromNotification = FCMService.hasPendingNotification;
+      if (openFromNotification) {
+          print('SplashScreen: Abierto desde notificación, yendo a MainNavigation');
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const MainNavigation(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              transitionDuration: const Duration(milliseconds: 400),
+            ),
+          );
+        } else {
+          print('SplashScreen: Navegando a WelcomeScreen');
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const WelcomeScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               // Efecto blur progresivo
@@ -77,10 +96,10 @@ class SplashScreenState extends State<SplashScreen>
                 ],
               );
             },
-            transitionDuration: const Duration(milliseconds: 600),
-          ),
-        );
-      }
+              transitionDuration: const Duration(milliseconds: 600),
+            ),
+          );
+        }
     });
   }
 

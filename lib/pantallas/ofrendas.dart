@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 
@@ -32,7 +33,7 @@ class Ofrendas extends StatelessWidget {
                   SizedBox(height: screenHeight * 0.04),
                   _buildDescription(screenWidth),
                   _buildBiblicalQuote(screenWidth),
-                  _buildBankAccounts(screenWidth, screenHeight),
+                  _buildBankAccounts(context, screenWidth, screenHeight),
                   SizedBox(height: screenHeight * 0.08),
                 ],
               ),
@@ -106,7 +107,7 @@ class Ofrendas extends StatelessWidget {
     );
   }
 
-  Widget _buildBankAccounts(double screenWidth, double screenHeight) {
+  Widget _buildBankAccounts(BuildContext context, double screenWidth, double screenHeight) {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: getHorizontalPadding(screenWidth) * 0.6),
@@ -124,16 +125,20 @@ class Ofrendas extends StatelessWidget {
           ),
           SizedBox(height: screenWidth * 0.04),
           _buildBankAccountCard(
+            context,
             "BAC Credomatic",
             "Cuenta en Lempiras/Cheques: 909536002",
             "Centro Cristiano Internacional",
+            "909536002",
             screenWidth,
           ),
           SizedBox(height: screenWidth * 0.03),
           _buildBankAccountCard(
+            context,
             "Atlántida",
             "Cuenta en Lempiras/Cheques: 2100151261",
             "Centro Cristiano Internacional",
+            "2100151261",
             screenWidth,
           ),
           SizedBox(height: screenWidth * 0.05),
@@ -169,9 +174,11 @@ class Ofrendas extends StatelessWidget {
   }
 
   Widget _buildBankAccountCard(
+    BuildContext context,
     String bankName,
     String accountNumber,
     String accountHolder,
+    String numberToCopy,
     double screenWidth,
   ) {
     return Container(
@@ -194,11 +201,43 @@ class Ofrendas extends StatelessWidget {
             ),
           ),
           SizedBox(height: screenWidth * 0.02),
-          Text(
-            accountNumber,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: getMonospaceTextStyle(screenWidth),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  accountNumber,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: getMonospaceTextStyle(screenWidth),
+                ),
+              ),
+              SizedBox(width: screenWidth * 0.02),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: numberToCopy));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Número copiado: $numberToCopy'),
+                        duration: const Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.02),
+                    child: Icon(
+                      Icons.copy_rounded,
+                      size: screenWidth * 0.06,
+                      color: accent,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: screenWidth * 0.01),
           Text(

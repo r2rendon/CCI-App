@@ -20,7 +20,6 @@ dependencies:
   url_launcher: ^6.2.5
   flutter_local_notifications: ^17.1.2
   timezone: ^0.9.4
-  webview_flutter: ^4.0.5
   http: ^1.1.0
   firebase_core:
     ^3.6.0
@@ -39,9 +38,6 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/images/logo.png
-    - assets/images/home_screen.png
-    - assets/images/menu.png
   # SF Pro Display es una fuente nativa de iOS, no necesita archivos de fuente
   # fonts:
   #   - family: SF Pro Display

@@ -17,7 +17,10 @@ class EventModel {
     this.registrationLink,
     required this.location,
     required this.createdAt,
+    this.eventDateDisplay,
   });
+
+  final String? eventDateDisplay;
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
@@ -29,6 +32,7 @@ class EventModel {
       registrationLink: json['registrationLink'],
       location: json['location'] ?? 'San Pedro Sula',
       createdAt: json['createdAt'] ?? '',
+      eventDateDisplay: json['eventDateDisplay'],
     );
   }
 
@@ -99,15 +103,18 @@ class EventModel {
 
   String get formattedDate {
     try {
-      final dt = eventDateTime.toLocal(); // Convertir a hora local
+      final dt = eventDateTime.toLocal();
       final hour = dt.hour % 12;
       final hour12 = hour == 0 ? 12 : hour;
       final minute = dt.minute.toString().padLeft(2, '0');
       final period = dt.hour < 12 ? 'AM' : 'PM';
-      return '${dt.day}/${dt.month}/${dt.year} $hour12:$minute $period';
+      return '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year} $hour12:$minute $period';
     } catch (e) {
       return eventDate;
     }
   }
+
+  /// Fecha para mostrar: eventDateDisplay si existe, sino formattedDate.
+  String get displayDate => eventDateDisplay ?? formattedDate;
 }
 

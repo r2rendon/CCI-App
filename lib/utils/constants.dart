@@ -241,6 +241,9 @@ const String kSectionEvents = "Eventos";
 const String kSectionChurch = "Seamos Iglesia";
 const String kSectionMinistries = "Ministerios CCI";
 const String kSectionLive = "En Vivo";
+
+/// Imagen que se muestra cuando no hay transmisión en vivo.
+const String kLivePlaceholderAsset = 'assets/images/live_placeholder.png';
 const String kSectionGive = "Dar";
 const String kSectionNext = "Next";
 const String kSectionLocation = "Ubicación";

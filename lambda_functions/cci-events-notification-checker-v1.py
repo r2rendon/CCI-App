@@ -12,6 +12,13 @@ dynamodb = boto3.resource('dynamodb')
 table_name = os.environ.get('DYNAMODB_TABLE_NAME', 'cci-events')
 table = dynamodb.Table(table_name)
 
+def _get_partition_key_name():
+    """Nombre real de la clave de partición de la tabla (p. ej. eventID o eventId)."""
+    for key in (table.key_schema or []):
+        if key.get('KeyType') == 'HASH':
+            return key.get('AttributeName') or 'eventID'
+    return 'eventID'
+
 def get_access_token(service_account_info):
     """Obtiene un token de acceso OAuth2 usando las credenciales de la cuenta de servicio"""
     credentials = service_account.Credentials.from_service_account_info(
@@ -120,24 +127,25 @@ def lambda_handler(event, context):
                     body=f"{event.get('name', 'Nuevo evento')} - {_format_date(event.get('eventDate', ''))}",
                     data={
                         'type': 'new_event',
-                        'eventId': event.get('eventId', ''),
+                        'eventId': event.get('eventID') or event.get('eventId', ''),
                         'eventName': event.get('name', ''),
                         'eventDate': event.get('eventDate', ''),
+                        'category': (event.get('category') or 'general').strip().lower(),
                         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
                     }
                 )
-                print(f"Notificación FCM enviada para evento {event.get('eventId')}: {result}")
+                event_id = event.get('eventID') or event.get('eventId')
+                print(f"Notificación FCM enviada para evento {event_id}: {result}")
                 
-                # Marcar como notificado
+                pk_name = _get_partition_key_name()
                 table.update_item(
-                    Key={'eventId': event.get('eventId')},
+                    Key={pk_name: event_id},
                     UpdateExpression='SET notified = :notified',
                     ExpressionAttributeValues={':notified': True}
                 )
-                
                 notifications_sent += 1
             except Exception as e:
-                print(f"Error enviando notificación FCM para evento {event.get('eventId')}: {str(e)}")
+                print(f"Error enviando notificación FCM para evento {event.get('eventID') or event.get('eventId')}: {str(e)}")
         
         return {
             'statusCode': 200,
@@ -153,31 +161,32 @@ def lambda_handler(event, context):
         }
 
 def _format_date(date_str):
-    """Formatea la fecha para mostrar en la notificación (formato AM/PM)"""
+    """Formatea la fecha para la notificación (AM/PM). Si no tiene Z/UTC, se asume hora Honduras."""
+    from datetime import timedelta, timezone
+    honduras_tz = timezone(timedelta(hours=-6))
+    s = (date_str or '').strip()
+    if not s:
+        return date_str or ''
     try:
-        # Parsear fecha ISO (ej: "2026-12-23T09:00:00Z")
-        dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
-        
-        # Convertir UTC a hora local de Honduras (UTC-6)
-        from datetime import timedelta, timezone
-        honduras_offset = timedelta(hours=-6)
-        honduras_tz = timezone(honduras_offset)
-        dt_local = dt.astimezone(honduras_tz)
-        
-        # Formatear en formato 12 horas con AM/PM
+        # Si termina en Z o +00:00 → es UTC, convertir a Honduras
+        if s.endswith('Z') or '+00:00' in s or s.endswith('+00:00'):
+            dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+            dt_local = dt.astimezone(honduras_tz)
+        else:
+            # Sin zona horaria → asumir que ya está en hora Honduras (no convertir)
+            dt = datetime.fromisoformat(s.replace('Z', ''))
+            dt_local = dt.replace(tzinfo=honduras_tz)
         hour = dt_local.hour
         hour12 = 12 if hour == 0 else (hour if hour <= 12 else hour - 12)
         minute = dt_local.minute
         period = 'AM' if hour < 12 else 'PM'
-        
         return f'{dt_local.day:02d}/{dt_local.month:02d}/{dt_local.year} {hour12}:{minute:02d} {period}'
-    except Exception as e:
-        # Si falla, intentar formato simple sin conversión de zona horaria
+    except Exception:
         try:
-            dt = datetime.fromisoformat(date_str.replace('Z', ''))
+            dt = datetime.fromisoformat(s.replace('Z', ''))
             hour = dt.hour
             hour12 = 12 if hour == 0 else (hour if hour <= 12 else hour - 12)
             period = 'AM' if hour < 12 else 'PM'
             return f'{dt.day:02d}/{dt.month:02d}/{dt.year} {hour12}:{dt.minute:02d} {period}'
-        except:
-            return date_str
+        except Exception:
+            return date_str or ''

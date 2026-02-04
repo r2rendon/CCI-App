@@ -1,6 +1,10 @@
-# cci_app
+# CCI App
 
-A new Flutter project.
+Aplicación oficial de CCI San Pedro Sula (eventos, transmisiones, notificaciones).
+
+## Notificaciones push (iOS)
+
+Para que las push funcionen en iOS hay que configurar APNs en Firebase. Guía paso a paso: **[docs/FIREBASE_PUSH_SETUP.md](docs/FIREBASE_PUSH_SETUP.md)**.
 
 ## Getting Started
 

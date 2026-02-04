@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'notification_service.dart';
 import '../navigation/main_navigation.dart';
+import '../pantallas/alive.dart';
+import '../pantallas/shift.dart';
 
 // Importar Firebase para Android e iOS
 import 'package:firebase_messaging/firebase_messaging.dart' if (dart.library.io) 'package:firebase_messaging/firebase_messaging.dart';
@@ -51,6 +54,43 @@ class FCMService {
   static RemoteMessage? _pendingInitialMessage;
   static String? _pendingNotificationPayload;
 
+  /// Datos de navegación pendiente (pantalla + evento) para que la pantalla destino los consuma
+  static String? pendingEventId;
+  static String? pendingCategory;
+
+  /// True si la app se abrió desde una notificación (permite saltar Welcome)
+  static bool get hasPendingNotification =>
+      _pendingInitialMessage != null || _pendingNotificationPayload != null;
+
+  /// En Android getInitialMessage() a veces no está listo al inicio. Reintentar con delay.
+  Future<void> ensureInitialMessage() async {
+    if (_pendingInitialMessage != null || _messaging == null) return;
+    try {
+      RemoteMessage? message = await _messaging!.getInitialMessage();
+      if (message == null) {
+        await Future.delayed(const Duration(milliseconds: 800));
+        message = await _messaging!.getInitialMessage();
+      }
+      if (message != null) {
+        debugPrint('ensureInitialMessage: mensaje obtenido (cold start)');
+        debugPrint('Datos: ${message.data}');
+        _pendingInitialMessage = message;
+      }
+    } catch (e) {
+      debugPrint('ensureInitialMessage error: $e');
+    }
+  }
+
+  /// Devuelve y limpia los datos de evento pendiente para la pantalla que los consuma
+  static Map<String, String>? consumePendingEventNavigation() {
+    final eventId = pendingEventId;
+    final category = pendingCategory;
+    pendingEventId = null;
+    pendingCategory = null;
+    if (eventId == null || eventId.isEmpty) return null;
+    return {'eventId': eventId, 'category': category ?? 'general'};
+  }
+
   /// Establece la clave de navegación para poder navegar desde notificaciones
   void setNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
     _navigatorKey = navigatorKey;
@@ -100,17 +140,14 @@ class FCMService {
         debugPrint('Nuevo FCM Token: $newToken');
       });
 
-      // Verificar si la app fue abierta desde una notificación
+      // Verificar si la app fue abierta desde una notificación (app cerrada o en segundo plano)
       RemoteMessage? initialMessage = await _messaging!.getInitialMessage();
       if (initialMessage != null) {
         debugPrint('App abierta desde notificación: ${initialMessage.messageId}');
         debugPrint('Datos: ${initialMessage.data}');
-        // Guardar el mensaje para navegar cuando MainNavigation esté listo
         _pendingInitialMessage = initialMessage;
-        // Intentar navegar después de un delay para dar tiempo a que la app se inicialice
-        Future.delayed(const Duration(milliseconds: 2000), () {
-          _handlePendingNavigation();
-        });
+        // No llamar _handlePendingNavigation aquí: SplashScreen llevará a MainNavigation
+        // y onMainNavigationReady() lo hará cuando el tab esté listo.
       }
 
       _initialized = true;
@@ -125,14 +162,20 @@ class FCMService {
     debugPrint('Notificación recibida en primer plano: ${message.messageId}');
     debugPrint('Datos de la notificación: ${message.data}');
     
-    // Mostrar notificación local con datos para navegación
     if (message.notification != null) {
-      final notificationType = message.data['type'];
+      final category = (message.data['category'] ?? 'general').toString();
+      final eventId = (message.data['eventId'] ?? message.data['eventID'] ?? '').toString();
+      // Payload con category y eventId para que al tocar la notificación local vaya a la pantalla correcta
+      final payload = jsonEncode({
+        'type': message.data['type'] ?? 'new_event',
+        'category': category,
+        'eventId': eventId,
+      });
       NotificationService().showNotification(
         id: message.hashCode,
         title: message.notification!.title ?? 'CCI San Pedro Sula',
         body: message.notification!.body ?? '',
-        payload: notificationType, // Pasar el tipo como payload para navegación
+        payload: payload,
       );
     }
   }
@@ -155,29 +198,77 @@ class FCMService {
     String? payload = _pendingNotificationPayload;
     
     if (message != null) {
-      final notificationType = message.data['type'];
-      debugPrint('Procesando navegación pendiente: $notificationType');
-      
-      if (notificationType == 'live_stream') {
-        _navigateToScreen(4);
-      } else if (notificationType == 'new_event') {
-        _navigateToScreen(1);
-      } else {
-        debugPrint('Tipo de notificación desconocido: $notificationType');
-      }
-      
-      // Limpiar el mensaje pendiente después de procesarlo
+      _applyNavigationFromData(message.data);
       _pendingInitialMessage = null;
     } else if (payload != null) {
       debugPrint('Procesando navegación desde payload: $payload');
-      
-      if (payload == 'live_stream') {
-        _navigateToScreen(4);
-      } else if (payload == 'new_event') {
-        _navigateToScreen(1);
-      }
-      
       _pendingNotificationPayload = null;
+      if (payload.trim().startsWith('{')) {
+        try {
+          final data = jsonDecode(payload) as Map<String, dynamic>;
+          final type = (data['type'] ?? 'new_event').toString();
+          final category = (data['category'] ?? 'general').toString().toLowerCase();
+          final eventId = (data['eventId'] ?? '').toString();
+          _applyNavigationFromData({'type': type, 'category': category, 'eventId': eventId});
+        } catch (e) {
+          debugPrint('Error parseando payload JSON: $e');
+          if (payload == 'live_stream') _navigateToScreen(4);
+          else if (payload == 'new_event') _navigateToScreen(1);
+        }
+      } else {
+        if (payload == 'live_stream') _navigateToScreen(4);
+        else if (payload == 'new_event') {
+          pendingCategory = 'general';
+          _navigateToScreen(1);
+        }
+      }
+    }
+  }
+
+  void _applyNavigationFromData(Map<String, dynamic> data) {
+    final notificationType = data['type'];
+    final category = (data['category'] ?? '').toString().toLowerCase();
+    final eventId = (data['eventId'] ?? data['eventID'] ?? '').toString();
+    debugPrint('Navegación: type=$notificationType, category=$category, eventId=$eventId');
+    
+    if (notificationType == 'live_stream') {
+      _navigateToScreen(4);
+      return;
+    }
+    if (notificationType == 'new_event') {
+      pendingEventId = eventId.isNotEmpty ? eventId : null;
+      pendingCategory = category.isNotEmpty ? category : 'general';
+      if (category == 'alive' || category == 'shift') {
+        // No ir al tab Ministerios: push directo a Alive/Shift para que al volver atrás no quede Ministerios
+        Future.delayed(const Duration(milliseconds: 500), () {
+          final state = _navigatorKey?.currentState;
+          if (state != null && state.mounted) {
+            if (category == 'alive') {
+              state.push(MaterialPageRoute(builder: (_) => const Alive()));
+            } else {
+              state.push(MaterialPageRoute(builder: (_) => const Shift()));
+            }
+          }
+        });
+      } else {
+        final index = _eventCategoryToPageIndex(category);
+        _navigateToScreen(index);
+      }
+      return;
+    }
+    debugPrint('Tipo de notificación desconocido: $notificationType');
+  }
+
+  /// general -> Eventos(1), next -> Next(7). alive/shift se manejan con push directo (sin tab Ministerios).
+  int _eventCategoryToPageIndex(String category) {
+    switch (category) {
+      case 'next':
+        return 7;
+      case 'alive':
+      case 'shift':
+        return 0;
+      default:
+        return 1;
     }
   }
   

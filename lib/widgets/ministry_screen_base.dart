@@ -3,13 +3,16 @@ import '../utils/constants.dart';
 import '../widgets/swipe_back_wrapper.dart';
 
 /// Widget base para pantallas de ministerios (Alive, Next, Shift)
-/// Reduce código duplicado y mantiene consistencia
+/// Reduce código duplicado y mantiene consistencia.
+/// Opcionalmente muestra una sección "Información" con eventos (AWS) vía [informationSection].
 class MinistryScreenBase extends StatelessWidget {
   final String title;
   final String description;
   final String imagePath;
   final String additionalInfo;
   final Widget socialWidget;
+  /// Sección opcional (ej. MinistryEventsSection) que se muestra bajo el bloque del ministerio.
+  final Widget? informationSection;
 
   const MinistryScreenBase({
     super.key,
@@ -18,6 +21,7 @@ class MinistryScreenBase extends StatelessWidget {
     required this.imagePath,
     required this.additionalInfo,
     required this.socialWidget,
+    this.informationSection,
   });
 
   @override
@@ -47,6 +51,10 @@ class MinistryScreenBase extends StatelessWidget {
                   SizedBox(height: screenHeight * 0.04),
                   _buildDescription(screenWidth),
                   _buildMinistryInfo(screenWidth, screenHeight),
+                  if (informationSection != null) ...[
+                    SizedBox(height: screenHeight * 0.03),
+                    informationSection!,
+                  ],
                   SizedBox(height: screenHeight * 0.08),
                 ],
               ),

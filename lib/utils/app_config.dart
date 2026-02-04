@@ -6,4 +6,7 @@ class AppConfig {
   static const String notificationChannelName = 'CCI Notifications';
   static const String notificationChannelDescription =
       'Notificaciones de CCI San Pedro Sula';
+
+  // Canal de YouTube
+  static const String youtubeChannelUrl = 'https://youtube.com/ccisanpedrosula';
 }

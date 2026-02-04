@@ -103,7 +103,7 @@ class Youth extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           _buildYouthButton(
             context: context,
-            title: "Next Generation",
+            title: "Next",
             subtitle: "18-25 años",
             icon: Icons.arrow_forward_outlined,
             screen: const Next(),

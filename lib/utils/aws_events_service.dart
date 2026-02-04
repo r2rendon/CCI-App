@@ -3,24 +3,35 @@ import 'package:http/http.dart' as http;
 import 'aws_config.dart';
 import '../models/event_model.dart';
 
+/// Servicio de eventos en AWS. Eventos general = pantalla Eventos principal.
+/// Eventos por ministerio = Next, Alive, Shift (categorías: next, alive, shift).
 class AWSEventsService {
-  static Future<List<EventModel>> getEvents() async {
+  /// Eventos general: pantalla "Eventos" principal (sin filtro de categoría).
+  static Future<List<EventModel>> getEventsGeneral() async {
+    return getEventsForMinistry(null);
+  }
+
+  /// Eventos de un ministerio (next, alive, shift). null = todos (Eventos general).
+  static Future<List<EventModel>> getEventsForMinistry(String? category) async {
     try {
+      final uri = category != null && category.isNotEmpty
+          ? Uri.parse('${AWSConfig.eventsEndpoint}/events').replace(
+              queryParameters: {'category': category},
+            )
+          : Uri.parse('${AWSConfig.eventsEndpoint}/events');
       final response = await http.get(
-        Uri.parse('${AWSConfig.eventsEndpoint}/events'),
+        uri,
         headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final eventsList = data['events'] as List;
-        return eventsList.map((event) => EventModel.fromJson(event)).toList();
+        final eventsList = data['events'] as List? ?? [];
+        return eventsList.map((event) => EventModel.fromJson(event as Map<String, dynamic>)).toList();
       } else {
-        // Si falla, retornar lista vacía
         return [];
       }
     } catch (e) {
-      // En caso de error, retornar lista vacía
       return [];
     }
   }

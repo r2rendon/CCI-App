@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../widgets/youtube_player_base.dart';
 import '../utils/constants.dart';
@@ -23,9 +24,13 @@ class _TransmisionRecienteState extends State<TransmisionReciente> {
   Future<void> _fetchRecentVideo() async {
     try {
       final videoIds = await AWSVideoService.getVideoIds();
+      final recentId = videoIds['recentVideoId'] ?? 'c5GWRFVO9MM';
+      if (kDebugMode) {
+        debugPrint('[TransmisionReciente] recentVideoId recibido: "$recentId"');
+      }
       if (mounted) {
         setState(() {
-          _recentVideoId = videoIds['recentVideoId'];
+          _recentVideoId = recentId;
           _isLoading = false;
         });
       }
@@ -55,21 +60,39 @@ class _TransmisionRecienteState extends State<TransmisionReciente> {
 class _LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return Container(
-      width: double.infinity,
-      height: screenHeight * 0.3,
-      decoration: BoxDecoration(
-        color: grisCard,
-        border: Border.all(
-          color: colorWithOpacity(blanco, 0.1),
-          width: 0.5,
-        ),
-      ),
-      child: Center(
-        child: CircularProgressIndicator(
-          color: accent,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: colorWithOpacity(negro, 0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: colorWithOpacity(accent, 0.08),
+                blurRadius: 20,
+                offset: const Offset(0, 2),
+                spreadRadius: -4,
+              ),
+            ],
+          ),
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: Container(
+              color: negro,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF007AFF)),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

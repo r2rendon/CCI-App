@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import '../utils/constants.dart';
 
+/// Reproductor de YouTube usando solo el widget del paquete [youtube_player_iframe].
+/// En móvil el paquete usa WebView internamente para el iframe; aquí solo se usa la API del player.
 class YoutubePlayerBase extends StatefulWidget {
   final String videoId;
   final String title;
@@ -17,110 +20,179 @@ class YoutubePlayerBase extends StatefulWidget {
 }
 
 class _YoutubePlayerBaseState extends State<YoutubePlayerBase> {
-  bool _isLoading = true;
+  late YoutubePlayerController _controller;
 
-  // HTML personalizado con iframe de YouTube optimizado
-  String get _htmlContent => '''
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController.fromVideoId(
+      videoId: widget.videoId,
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        showControls: true,
+        showFullscreenButton: true,
+        mute: false,
+        loop: false,
+        strictRelatedVideos: true,
+        origin: 'https://www.youtube-nocookie.com',
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
+  }
+
+  Future<void> _openInYouTube() async {
+    final uri = Uri.parse(
+      'https://www.youtube.com/watch?v=${widget.videoId}',
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #000000;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-    }
-    .video-container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="video-container">
-    <iframe
-      src="https://www.youtube.com/embed/${widget.videoId}?autoplay=0&controls=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=https://www.youtube.com&iv_load_policy=3"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-    ></iframe>
-  </div>
-</body>
-</html>
-''';
+  }
+
+  bool _isEmbedRestriction(YoutubeError error) {
+    return error == YoutubeError.notEmbeddable ||
+        error == YoutubeError.sameAsNotEmbeddable;
+  }
+
+  Widget _buildUnavailableCard() {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorWithOpacity(negro, 0.95),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: colorWithOpacity(negro, 0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.play_circle_outline, size: 48, color: accent),
+              const SizedBox(height: 12),
+              Text(
+                'Este video no se puede reproducir aquí',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Ábrelo en YouTube para verlo.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: _openInYouTube,
+                icon: const Icon(Icons.open_in_new, size: 20),
+                label: const Text('Abrir en YouTube'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: accent,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: InAppWebView(
-            initialData: InAppWebViewInitialData(data: _htmlContent),
-            initialSettings: InAppWebViewSettings(
-              javaScriptEnabled: true,
-              domStorageEnabled: true,
-              mediaPlaybackRequiresUserGesture: false,
-              allowsInlineMediaPlayback: true,
-              iframeAllow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-              iframeAllowFullscreen: true,
-              useHybridComposition: true,
-              transparentBackground: true,
-              supportZoom: false,
-              disableHorizontalScroll: true,
-              disableVerticalScroll: true,
-            ),
-            onWebViewCreated: (controller) {
-              // Controller disponible para futuras operaciones si es necesario
-            },
-            onLoadStart: (controller, url) {
-              if (mounted) {
-                setState(() {
-                  _isLoading = true;
-                });
-              }
-            },
-            onLoadStop: (controller, url) async {
-              if (mounted) {
-                setState(() {
-                  _isLoading = false;
-                });
-              }
-            },
-            onConsoleMessage: (controller, consoleMessage) {
-              debugPrint('WebView console: ${consoleMessage.message}');
-            },
-          ),
-        ),
-        if (_isLoading)
-          Container(
-            color: grisCard,
-            child: const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF007AFF)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorWithOpacity(negro, 0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: colorWithOpacity(accent, 0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 2),
+                    spreadRadius: -4,
+                  ),
+                ],
+              ),
+              child: StreamBuilder<YoutubePlayerValue>(
+                stream: _controller.stream,
+                initialData: _controller.value,
+                builder: (context, snapshot) {
+                  final value = snapshot.data;
+                  final showUnavailable = value != null &&
+                      value.hasError &&
+                      _isEmbedRestriction(value.error);
+                  if (showUnavailable) {
+                    return _buildUnavailableCard();
+                  }
+                  return YoutubePlayer(
+                    controller: _controller,
+                    aspectRatio: 16 / 9,
+                    backgroundColor: negro,
+                  );
+                },
               ),
             ),
           ),
-      ],
+          const SizedBox(height: 10),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: _openInYouTube,
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.open_in_new, size: 18, color: accent),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Abrir en YouTube',
+                      style: TextStyle(
+                        color: accent,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

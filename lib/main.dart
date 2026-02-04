@@ -6,7 +6,6 @@ import 'dart:io' show Platform;
 import 'dart:async';
 import 'home/splash_screen.dart';
 import 'utils/notification_service.dart';
-import 'utils/live_stream_monitor.dart';
 import 'utils/fcm_service.dart';
 
 // Importar Firebase para Android e iOS
@@ -82,12 +81,8 @@ void main() async {
     // Continuar sin FCM si hay error (puede ser por Xcode antiguo o falta de APNs)
   }
 
-  // Iniciar monitoreo de transmisiones en vivo (fallback local)
-  try {
-    LiveStreamMonitor().startMonitoring();
-  } catch (e) {
-    debugPrint('Error iniciando monitoreo de transmisiones: $e');
-  }
+  // Monitoreo manual: el usuario usa el botón "Probar" en Transmisiones
+  // para verificar cuando hay transmisión en vivo (sin polling automático)
 
   runApp(const _ForceDisableDebugOverlays(child: MyApp()));
 }

@@ -91,37 +91,169 @@ class NotificationService {
     }
   }
 
-  /// Programa notificaciones recurrentes para transmisiones en vivo
+  /// Programa notificaciones recurrentes para celebraciones
   Future<void> scheduleRecurringNotifications() async {
-    // Notificación para servicio dominical - 9:00 AM
+    // Domingos: una sola notificación 40 min antes de cada celebración
+    await scheduleSundayNotifications();
+    // Miércoles: 9h antes + a las 7:00 PM (cada miércoles; primer miércoles = Ayuno y Oración)
+    await scheduleWednesdayNotifications();
+  }
+
+  /// Domingos: una notificación 40 min antes de 9:00 AM y una 40 min antes de 11:30 AM
+  Future<void> scheduleSundayNotifications() async {
+    // 40 min antes de 9:00 = 8:20
     await scheduleWeeklyNotification(
       id: 1,
-      title: 'Servicio Dominical',
-      body: 'Únete a nuestro servicio dominical a las 9:00 AM',
+      title: 'Celebración Semanal',
+      body: 'Celebración Semanal 9:00 AM',
       day: DateTime.sunday,
-      hour: 9,
-      minute: 0,
+      hour: 8,
+      minute: 20,
     );
-
-    // Notificación para transmisión dominical - 11:30 AM
+    // 40 min antes de 11:30 = 10:50
     await scheduleWeeklyNotification(
       id: 2,
-      title: 'Transmisión en Vivo',
-      body: '¡Nuestra transmisión en vivo comienza a las 11:30 AM!',
+      title: 'Celebración Semanal',
+      body: 'Celebración Semanal 11:30 AM',
       day: DateTime.sunday,
-      hour: 11,
-      minute: 30,
+      hour: 10,
+      minute: 50,
     );
+  }
 
-    // Notificación para transmisión miércoles - 7:00 PM
-    await scheduleWeeklyNotification(
-      id: 3,
-      title: 'Transmisión en Vivo',
-      body: '¡Nuestra transmisión de miércoles comienza a las 7:00 PM!',
-      day: DateTime.wednesday,
-      hour: 19,
-      minute: 0,
-    );
+  /// Miércoles: para cada miércoles, 2 notificaciones — 9h antes (10:00) y a las 19:00
+  /// Primer miércoles del mes = Ayuno y Oración (se transmite); el resto = Celebración de Oración
+  Future<void> scheduleWednesdayNotifications() async {
+    if (!_initialized) await initialize();
+
+    final now = tz.TZDateTime.now(tz.local);
+    const int baseId = 1000;
+    int id = baseId;
+
+    // Próximos 12 meses, todos los miércoles
+    for (int i = 0; i < 12; i++) {
+      final monthStart = DateTime(now.year, now.month + i, 1);
+      final wednesdays = _wednesdaysInMonth(monthStart.year, monthStart.month);
+      for (final wed in wednesdays) {
+        final wed10am = tz.TZDateTime(tz.local, wed.year, wed.month, wed.day, 10, 0);
+        final wed7pm = tz.TZDateTime(tz.local, wed.year, wed.month, wed.day, 19, 0);
+        if (wed10am.isBefore(now) && wed7pm.isBefore(now)) continue;
+
+        final isFirstWednesday = _isFirstWednesdayOfMonth(wed.year, wed.month, wed.day);
+        final String title;
+        final String body9h;
+        final String body7pm;
+        if (isFirstWednesday) {
+          title = 'Celebración de Ayuno y Oración';
+          body9h = 'Recordatorio: Celebración de Ayuno y Oración. Unámonos con un mismo corazón para buscar la presencia de Dios.\n Celebración: 7:00 p.m.\n Les esperamos en CCI San Pedro Sula.'; //Modificar este mensaje'
+          body7pm = 'Celebración de Ayuno y Oración 7:00 PM';
+        } else {
+          title = 'Celebración de Oración';
+          body9h = 'Recordatorio: Celebración de Oración. Unámonos con un mismo corazón para buscar la presencia de Dios..\n Celebración: 7:00 p.m.\n Les esperamos en CCI San Pedro Sula.';
+          body7pm = 'Celebración de Oración 7:00 PM';
+        }
+
+        if (wed10am.isAfter(now)) {
+          await _scheduleOne(
+            id: id++,
+            title: title,
+            body: body9h,
+            scheduled: wed10am,
+          );
+        }
+        if (wed7pm.isAfter(now)) {
+          await _scheduleOne(
+            id: id++,
+            title: title,
+            body: body7pm,
+            scheduled: wed7pm,
+          );
+        }
+      }
+    }
+  }
+
+  /// Lista de todos los miércoles del mes (DateTime en hora local)
+  List<DateTime> _wednesdaysInMonth(int year, int month) {
+    final first = DateTime(year, month, 1);
+    final daysToFirstWed = (3 - first.weekday + 7) % 7;
+    final firstWed = first.add(Duration(days: daysToFirstWed));
+    final list = <DateTime>[];
+    for (var d = firstWed; d.month == month; d = d.add(const Duration(days: 7))) {
+      list.add(d);
+    }
+    return list;
+  }
+
+  bool _isFirstWednesdayOfMonth(int year, int month, int day) {
+    final first = DateTime(year, month, 1);
+    final daysToFirstWed = (3 - first.weekday + 7) % 7;
+    return 1 + daysToFirstWed == day;
+  }
+
+  Future<void> _scheduleOne({
+    required int id,
+    required String title,
+    required String body,
+    required tz.TZDateTime scheduled,
+  }) async {
+    try {
+      await _notifications.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduled,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            AppConfig.notificationChannelId,
+            AppConfig.notificationChannelName,
+            channelDescription: AppConfig.notificationChannelDescription,
+            importance: Importance.high,
+            priority: Priority.high,
+            playSound: true,
+            enableVibration: true,
+          ),
+          iOS: const DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        androidScheduleMode: _getScheduleMode(),
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      try {
+        await _notifications.zonedSchedule(
+          id,
+          title,
+          body,
+          scheduled,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              AppConfig.notificationChannelId,
+              AppConfig.notificationChannelName,
+              channelDescription: AppConfig.notificationChannelDescription,
+              importance: Importance.high,
+              priority: Priority.high,
+              playSound: true,
+              enableVibration: true,
+            ),
+            iOS: const DarwinNotificationDetails(
+              presentAlert: true,
+              presentBadge: true,
+              presentSound: true,
+            ),
+          ),
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+      } catch (e2) {
+        print('Error programando notificación $id: $e2');
+      }
+    }
   }
 
   /// Programa una notificación semanal recurrente
